@@ -1,0 +1,13 @@
+{
+  "name": "beyond-test",
+  "version": "1.0.0",
+  "description": "Beyond - Technical test app.",
+  "author": "Paul Smith <wharfstreetconsulting@gmail.com>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
