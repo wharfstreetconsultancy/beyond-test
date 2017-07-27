@@ -47,8 +47,8 @@ export KOPS_STATE_STORE=s3://$BUCKET
 
 # TODO - Secure access to these AMI credentials
 #####
-export AWS_ACCESS_KEY_ID=AKIAJTCXWZITSWVQIBCA
-export AWS_SECRET_ACCESS_KEY=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
+export AWS_ACCESS_KEY_ID=???
+export AWS_SECRET_ACCESS_KEY=???
 #####
 
 # Configure cluster
