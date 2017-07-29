@@ -17,7 +17,7 @@ echo ==========================
 echo
 
 (
-	while IFS=$'|\n' read -ra USER; do
+	while IFS=$'|' read -ra USER; do
 		for usr in "${USER[@]}"; do
 			echo $usr
 			echo ==========================
