@@ -9,7 +9,7 @@ aws configure --profile wsc-root
 #
 # Fetch list of admin users
 #
-export ADMIN_USERS=$(aws dynamodb scan --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"\\n"')
+export ADMIN_USERS=$(aws dynamodb scan --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"|"')
 
 echo $ADMIN_USERS
 
@@ -18,7 +18,7 @@ echo $ADMIN_USERS
 #  echo "$file found."
 
 (
-IFS='\n'
+IFS='|'
 for p in $ADMIN_USERS; do
 	# key=$(echo $key | tr '.' '_')
 	# eval "${key}='${value}'"
