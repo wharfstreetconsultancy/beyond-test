@@ -22,7 +22,9 @@ IFS='|'
 for p in $ADMIN_USERS; do
 	# key=$(echo $key | tr '.' '_')
 	# eval "${key}='${value}'"
-	echo "$p"
+	do declare $p key value
+	echo key=$key
+	echo value=$value
 done
 )
 
