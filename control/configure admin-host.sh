@@ -36,5 +36,7 @@ sudo yum install -y jq
 #
 # Clone admin scripts and dockerfile
 #
-sudo -i -u ec2-user git clone https://github.com/wharfstreetconsultancy/beyond-test.git beyond-test
+git clone https://github.com/wharfstreetconsultancy/beyond-test.git /usr/local/src/beyond-test
+chmod -R +x /usr/local/src/beyond-test
+
 
