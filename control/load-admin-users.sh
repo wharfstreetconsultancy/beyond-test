@@ -21,7 +21,7 @@ echo $ADMIN_USERS
   do
     key=$(echo $key | tr '.' '_')
     eval "${key}='${value}'"
-  done < echo $ADMIN_USERS
+  done < $(echo $ADMIN_USERS)
 
 #  echo "User Id       = " ${db_uat_user}
 #  echo "user password = " ${db_uat_passwd}
