@@ -9,7 +9,7 @@ aws configure --profile wsc-root
 #
 # Fetch list of admin users
 #
-export ADMIN_USERS=$(aws dynamodb scan --table-name BeyondAdminUsers | jq -r '.Items[] | "user="+.UserName.S+"|key="+.PublicKey.S|')
+export ADMIN_USERS=$(aws dynamodb scan --table-name BeyondAdminUsers | jq -r '.Items[] | "user="+.UserName.S+"|key="+.PublicKey.S+"|"')
 
 echo $ADMIN_USERS
 echo
