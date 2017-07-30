@@ -20,7 +20,7 @@ echo
 	IFS='||'
 	for word in $ADMIN_USERS; do
 		echo @@@@@@@@@
-		echo Length: ${#$word}
+		echo Length: ${#word}
 		echo $word
 		echo @@@@@@@@@
 	done
