@@ -17,16 +17,11 @@ echo ==========================
 echo
 
 (
-	# while IFS='||' read -ra USER; do
-	IFS='|'
-	for each LINE; do
+	IFS='||'
+	for word in $ADMIN_USERS; do
 		echo @@@@@@@@@
-		echo ${USER[@]}
+		echo $word
 		echo @@@@@@@@@
-		# for usr in "${USER[@]}"; do
-			# echo $usr
-			# echo ==========================
-		# done
-	done <<< "$ADMIN_USERS"
+	done
 )
 
