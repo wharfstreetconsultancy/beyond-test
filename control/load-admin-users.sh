@@ -11,8 +11,8 @@ fi
 #
 # Prompt 'super user' for AWS access key details (to run 'aws' cli) and other account defaults
 #
-echo Enter AWS access key details (to run 'aws' cli) and other account defaults
-echo (Hint: AWS access key can be downloaded once from AWS console)
+echo "Enter AWS access key details (to run 'aws' cli) and other account defaults"
+echo "(Hint: AWS access key can be downloaded once from AWS console)"
 aws configure --profile $USER
 
 #
