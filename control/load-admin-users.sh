@@ -9,7 +9,8 @@ aws configure --profile $USER
 #
 # Fetch list of admin users: key=user-name; value=public-key
 #
-export ADMIN_USERS=$(aws dynamodb scan --profile $USER --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"|"' | tr -d '\n')
+# export ADMIN_USERS=$(aws dynamodb scan --profile $USER --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"|"' | tr -d '\n')
+export ADMIN_USERS=$(aws dynamodb scan --profile $USER --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"|"')
 
 echo RAW DATA:
 echo ==========================
