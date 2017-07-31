@@ -4,12 +4,12 @@
 # Ensure 'wsc-root' account profile is configured
 #
 echo Configure 'wsc-root' access key details...
-aws configure --profile wsc-root
+aws configure --profile $USER
 
 #
 # Fetch list of admin users: key=user-name; value=public-key
 #
-export ADMIN_USERS=$(aws dynamodb scan --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"|"' | tr -d '\n')
+export ADMIN_USERS=$(aws dynamodb scan --profile $USER --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"|"' | tr -d '\n')
 
 echo RAW DATA:
 echo ==========================
@@ -25,7 +25,8 @@ echo
 				echo USER_NAME=$USER_NAME
 				echo PUBLIC_KEY=$PUBLIC_KEY
 				if id "$USER_NAME" >/dev/null 2>&1; then
-					echo User \'$USER_NAME\' exists
+					echo Updating public key for existing user: \'$USER_NAME\'
+					sudo -H -u $USER_NAME bash -c 'echo $PUBLIC_KEY > ~/.ssh/authorized_keys; chmod 600 ~/.ssh/authorized_keys'
 				else
 					echo Creating new user: \'$USER_NAME\'
 					sudo adduser $USER_NAME
