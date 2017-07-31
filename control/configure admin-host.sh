@@ -49,7 +49,7 @@ echo SUPER_USER=$SUPER_USER >> /etc/environment
 
 # Create super user
 adduser $SUPER_USER
-sudo -H -u $SUPER_USER bash -c 'mkdir ~/.ssh; chmod 700 ~/.ssh'
+sudo -H -u $SUPER_USER bash -c 'mkdir ~/.ssh; chmod 700 ~/.ssh; echo "" > ~/.ssh/authorized_keys; chmod 600 ~/.ssh/authorized_keys; ln -s /usr/local/src/beyond-test ~/beyond-test'
 
 # Allow super user to run sudo command
 echo "$SUPER_USER ALL = NOPASSWD: ALL" >> /etc/sudoers.d/cloud-init
