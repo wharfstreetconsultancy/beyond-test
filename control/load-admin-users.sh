@@ -29,7 +29,7 @@ echo
 				else
 					echo Creating new user: \'$USER_NAME\'
 					sudo adduser $USER_NAME
-					sudo -H -u $USER_NAME bash -c 'mkdir ~/.ssh; chmod 700 ~/.ssh; echo $PUBLIC_KEY > ~/.ssh/authorized_keys; chmod 600 ~/.ssh/authorized_keys'
+					sudo -H -u $USER_NAME bash -c 'mkdir ~/.ssh; chmod 700 ~/.ssh; echo $PUBLIC_KEY > ~/.ssh/authorized_keys; chmod 600 ~/.ssh/authorized_keys; ln -s /usr/local/src/beyond-test ~/beyond-test'
 				fi
 				echo
 			done<<<"$USER"

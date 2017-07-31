@@ -38,5 +38,4 @@ sudo yum install -y jq
 #
 git clone https://github.com/wharfstreetconsultancy/beyond-test.git /usr/local/src/beyond-test
 chmod -R +x /usr/local/src/beyond-test
-
-
+ln -s /usr/local/src/beyond-test ~ec2-user/beyond-test
