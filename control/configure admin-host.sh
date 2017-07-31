@@ -34,8 +34,23 @@ sudo yum install -y git
 sudo yum install -y jq
 
 #
-# Clone admin scripts and dockerfile
+# Clone source for control and app build
 #
 git clone https://github.com/wharfstreetconsultancy/beyond-test.git /usr/local/src/beyond-test
 chmod -R +x /usr/local/src/beyond-test
-ln -s /usr/local/src/beyond-test ~ec2-user/beyond-test
+
+#
+# Setup the default admin super user
+#
+
+# Set super user in this script and make a permanent env var
+export SUPER_USER=wsc-root
+echo SUPER_USER=$SUPER_USER >> /etc/environment
+
+# Create super user
+adduser $SUPER_USER
+sudo -H -u $SUPER_USER bash -c 'mkdir ~/.ssh; chmod 700 ~/.ssh'
+
+# Allow super user to run sudo command
+echo "$SUPER_USER ALL = NOPASSWD: ALL" >> /etc/sudoers.d/cloud-init
+echo "$SUPER_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/cloud-init
