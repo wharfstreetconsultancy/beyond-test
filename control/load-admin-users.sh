@@ -7,22 +7,33 @@ echo Configure 'wsc-root' access key details...
 aws configure --profile wsc-root
 
 #
-# Fetch list of admin users
+# Fetch list of admin users: key=user-name; value=public-key
 #
-export ADMIN_USERS=$(aws dynamodb scan --table-name BeyondAdminUsers | jq -r '.Items[] | "user="+.UserName.S+"|key="+.PublicKey.S+"||"')
+export ADMIN_USERS=$(aws dynamodb scan --table-name BeyondAdminUsers | jq -r '.Items[] | .UserName.S+"="+.PublicKey.S+"|"' | tr -d '\n')
 
+echo RAW DATA:
+echo ==========================
 echo $ADMIN_USERS
-echo
 echo ==========================
 echo
 
 (
-	IFS='||'
-	for word in $ADMIN_USERS; do
-		echo @@@@@@@@@
-		echo Length: ${#word}
-		echo $word
-		echo @@@@@@@@@
+	IFS='|'
+	for USER in $ADMIN_USERS; do
+		(
+			while IFS='=' read -r USER_NAME PUBLIC_KEY; do
+				echo USER_NAME=$USER_NAME
+				echo PUBLIC_KEY=$PUBLIC_KEY
+				if id "$USER_NAME" >/dev/null 2>&1; then
+					echo User \'$USER_NAME\' exists
+				else
+					echo Creating new user: \'$USER_NAME\'
+					sudo adduser $USER_NAME
+					sudo -H -u $USER_NAME bash -c 'mkdir ~/.ssh; chmod 700 ~/.ssh; echo $PUBLIC_KEY > ~/.ssh/authorized_keys; chmod 600 ~/.ssh/authorized_keys'
+				fi
+				echo
+			done<<<"$USER"
+		)
 	done
 )
 
