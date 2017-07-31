@@ -24,6 +24,7 @@ echo
 			while IFS='=' read -r USER_NAME PUBLIC_KEY; do
 				echo USER_NAME=$USER_NAME
 				echo PUBLIC_KEY=$PUBLIC_KEY
+				export USER_NAME PUBLIC_KEY
 				if id "$USER_NAME" >/dev/null 2>&1; then
 					echo Updating public key for existing user: \'$USER_NAME\'
 					sudo -H -u $USER_NAME bash -c 'echo $PUBLIC_KEY > ~/.ssh/authorized_keys; chmod 600 ~/.ssh/authorized_keys'
