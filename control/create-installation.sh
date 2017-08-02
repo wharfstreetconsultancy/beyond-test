@@ -41,7 +41,7 @@ export RECORD_SET_ID=$(aws route53 get-hosted-zone --profile $USER --id $ROOT_DO
 echo "ID of root domain reusable resource record set: $RECORD_SET_ID"
 
 # Create hosted zone for sub-domain
-export CHANGE_ID=$(aws route53 create-hosted-zone --profile $USER --name $SUB_DOMAIN --caller-reference $TIMESTAMP --delegation-set-id $RECORD_SET_ID --hosted-zone-config Comment="Hosted zone created by Beyond Admin user" --query ChangeInfo.Id)
+export CHANGE_ID=$(aws route53 create-hosted-zone --profile $USER --name $SUB_DOMAIN --caller-reference $TIMESTAMP --hosted-zone-config Comment="Hosted zone created by Beyond Admin user" --query ChangeInfo.Id)
 export CHANGE_ID=$(echo $CHANGE_ID | tr -d "\"")
 echo $CHANGE_ID
 
