@@ -34,31 +34,31 @@ echo "Sub-domain (to be created): $SUB_DOMAIN"
 
 # Get root-domain ID
 export ROOT_DOMAIN_ID=$(aws route53 list-hosted-zones-by-name --profile $USER --dns-name $ROOT_DOMAIN | jq -r '.HostedZones[] | select(.Name == "'$ROOT_DOMAIN'.") | .Id | split("/") | .[2]')
-echo ID of root domain: $ROOT_DOMAIN_ID
+echo "ID of root domain: $ROOT_DOMAIN_ID"
 
 # Get resource record set for root-domain
 export RECORD_SET_ID=$(aws route53 get-hosted-zone --profile $USER --id $ROOT_DOMAIN_ID | jq -r '.DelegationSet.Id | split("/") | .[2]')
-echo ID of root domain record set: $RECORD_SET_ID
+echo "ID of root domain reusable resource record set: $RECORD_SET_ID"
 
 # Create hosted zone for sub-domain
-# export CHANGE_ID=$(aws route53 create-hosted-zone --profile $USER --name $SUB_DOMAIN --caller-reference $TIMESTAMP --delegation-set-id $RECORD_SET_ID --hosted-zone-config Comment="Hosted zone created by Beyond Admin user" --query ChangeInfo.Id)
-# export CHANGE_ID=$(echo $CHANGE_ID | tr -d "\"")
-# echo $CHANGE_ID
+export CHANGE_ID=$(aws route53 create-hosted-zone --profile $USER --name $SUB_DOMAIN --caller-reference $TIMESTAMP --delegation-set-id $RECORD_SET_ID --hosted-zone-config Comment="Hosted zone created by Beyond Admin user" --query ChangeInfo.Id)
+export CHANGE_ID=$(echo $CHANGE_ID | tr -d "\"")
+echo $CHANGE_ID
 
 # Wait for hosted zone to propagate across all DNS servers
-# until [ "$CHANGE_STATUS" == "INSYNC" ]; do
-#         getChangeStatus $CHANGE_ID
-#         echo Status is still $CHANGE_STATUS
-#         sleep 5
-# done
+until [ "$CHANGE_STATUS" == "INSYNC" ]; do
+        getChangeStatus $CHANGE_ID
+        echo Status is still $CHANGE_STATUS
+        sleep 5
+done
 
 #
 # Create cluster records in S3
 #
-# export BUCKET=cluster.$SUB_DOMAIN
-# echo Creating bucket: $BUCKET
-# aws s3 mb s3://$BUCKET --profile $USER
-# export KOPS_STATE_STORE=s3://$BUCKET
+export BUCKET=cluster.$SUB_DOMAIN
+echo Creating bucket: $BUCKET
+aws s3 mb s3://$BUCKET --profile $USER
+export KOPS_STATE_STORE=s3://$BUCKET
 
 #
 # Create Kubernetes cluster
