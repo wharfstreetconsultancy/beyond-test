@@ -26,17 +26,18 @@ export TIMESTAMP=$(date +%Y%m%d%H%M%S)
 
 # Define the root-domain for this deployment
 export ROOT_DOMAIN=wharfstreetconsultancy.com
+echo Root-domain (pre-existing): $ROOT_DOMAIN
 
 # Define the sub-domain for this deployment
 export SUB_DOMAIN=$TIMESTAMP.$ROOT_DOMAIN
-echo Creating domain: $SUB_DOMAIN
+echo Sub-domain (to be created): $SUB_DOMAIN
 
 # Get root-domain ID
-export ROOT_DOMAIN_ID=$(aws route53 list-hosted-zones-by-name --profile $USER --dns-name $ROOT_DOMAIN | jq -r '.HostedZones[] | select(.Name == "$ROOT_DOMAIN.") | .Id | split("/") | .[2]')
+export ROOT_DOMAIN_ID=$(aws route53 list-hosted-zones-by-name --profile $USER --dns-name $ROOT_DOMAIN | jq -r '.HostedZones[] | select(.Name == "'$ROOT_DOMAIN'.") | .Id | split("/") | .[2]')
 echo ID of root domain: $ROOT_DOMAIN_ID
 
 # Get resource record set for root-domain
-export RECORD_SET_ID=$(aws route53 get-hosted-zone --profile $USER --id ROOT_DOMAIN_ID | jq -r '.DelegationSet.Id | split("/") | .[2]')
+export RECORD_SET_ID=$(aws route53 get-hosted-zone --profile $USER --id $ROOT_DOMAIN_ID | jq -r '.DelegationSet.Id | split("/") | .[2]')
 echo ID of root domain record set: $RECORD_SET_ID
 
 # Create hosted zone for sub-domain
