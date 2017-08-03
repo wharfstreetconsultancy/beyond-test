@@ -7,6 +7,7 @@
 # getChangeStatus: Gets the status of the latest change
 function getChangeStatus {
         export CHANGE_STATUS=$(aws route53 get-change --profile $USER --id $1 | jq -r '.ChangeInfo.Status')
+        echo Status of $1: $CHANGE_STATUS
 }
 
 #
@@ -50,12 +51,11 @@ echo "Reusable record set ID: $RECORD_SET_ID"
 
 # Create hosted zone for sub-domain
 export CHANGE_ID=$(aws route53 create-hosted-zone --profile $USER --name $SUB_DOMAIN --caller-reference $TIMESTAMP --hosted-zone-config Comment="Hosted zone created by Beyond Admin user" --delegation-set-id $RECORD_SET_ID | jq -r '.ChangeInfo.Id | split("/") | .[2]')
-echo $CHANGE_ID
+echo Sub-domain created. Track status using change ID: $CHANGE_ID
 
 # Wait for hosted zone to propagate across all DNS servers
 until [ "$CHANGE_STATUS" == "INSYNC" ]; do
         getChangeStatus $CHANGE_ID
-        echo Status is still $CHANGE_STATUS
         sleep 5
 done
 
