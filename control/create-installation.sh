@@ -41,10 +41,14 @@ echo "Sub-domain (to be created): $SUB_DOMAIN"
 
 #
 export RECORD_SETS=$(aws route53 list-reusable-delegation-sets --profile $USER)
+export RECORD_SET_COUNT=$(echo $RECORD_SETS | jq -r '.DelegationSets | length') 
 #
-if [ echo $RECORD_SETS | jq -r '.DelegationSets | length' == 1 ]; then
+if [ $RECORD_SET_COUNT -eq 0 ]; then
 	echo No reusable delegation set found. Please create one.
 	exit
+elif [ $RECORD_SET_COUNT -gt 1 ]; then
+        echo More than one reusable delegation set found. Please delete one.
+        exit
 fi
 #
 export RECORD_SET_ID=$(echo $RECORD_SETS | jq -r '.DelegationSets[0].Id | split("/") | .[2]')
