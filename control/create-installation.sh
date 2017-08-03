@@ -33,15 +33,26 @@ export SUB_DOMAIN=$TIMESTAMP.$ROOT_DOMAIN
 echo "Sub-domain (to be created): $SUB_DOMAIN"
 
 # Get root-domain ID
-export ROOT_DOMAIN_ID=$(aws route53 list-hosted-zones-by-name --profile $USER --dns-name $ROOT_DOMAIN | jq -r '.HostedZones[] | select(.Name == "'$ROOT_DOMAIN'.") | .Id | split("/") | .[2]')
-echo "ID of root domain: $ROOT_DOMAIN_ID"
+# export ROOT_DOMAIN_ID=$(aws route53 list-hosted-zones-by-name --profile $USER --dns-name $ROOT_DOMAIN | jq -r '.HostedZones[] | select(.Name == "'$ROOT_DOMAIN'.") | .Id | split("/") | .[2]')
+# echo "ID of root domain: $ROOT_DOMAIN_ID"
 
 # Get resource record set for root-domain
-export RECORD_SET_ID=$(aws route53 get-hosted-zone --profile $USER --id $ROOT_DOMAIN_ID | jq -r '.DelegationSet.Id | split("/") | .[2]')
+# export RECORD_SET_ID=$(aws route53 get-hosted-zone --profile $USER --id $ROOT_DOMAIN_ID | jq -r '.DelegationSet.Id | split("/") | .[2]')
+
+#
+export RECORD_SETS=$(aws route53 list-reusable-delegation-sets --profile $USER)
+#
+if [ echo $RECORD_SETS | jq -r '.DelegationSets | length' == 1 ]; then
+	echo No reusable delegation set found. Please create one.
+	exit
+fi
+#
+export RECORD_SET_ID=$(echo $RECORD_SETS | jq -r '.DelegationSets[0].Id | split("/") | .[2]')
+#
 echo "ID of root domain reusable resource record set: $RECORD_SET_ID"
 
 # Create hosted zone for sub-domain
-export CHANGE_ID=$(aws route53 create-hosted-zone --profile $USER --name $SUB_DOMAIN --caller-reference $TIMESTAMP --hosted-zone-config Comment="Hosted zone created by Beyond Admin user" --query ChangeInfo.Id)
+export CHANGE_ID=$(aws route53 create-hosted-zone --profile $USER --name $SUB_DOMAIN --caller-reference $TIMESTAMP --hosted-zone-config Comment="Hosted zone created by Beyond Admin user" --delegation-set-id $RECORD_SET_ID --query ChangeInfo.Id)
 export CHANGE_ID=$(echo $CHANGE_ID | tr -d "\"")
 echo $CHANGE_ID
 
