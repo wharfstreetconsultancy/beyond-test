@@ -23,6 +23,7 @@ aws configure --profile $USER
 
 # Get current timestamp
 export TIMESTAMP=$(date +%Y%m%d%H%M%S)
+# export TIMESTAMP=20170803213838
 
 # Define the root-domain for this deployment
 export ROOT_DOMAIN=wharfstreetconsultancy.com
@@ -70,9 +71,15 @@ export KOPS_STATE_STORE=s3://$BUCKET
 #
 # Create Kubernetes cluster
 #
+while IFS="\n" read -r CRED_PROPERTY; do
+	while IFS="=" read -r KEY VALUE; do
+		KEY=$(echo $KEY | tr '[:lower:]' '[:upper:]')
+		export $KEY=$VALUE; echo $KEY=${!KEY}
+	done <<< "$CRED_PROPERTY"
+done <<< "$(cat ~/.aws/credentials | grep '=' | tr -d ' ')"
 
 # Configure cluster
-# kops create cluster --ssh-public-key ~/.ssh/authorized_keys --zones=us-west-2a $SUB_DOMAIN
+kops create cluster --ssh-public-key ~/.ssh/authorized_keys --zones=us-west-2a $SUB_DOMAIN
 
 # Build cluster
 # kops update cluster --ssh-public-key ~/.ssh/authorized_keys --zones=us-west-2a $SUB_DOMAIN
