@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: beyond-test
+  name: beyond-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: beyond-test
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: beyond-test
+    spec:
+      containers:
+      - image: wharfstreetconsultancy/beyond-test
+        name: beyond-test
+        resources: {}
+status: {}
