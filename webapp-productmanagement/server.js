@@ -7,6 +7,7 @@ var multer = require('multer');
 var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
 var jq = require('node-jq');
+var ddbAv = require('dynamodb-data-types').AttributeValue;
 
 //
 // Manage HTTP server container
@@ -109,7 +110,7 @@ function loadExistingProducts(callback) {
 			.then((existingProductsList) => {
 
 				// Return existing product list to caller
-				callback(existingProductsList);
+				callback(ddbAv.unwrap(existingProductsList));
 			})
 			.catch((err) => {throw err;	});
 	});
@@ -139,7 +140,7 @@ function storeNewProduct(newProduct,callback) {
 		};
 
 		// Perform store command
-		dynamodb.putItem(params, function(err, data) {
+		dynamodb.putItem(ddbAv.wrap(params), function(err, data) {
 			if(err) throw err;
 			console.log("Stored: "+JSON.stringify(data));
 
