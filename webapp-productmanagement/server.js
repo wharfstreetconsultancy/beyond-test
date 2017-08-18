@@ -6,6 +6,7 @@ var fs = require('fs');
 var multer = require('multer');
 var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
+var jq = require('node-jq');
 
 //
 // Manage HTTP server container
@@ -101,22 +102,24 @@ function loadExistingProducts(callback) {
 	};
 
 	// Perform load command
-	dynamodb.scan(params, function(err, data) {
+	dynamodb.scan(params, function(err, fileData) {
 		if(err) throw err;
-		console.log("Loaded: "+JSON.stringify(data));
-		console.log("Size: "+data.length);
+		console.log("Loaded: "+JSON.stringify(fileData));
+		jq.run('.Items[]'fileData, function (err, arrayData) {
+			console.log("Parsed: "+JSON.stringify(arrayData));
 
-		// Create existing product list from file
-		var existingProductsList = [];
-		if(data.length > 0) {
-			console.log("Trying to parse:");
-			console.log(JSON.parse(data.toString()));
-			// Only parse if file contains data
-			existingProductsList = JSON.parse(data.toString());
-		}
+			// Create existing product list from file
+			var existingProductsList = [];
+			if(data.length > 0) {
+				console.log("Trying to parse:");
+				console.log(JSON.parse(data.toString()));
+				// Only parse if file contains data
+				existingProductsList = JSON.parse(data.toString());
+			}
 
-		// Return existing product list to caller
-		callback(existingProductsList);
+			// Return existing product list to caller
+			callback(existingProductsList);
+		});
 	});
 }
 
