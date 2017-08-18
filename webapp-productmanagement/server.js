@@ -105,16 +105,16 @@ function loadExistingProducts(callback) {
 	dynamodb.scan(params, function(err, fileData) {
 		if(err) throw err;
 		console.log("Loaded: "+JSON.stringify(fileData));
-		jq.run('.Items[]'fileData, function (err, arrayData) {
+		jq.run('.Items[]', fileData, function (err, arrayData) {
 			console.log("Parsed: "+JSON.stringify(arrayData));
 
 			// Create existing product list from file
 			var existingProductsList = [];
-			if(data.length > 0) {
+			if(arrayData.length > 0) {
 				console.log("Trying to parse:");
-				console.log(JSON.parse(data.toString()));
+				console.log(JSON.parse(arrayData.toString()));
 				// Only parse if file contains data
-				existingProductsList = JSON.parse(data.toString());
+				existingProductsList = JSON.parse(arrayData.toString());
 			}
 
 			// Return existing product list to caller
