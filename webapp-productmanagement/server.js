@@ -105,7 +105,7 @@ function loadExistingProducts(callback) {
 	dynamodb.scan(params, function(err, fileData) {
 		if(err) throw err;
 		console.log("Loaded: "+JSON.stringify(fileData));
-		jq.run('.Items[]', fileData, {input: 'json', output: 'json'})
+		jq.run('.Items', fileData, {input: 'json', output: 'json'})
 			.then((existingProductsList) => {
 
 				// Return existing product list to caller
@@ -129,12 +129,12 @@ function storeNewProduct(newProduct,callback) {
 		var params = {
 			TableName: 'SuroorFashionsProducts',
 			Item: {
-				productId: {S: newProduct.productId},
-		      	productName: {S: newProduct.productName},
-				productType: {S: newProduct.productType},
-				description: {S: newProduct.description},
-				imageLocation: {S: newProduct.imageLocation},
-				creationTimestamp: {S: newProduct.creationTimestamp}
+				productId: newProduct.productId,
+		      	productName: newProduct.productName,
+				productType: newProduct.productType,
+				description: newProduct.description,
+				imageLocation: newProduct.imageLocation,
+				creationTimestamp: newProduct.creationTimestamp
 			}
 		};
 
