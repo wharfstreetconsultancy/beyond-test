@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Contact Us | Suroor Fasions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel='shortcut icon' type='image/x-icon' href='assets/img/favicon.jpg'/>
+  </head>
+  <body>
+    <!------------------------------ Header --------------------------->
+    <!--This is the Header Content-->
+  	<div class="container-fluid">
+  		<div class="row">
+  			<div class="col-sm-1 header">
+  				<div class="col-xs-1 col-md-1 col-lg-1 text-center">
+  					<a href="/"><img src="assets/img/SVGlogo.svg" class="img" alt="Suroor Fasions"></a>
+  				</div>
+  			</div>
+  		</div>
+    </div>
+  	<nav class="navbar navbar-default">
+  		  <div class="container-fluid nav-con">
+  			<!--Brand and toggle get grouped for better mobile display-->
+  			<div class="navbar-header">
+  				<div class="col-sm-1 header">
+  				  <button type="button" class="navbar-toggle x collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+  					<span class="sr-only">Toggle navigation</span>
+  					<span class="icon-bar"></span>
+  					<span class="icon-bar second-bar"></span>
+  				  </button>
+  			  	</div>
+  			</div>
+  			<!--Collect the nav links, forms, and other content for toggling-->
+  			<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
+  			  <ul class="myNav nav navbar-nav">
+            <li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
+  					<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
+  					<li><a href="contact.html">Contact</a></li>
+            <li><a href="coming_soon.html"><span class="fa fa-shopping-cart"></span> Cart</a></li>
+  			  </ul>
+  			</div>
+  		  </div>
+    </nav>
+    <div class="container-fluid">
+      <h1 class="contact-header">Contact Us</h1>
+      <div class="border"></div>
+      <div class="row">
+        <div class="col-sm-6 col-md-6 contact-info">
+          <h3>Come Visit Us</h3>
+          <p>Suroor Fashions</p>
+          <p>420 N.Wantagh Avenue</p>
+          <p style="margin-bottom: 50px;">Bethpage, NY 11714</p>
+          <h3>Direct Contact</h3>
+          <p>Phone: (516) 433-4523</p>
+          <p>Email: SuroorFashions@gmail.com</p>
+        </div>
+        <div class="col-sm-6 col-md-6">
+          <form class="well form-horizontal" action="https://formspree.io/suroorfashions@gmail.com" method="POST"  id="contact_form">
+              <fieldset>
+
+              <!-- Form Name -->
+              <legend>Contact Us Today!</legend>
+
+              <!-- Text input-->
+
+              <div class="form-group">
+              <label class="col-md-4 control-label">First Name</label>
+              <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+              <input  name="first_name" placeholder="First Name" class="form-control"  type="text">
+                </div>
+              </div>
+              </div>
+
+              <!-- Text input-->
+
+              <div class="form-group">
+              <label class="col-md-4 control-label" >Last Name</label>
+                <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+              <input name="last_name" placeholder="Last Name" class="form-control"  type="text">
+                </div>
+              </div>
+              </div>
+
+              <!-- Text input-->
+                   <div class="form-group">
+              <label class="col-md-4 control-label">E-Mail</label>
+                <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+              <input name="email" placeholder="E-Mail Address" class="form-control"  type="text">
+                </div>
+              </div>
+              </div>
+
+
+              <!-- Text input-->
+
+              <div class="form-group">
+              <label class="col-md-4 control-label">Phone #</label>
+                <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+              <input name="phone" placeholder="(123) 456-7890" class="form-control" type="text">
+                </div>
+              </div>
+              </div>
+
+              <!-- Text area -->
+
+              <div class="form-group">
+              <label class="col-md-4 control-label">Comment</label>
+                <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                      <textarea class="form-control" name="comment" placeholder="Commemt"></textarea>
+              </div>
+              </div>
+              </div>
+
+              <!-- Success message -->
+              <div class="alert alert-success" role="alert" id="success_message">Success <i class="glyphicon glyphicon-thumbs-up"></i> Thanks for contacting us, we will get back to you shortly.</div>
+
+              <!-- Button -->
+              <div class="form-group">
+              <label class="col-md-4 control-label"></label>
+              <div class="col-md-4">
+                <button type="submit" class="btn btn-warning myBtn" >Send <span class="glyphicon glyphicon-send"></span></button>
+              </div>
+              </div>
+
+              </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.container -->
+
+    <!-- this is the footer -->
+    <footer>
+      <div class="container-fluid">
+        <div class="footer">
+          <p class="copyright">&copy 2017 Suroor Fasions | All Rights Reserved</p>
+          <p class="links"><a href="#">Terms of use </a></p>
+          <span class="links">|</span>
+          <p class="links"><a href="#">Privacy Policy </a></p>
+          <span class="links">|</span>
+          <p class="links"><a href="#">Sales & Return Policy</a></p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="assets/js/form.js"></script>
+  </body>
+</html>

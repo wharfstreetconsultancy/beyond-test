@@ -1,0 +1,40 @@
+.carousel-control.right,
+.carousel-control.left {
+  background-image: none;
+}
+
+.carousel-control {
+  color: #2e3333;
+}
+
+.carousel-indicators .active{
+  background-color: #2e3333;
+}
+
+.carousel-indicators li {
+  border-color: #2e3333;
+}
+
+#slideshow {
+  border-top: 5px solid #2682c2;
+  border-bottom: 5px solid #2682c2;
+}
+
+.body {
+  margin: 15px;
+}
+
+.note {
+  margin: 30px;
+  text-align: center;
+}
+
+.thumbnail > img {
+  height: 300px;
+  text-align: center;
+}
+
+.carousel-inner > .active, .carousel-inner > .item{
+  height: 650px;
+  text-align: -webkit-center;
+}

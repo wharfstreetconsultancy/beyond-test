@@ -1,0 +1,11 @@
+.thumbnail > img {
+  height: 300px;
+}
+
+.shopHeader > h1 {
+  font-size: 50px;
+}
+
+.caption {
+  text-align: center;
+}

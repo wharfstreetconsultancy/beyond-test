@@ -1,0 +1,26 @@
+body {
+  height: 100%;
+}
+footer {
+  background-color: #2e3333;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  text-align: center;
+  color: white;
+}
+
+.links {
+  display: inline;
+  padding: 0px 10px;
+}
+
+@media (max-width: 500px) {
+  footer {
+    font-size: 10px;
+  }
+  .links {
+    padding: 0px 2px;
+  }
+}
