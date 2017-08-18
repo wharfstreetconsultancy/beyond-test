@@ -105,21 +105,13 @@ function loadExistingProducts(callback) {
 	dynamodb.scan(params, function(err, fileData) {
 		if(err) throw err;
 		console.log("Loaded: "+JSON.stringify(fileData));
-		jq.run('.Items[]', fileData).then((arrayData) {
-			console.log("Parsed: "+JSON.stringify(arrayData));
+		jq.run('.Items[]', fileData, {input: 'json', output: 'json'})
+			.then((existingProductsList) => {
 
-			// Create existing product list from file
-			var existingProductsList = [];
-			if(arrayData.length > 0) {
-				console.log("Trying to parse:");
-				console.log(JSON.parse(arrayData.toString()));
-				// Only parse if file contains data
-				existingProductsList = JSON.parse(arrayData.toString());
-			}
-
-			// Return existing product list to caller
-			callback(existingProductsList);
-		});
+				// Return existing product list to caller
+				callback(existingProductsList);
+			})
+			.catch((err) => {throw err;	});
 	});
 }
 
@@ -196,7 +188,7 @@ function formatProductHtml(existingProductsList,callback) {
 
 			// Write product in list item element
 			formattedProductHtml += '<li>';
-			formattedProductHtml += product.productName;
+			formattedProductHtml += JSON.stringify(product.productName);
 			formattedProductHtml += '</li>';
 		}
 
