@@ -7,7 +7,6 @@ var multer = require('multer');
 var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
 var jq = require('node-jq');
-var ddbAv = require('dynamodb-data-types').AttributeValue;
 
 //
 // Manage HTTP server container
@@ -18,9 +17,10 @@ app.use(multer({ dest: '/tmp/'}).single('filetoupload'));
 
 //
 // Manage AWS API
-var dynamodb = new AWS.DynamoDB({
+/*var dynamodb = new AWS.DynamoDB({
 	apiVersion: '2012-08-10'
-});
+});*/
+var dddc = new AWS.DynamoDB.DocumentClient();
 
 //
 // Create and run server
@@ -62,12 +62,12 @@ app.post('/', function (req, res) {
 	var timestamp = new Date().getTime().toString();
 	// Create product object
 	var newProduct = {
-		productId: {S: timestamp},
-      	productName: {S: req.body.product_name},
-		productType: {S: 'CLOTHING'},
-		description: {S: req.body.product_description},
-		imageLocation: {S: req.file.path},
-		creationTimestamp: {N: timestamp}
+		productId: timestamp,
+      	productName: req.body.product_name,
+		productType: 'CLOTHING',
+		description: req.body.product_description,
+		imageLocation: req.file.path,
+		creationTimestamp: timestamp
   	};
 
 	// Log new product
@@ -101,20 +101,26 @@ function loadExistingProducts(callback) {
 		},
 		FilterExpression: 'productType = :c'
 	};
-
+	console.log("About to load with: "+JSON.stringify(params));
 	// Perform load command
-	dynamodb.scan(params, function(err, fileData) {
+	dddc.query(params, function(err, fileData) {
 		if(err) throw err;
-		console.log("Loaded: "+JSON.stringify(fileData));
+
+		existingProductsList = fileData.Items;
+		console.log("Loaded: "+JSON.stringify(existingProductsList));
+
+		// Return existing product list to caller
+		callback(existingProductsList);
+
+/*
 		jq.run('.Items', fileData, {input: 'json', output: 'json'})
 			.then((existingProductsList) => {
 
 				// Return existing product list to caller
 				callback(existingProductsList);
-			})
-			.catch((err) => {
-				console.log("Oops!");
-				throw err;	});
+			});
+		});
+*/
 	});
 }
 
@@ -122,22 +128,23 @@ function loadExistingProducts(callback) {
 // Store new product in the data source
 function storeNewProduct(newProduct,callback) {
 
-	// Create products file if it doesn't exist
-	loadExistingProducts(function (existingProductsList) {
-console.log("What have we here: "+existingProductsList);
-		// Add new product to existing product list
-		existingProductsList.push(newProduct);
+	// Create search params
+	var params = {
+		TableName: 'SuroorFashionsProducts',
+		Item: newProduct
+	};
+	console.log("About to store with: "+JSON.stringify(params));
+	// Perform store command
+	dddc.put(params, function(err, data) {
+		if(err) throw err;
 
-		// Create search params
-		var params = {
-			TableName: 'SuroorFashionsProducts',
-			Item: newProduct
-		};
+		console.log("Stored: "+JSON.stringify(data));
 
-		// Perform store command
-		dynamodb.putItem(params, function(err, data) {
-			if(err) throw err;
-			console.log("Stored: "+JSON.stringify(data));
+
+
+		// Fetch latest existing products list
+		loadExistingProducts(function (existingProductsList) {
+			console.log("Latest list: "+JSON.stringify(existingProductsList));
 
 			// Return to caller
 			callback(existingProductsList);
