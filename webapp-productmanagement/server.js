@@ -99,11 +99,11 @@ function loadExistingProducts(callback) {
 		ExpressionAttributeValues: {
 			':c': {S: 'CLOTHING'}
 		},
-		KeyConditionExpression: 'productType = :c'
+		FilterExpression: 'productType = :c'
 	};
 	console.log("About to load with: "+JSON.stringify(params));
 	// Perform load command
-	dddc.query(params, function(err, fileData) {
+	dddc.scan(params, function(err, fileData) {
 		if(err) throw err;
 
 		existingProductsList = fileData.Items;
