@@ -110,7 +110,7 @@ function loadExistingProducts(callback) {
 			.then((existingProductsList) => {
 
 				// Return existing product list to caller
-				callback(ddbAv.unwrap(existingProductsList));
+				callback(existingProductsList);
 			})
 			.catch((err) => {
 				console.log("Oops!");
@@ -135,7 +135,7 @@ console.log("What have we here: "+existingProductsList);
 		};
 
 		// Perform store command
-		dynamodb.putItem(ddbAv.wrap(params), function(err, data) {
+		dynamodb.putItem(params, function(err, data) {
 			if(err) throw err;
 			console.log("Stored: "+JSON.stringify(data));
 
