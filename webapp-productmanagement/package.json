@@ -15,6 +15,6 @@
 		"replacestream": "~4.0.2",
 		"aws-sdk": "~2.100.0",
 		"node-jq": "~0.7.0",
-		"dynamodb-data-types": "*"
+		"dynamodb-data-types": "~3.0.0"
 	}
 }

@@ -112,7 +112,9 @@ function loadExistingProducts(callback) {
 				// Return existing product list to caller
 				callback(ddbAv.unwrap(existingProductsList));
 			})
-			.catch((err) => {throw err;	});
+			.catch((err) => {
+				console.log("Oops!");
+				throw err;	});
 	});
 }
 
@@ -122,7 +124,7 @@ function storeNewProduct(newProduct,callback) {
 
 	// Create products file if it doesn't exist
 	loadExistingProducts(function (existingProductsList) {
-
+console.log("What have we here: "+existingProductsList);
 		// Add new product to existing product list
 		existingProductsList.push(newProduct);
 
