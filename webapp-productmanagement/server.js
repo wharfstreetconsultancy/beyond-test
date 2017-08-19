@@ -81,7 +81,7 @@ app.post('/', function (req, res) {
 		// Add dynamic elements to response page
 		formatProductHtml(existingProductsList, function(formattedProductHtml) {
 			fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{user.prompt}', 'Product ('+newProduct.name+') added successfully at '+new Date(newProduct.creationTimestamp).toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'<br>Please provide more product details')
+				.pipe(replaceStream('{user.prompt}', 'Product ('+newProduct.name+') added successfully at '+new Date(parseInt(newProduct.creationTimestamp, 10)).toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'<br>Please provide more product details')
 				.pipe(replaceStream('{existing.products.list}', formattedProductHtml))
 				.pipe(res);
 		});
