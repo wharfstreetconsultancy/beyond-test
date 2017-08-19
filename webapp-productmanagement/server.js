@@ -99,7 +99,7 @@ function loadExistingProducts(callback) {
 		ExpressionAttributeValues: {
 			':c': {S: 'CLOTHING'}
 		},
-		FilterExpression: 'productType = :c'
+		KeyConditionExpression: 'productType = :c'
 	};
 	console.log("About to load with: "+JSON.stringify(params));
 	// Perform load command
