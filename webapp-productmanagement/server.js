@@ -62,12 +62,12 @@ app.post('/', function (req, res) {
 	var timestamp = new Date().getTime().toString();
 	// Create product object
 	var newProduct = {
-		productId: timestamp,
-      	productName: req.body.product_name,
-		productType: 'CLOTHING',
-		description: req.body.product_description,
-		imageLocation: req.file.path,
-		creationTimestamp: timestamp
+		productId: {S: timestamp},
+      	productName: {S: req.body.product_name},
+		productType: {S: 'CLOTHING'},
+		description: {S: req.body.product_description},
+		imageLocation: {S: req.file.path},
+		creationTimestamp: {N: timestamp}
   	};
 
 	// Log new product
@@ -131,14 +131,7 @@ console.log("What have we here: "+existingProductsList);
 		// Create search params
 		var params = {
 			TableName: 'SuroorFashionsProducts',
-			Item: {
-				productId: newProduct.productId,
-		      	productName: newProduct.productName,
-				productType: newProduct.productType,
-				description: newProduct.description,
-				imageLocation: newProduct.imageLocation,
-				creationTimestamp: newProduct.creationTimestamp
-			}
+			Item: newProduct
 		};
 
 		// Perform store command
