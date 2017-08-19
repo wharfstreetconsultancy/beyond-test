@@ -81,9 +81,9 @@ app.post('/', function (req, res) {
 		// Add dynamic elements to response page
 		formatProductHtml(existingProductsList, function(formattedProductHtml) {
 			console.log("Product Name: "+JSON.stringify(newProduct.productName));
-			console.log("Timestamp: "+JSON.stringify(newProduct.creationTimestamp));
+			console.log("Timestamp: "+parseInt(newProduct.creationTimestamp));
 			fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{user.prompt}', 'Product ('+JSON.stringify(newProduct.name)+') added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'<br>Please provide more product details')
+				.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details')
 				.pipe(replaceStream('{existing.products.list}', formattedProductHtml))
 				.pipe(res);
 		});
@@ -99,7 +99,7 @@ function loadExistingProducts(callback) {
 		TableName: 'SuroorFashionsProducts',
 		Limit: 10,
 		ExpressionAttributeValues: {
-			':c': {S: 'CLOTHING'}
+			':c': 'CLOTHING'
 		},
 		FilterExpression: 'productType = :c'
 	};
