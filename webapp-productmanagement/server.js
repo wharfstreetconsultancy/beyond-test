@@ -82,7 +82,7 @@ app.post('/', function (req, res) {
 		formatProductHtml(existingProductsList, function(formattedProductHtml) {
 			console.log("Formatted:\n"+formattedProductHtml);
 			fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{user.prompt}', 'Product ('+newProduct.name+') added successfully at '+new Date(1503178517599).toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'<br>Please provide more product details')
+//				.pipe(replaceStream('{user.prompt}', 'Product ('+newProduct.name+') added successfully at '+new Date(parseInt(newProduct.creationTimestamp, 10)).toISOString().replace(/T/, ' ').replace(/\..+/, ''))+'<br>Please provide more product details')
 				.pipe(replaceStream('{existing.products.list}', formattedProductHtml))
 				.pipe(res);
 		});
