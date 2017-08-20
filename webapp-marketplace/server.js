@@ -1,6 +1,7 @@
 //
 // Import required libraries
 var express = require('express');
+var fs = require('fs');
 var AWS = require('aws-sdk');
 
 //
