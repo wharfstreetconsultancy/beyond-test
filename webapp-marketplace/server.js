@@ -90,9 +90,9 @@ function formatProductHtml(productsList,callback) {
 			// Write product in showcase carousel element
 			productsCarouselHtml += '<div class="col-md-3 col-sm-6 hero-feature">'
 			productsCarouselHtml += '<div class="thumbnail">'
-			productsCarouselHtml += '<img src="product.imageLocation" alt="">'
+			productsCarouselHtml += '<img src="'+product.imageLocation+'" alt="">'
 			productsCarouselHtml += '<div class="caption">'
-			productsCarouselHtml += '<h3>product.productName</h3>'
+			productsCarouselHtml += '<h3>'+product.productName+'</h3>'
 			productsCarouselHtml += '<p/>'
 			productsCarouselHtml += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
 			productsCarouselHtml += '</div>'
