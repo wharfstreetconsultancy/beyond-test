@@ -20,7 +20,9 @@ app.use(multer({ dest: '/tmp/'}).single('filetoupload'));
 /*var dynamodb = new AWS.DynamoDB({
 	apiVersion: '2012-08-10'
 });*/
-var dddc = new AWS.DynamoDB.DocumentClient();
+var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+// Create S3 service object
+var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 //
 // Create and run server
@@ -107,7 +109,7 @@ function loadExistingProducts(callback) {
 		FilterExpression: 'productType = :c'
 	};
 
-	// Perform load command
+	// Perform product load action
 	dddc.scan(params, function(err, fileData) {
 		if(err) throw err;
 
@@ -126,14 +128,39 @@ function loadExistingProducts(callback) {
 // Store new product in the data source
 function storeNewProduct(newProduct,callback) {
 
-	// Create store params
-	var params = {
+
+	// Create params for image 'store' operation
+	var storeImageParams = {
+		Bucket: 'suroor.fashions.products',
+		Key: newProduct.productId+'/main',
+		Body: fs.createReadStream(newProduct.imageLocation).on('error', function(err) {
+  console.log('File Error', err);
+})
+	};
+	console.log("Uploading with: ", storeImageParams);
+	// Perform image store action
+	s3.upload (uploadParams, function (err, data) {
+		if (err) throw err;
+
+		console.log("Upload Success", data.Location);
+		newProduct.imageLocation = data.Location;
+	});
+
+
+
+
+
+
+
+
+	// Create params for product 'store' operation
+	var storeProductParams = {
 		TableName: 'SuroorFashionsProducts',
 		Item: newProduct
 	};
 
-	// Perform store command
-	dddc.put(params, function (err, data) {
+	// Perform product store action
+	dddc.put(storeProductParams, function (err, data) {
 		if(err) throw err;
 
 		// Fetch updated products list
