@@ -6,7 +6,6 @@ var fs = require('fs');
 var multer = require('multer');
 var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
-var jq = require('node-jq');
 
 //
 // Manage HTTP server container
@@ -17,9 +16,6 @@ app.use(multer({ dest: '/tmp/'}).single('filetoupload'));
 
 //
 // Manage AWS API
-/*var dynamodb = new AWS.DynamoDB({
-	apiVersion: '2012-08-10'
-});*/
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 // Create S3 service object
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
