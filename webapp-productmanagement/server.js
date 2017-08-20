@@ -27,7 +27,7 @@ var dddc = new AWS.DynamoDB.DocumentClient();
 var server = app.listen(8081, function() {
 
 	// Output server endpoint
-	console.log('Example app listening at http://'+server.address().address+':'+server.address().port+'/');
+	console.log('Product Management app listening at http://'+server.address().address+':'+server.address().port+'/');
 })
 
 //
@@ -43,10 +43,10 @@ app.get('/', function (req, res) {
 		console.log( "Existing Products List: " + JSON.stringify(existingProductsList) );
 
 		// Add dynamic elements to response page
-		formatProductHtml(existingProductsList, function(formattedProductHtml) {
+		formatProductHtml(existingProductsList, function(productsListHtml) {
 			fs.createReadStream(__dirname+'/index.html')
 				.pipe(replaceStream('{user.prompt}', 'Please provide product details'))
-	.pipe(replaceStream('{existing.products.list}', formattedProductHtml))
+	.pipe(replaceStream('{products.list}', productsListHtml))
 				.pipe(res);
 		});
 	});
@@ -59,8 +59,10 @@ app.post('/', function (req, res) {
 	// Log request received
 	console.log( "Received request: POST /" );
 
+	// Capture creation timestamp
 	var timestamp = new Date().getTime().toString();
-	// Create product object
+
+	// Create new product object
 	var newProduct = {
 		productId: timestamp,
       	productName: req.body.product_name,
@@ -70,21 +72,22 @@ app.post('/', function (req, res) {
 		creationTimestamp: timestamp
   	};
 
-	// Log new product
+	// Log new product object
 	console.log( "New Product: " + JSON.stringify(newProduct) );
 
-	// Store new products
-	storeNewProduct( newProduct, function (existingProductsList) {
-		// Log existing product list
-		console.log( "Updated Products List: " + JSON.stringify(existingProductsList) );
+	// Store new product object in DB
+	storeNewProduct( newProduct, function (updatedProductsList) {
+
+		// Log updated products list
+		console.log( "Updated Products List: " + JSON.stringify(updatedProductsList) );
 
 		// Add dynamic elements to response page
-		formatProductHtml(existingProductsList, function(formattedProductHtml) {
-			console.log("Product Name: "+JSON.stringify(newProduct.productName));
-			console.log("Timestamp: "+parseInt(newProduct.creationTimestamp));
+		formatProductHtml(updatedProductsList, function(productsListHtml) {
+
+			// Add dynamic elements to response page
 			fs.createReadStream(__dirname+'/index.html')
 				.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
-				.pipe(replaceStream('{existing.products.list}', formattedProductHtml))
+				.pipe(replaceStream('{products.list}', productsListHtml))
 				.pipe(res);
 		});
 	});
@@ -94,7 +97,7 @@ app.post('/', function (req, res) {
 // Load existing products from the data source
 function loadExistingProducts(callback) {
 
-	// Create search params
+	// Create load params
 	var params = {
 		TableName: 'SuroorFashionsProducts',
 		Limit: 10,
@@ -103,26 +106,19 @@ function loadExistingProducts(callback) {
 		},
 		FilterExpression: 'productType = :c'
 	};
-	console.log("About to load with: "+JSON.stringify(params));
+
 	// Perform load command
 	dddc.scan(params, function(err, fileData) {
 		if(err) throw err;
 
+		// Select only product items from output
 		existingProductsList = fileData.Items;
+
+		// Log loaded products list
 		console.log("Loaded: "+JSON.stringify(existingProductsList));
 
 		// Return existing product list to caller
 		callback(existingProductsList);
-
-/*
-		jq.run('.Items', fileData, {input: 'json', output: 'json'})
-			.then((existingProductsList) => {
-
-				// Return existing product list to caller
-				callback(existingProductsList);
-			});
-		});
-*/
 	});
 }
 
@@ -130,81 +126,55 @@ function loadExistingProducts(callback) {
 // Store new product in the data source
 function storeNewProduct(newProduct,callback) {
 
-	// Create search params
+	// Create store params
 	var params = {
 		TableName: 'SuroorFashionsProducts',
 		Item: newProduct
 	};
-	console.log("About to store with: "+JSON.stringify(params));
+
 	// Perform store command
-	dddc.put(params, function(err, data) {
+	dddc.put(params, function (err, data) {
 		if(err) throw err;
 
-		console.log("Stored: "+JSON.stringify(data));
-
-
-
-		// Fetch latest existing products list
-		loadExistingProducts(function (existingProductsList) {
-			console.log("Latest list: "+JSON.stringify(existingProductsList));
+		// Fetch updated products list
+		loadExistingProducts(function (updatedProductsList) {
 
 			// Return to caller
-			callback(existingProductsList);
+			callback(updatedProductsList);
 		});
 	});
 }
 
 //
-// Load existing products from the data source
-function checkForFile(fileName,callback)
-{
-	// Check if file exists
-	fs.exists(fileName, function (exists) {
-
-		if(exists) {
-			// File already exists - return
-			callback();
-		} else {
-			// Create file
-			fs.open(fileName, 'w+', function (err, data) { 
-				if(err) throw err;
-				// File created - return
-				callback();
-			})
-		}
-	});
-}
-
-//
-// Format response with existing products list
-function formatProductHtml(existingProductsList,callback) {
+// Format products list into HTML
+function formatProductHtml(productsList,callback) {
 
 	// Initialise HTML section
-	var formattedProductHtml = '';
+	var productsListHtml = '';
 
 	// If there are any existing products
-	if(existingProductsList.length > 0) {
+	if(productsList.length > 0) {
 
 		// Open list element
-		formattedProductHtml += '<ul>';
+		productsListHtml += '<ul>';
 
-		// Iterate through existing product list
-		for(var product of existingProductsList) {
+		// Iterate through product list
+		for(var product of productsList) {
 
 			// Write product in list item element
-			formattedProductHtml += '<li>';
-			formattedProductHtml += JSON.stringify(product.productName);
-			formattedProductHtml += '</li>';
+			productsListHtml += '<li>';
+			productsListHtml += JSON.stringify(product.productName);
+			productsListHtml += '</li>';
 		}
 
 		// Close list element
-		formattedProductHtml += '</ul>';
+		productsListHtml += '</ul>';
 	} else {
 
 		// Provide default message
-		formattedProductHtml += 'No product exists';
+		productsListHtml += 'No product exists';
 	}
 
 	// Return to caller
-	callback(formattedProductHtml);
+	callback(productsListHtml);
 }
