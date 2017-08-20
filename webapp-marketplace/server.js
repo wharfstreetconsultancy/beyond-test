@@ -34,9 +34,9 @@ app.get('/', function (req, res) {
 		console.log( "Existing Products List: " + JSON.stringify(existingProductsList) );
 
 		// Add dynamic elements to response page
-		formatProductHtml(existingProductsList, function(productsListHtml) {
+		formatProductHtml(existingProductsList, function(productsCarouselHtml) {
 			fs.createReadStream(__dirname+'/index.html')
-	.pipe(replaceStream('{products.list}', productsListHtml))
+	.pipe(replaceStream('{products.showcase.carousel}', productsCarouselHtml))
 				.pipe(res);
 		});
 	});
@@ -77,7 +77,7 @@ function loadExistingProducts(callback) {
 function formatProductHtml(productsList,callback) {
 
 	// Initialise HTML section
-	var productsListHtml = '';
+	var productsCarouselHtml = '';
 
 	// If there are any existing products
 	if(productsList.length > 0) {
@@ -85,24 +85,24 @@ function formatProductHtml(productsList,callback) {
 		// Iterate through product list
 		for(var product of productsList) {
 
-			// Write product in showcase display element
-			productsListHtml += <div class="col-md-3 col-sm-6 hero-feature">
-			productsListHtml += <div class="thumbnail">
-			productsListHtml += <img src="product.imageLocation" alt="">
-			productsListHtml += <div class="caption">
-			productsListHtml += <h3>product.productName</h3>
-			productsListHtml += <p/>
-			productsListHtml += <p><a href="#" class="btn btn-primary disabled">View Product</a></p>
-			productsListHtml += </div>
-			productsListHtml += </div>
-			productsListHtml += </div>
+			// Write product in showcase carousel element
+			productsCarouselHtml += '<div class="col-md-3 col-sm-6 hero-feature">'
+			productsCarouselHtml += '<div class="thumbnail">'
+			productsCarouselHtml += '<img src="product.imageLocation" alt="">'
+			productsCarouselHtml += '<div class="caption">'
+			productsCarouselHtml += '<h3>product.productName</h3>'
+			productsCarouselHtml += '<p/>'
+			productsCarouselHtml += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
+			productsCarouselHtml += '</div>'
+			productsCarouselHtml += '</div>'
+			productsCarouselHtml += '</div>'
 		}
 	} else {
 
 		// Provide default message
-		productsListHtml += 'No product exists';
+		productsCarouselHtml += 'No product exists';
 	}
 
 	// Return to caller
-	callback(productsListHtml);
+	callback(productsCarouselHtml);
 }
