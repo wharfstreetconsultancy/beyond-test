@@ -88,7 +88,7 @@ app.post('/', function (req, res) {
 
 			// Add dynamic elements to response page
 			fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
+				.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.productName)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
 				.pipe(replaceStream('{products.list}', productsListHtml))
 				.pipe(res);
 		});
@@ -128,7 +128,6 @@ function loadExistingProducts(callback) {
 // Store new product in the data source
 function storeNewProduct(newProduct,callback) {
 
-
 	// Create params for image 'store' operation
 	var storeImageParams = {
 		Bucket: 'suroor.fashions.products',
@@ -139,35 +138,28 @@ function storeNewProduct(newProduct,callback) {
 	};
 	console.log("Uploading with: ", storeImageParams);
 	// Perform image store action
-	s3.upload (uploadParams, function (err, data) {
+	s3.upload(storeImageParams, function (err, data) {
 		if (err) throw err;
 
 		console.log("Upload Success", data.Location);
 		newProduct.imageLocation = data.Location;
-	});
 
+		// Create params for product 'store' operation
+		var storeProductParams = {
+			TableName: 'SuroorFashionsProducts',
+			Item: newProduct
+		};
+		console.log("Uploading with: ", storeProductParams);
+		// Perform product store action
+		dddc.put(storeProductParams, function (err, data) {
+			if(err) throw err;
 
+			// Fetch updated products list
+			loadExistingProducts(function (updatedProductsList) {
 
-
-
-
-
-
-	// Create params for product 'store' operation
-	var storeProductParams = {
-		TableName: 'SuroorFashionsProducts',
-		Item: newProduct
-	};
-
-	// Perform product store action
-	dddc.put(storeProductParams, function (err, data) {
-		if(err) throw err;
-
-		// Fetch updated products list
-		loadExistingProducts(function (updatedProductsList) {
-
-			// Return to caller
-			callback(updatedProductsList);
+				// Return to caller
+				callback(updatedProductsList);
+			});
 		});
 	});
 }
