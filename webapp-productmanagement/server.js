@@ -1,11 +1,16 @@
 //
-// Import required libraries
+//
+// Product Management Web Site
+//
+//
+
+//
+// Manage environment
 var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var multer = require('multer');
 var replaceStream = require('replacestream')
-var AWS = require('aws-sdk');
 
 //
 // Manage HTTP server container
@@ -15,13 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ dest: '/tmp/'}).single('filetoupload'));
 
 //
-// Manage AWS API
-var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-// Create S3 service object
-var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-
-//
-// Create and run server
+// Create and run web server
 var server = app.listen(8081, function() {
 
 	// Output server endpoint
@@ -29,14 +28,46 @@ var server = app.listen(8081, function() {
 })
 
 //
-// GET - root context - serve index page
+// GET - web site - index page
 app.get('/', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: GET /" );
 
-	// Store new products
-	loadExistingProducts(function (existingProductsList) {
+	//
+	// Load all existing products from REST API
+
+	// Params for load operation
+	var loadProductParams = {
+		host: 'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com/',
+		port: 81,
+		path: '/product',
+		method: 'GET',
+		headers:{
+			Content-Type : 'multipart/form-data'
+		}
+	};
+
+	http.request(options, function(err, response, body) {
+		if (err) throw err;
+
+		// Log existing product list
+		console.log( "Server responded with: " + JSON.stringify(response) + " - " + JSON.stringify(body) );
+
+		// Add dynamic elements to response page
+		formatProductHtml({[]}, function(productsListHtml) {
+			fs.createReadStream(__dirname+'/index.html')
+				.pipe(replaceStream('{user.prompt}', 'Please provide product details'))
+	.pipe(replaceStream('{products.list}', productsListHtml))
+				.pipe(res);
+		});
+	});
+
+
+
+
+/*
+//	loadExistingProducts(function (existingProductsList) {
 		// Log existing product list
 		console.log( "Existing Products List: " + JSON.stringify(existingProductsList) );
 
@@ -48,10 +79,11 @@ app.get('/', function (req, res) {
 				.pipe(res);
 		});
 	});
+*/
 })
 
 //
-// POST - root context - capture and process product details
+// POST - web site - capture and process product details
 app.post('/', function (req, res) {
 
 	// Log request received
@@ -73,6 +105,25 @@ app.post('/', function (req, res) {
 	// Log new product object
 	console.log( "New Product: " + JSON.stringify(newProduct) );
 
+
+
+	// Params for load operation
+	var storeProductParams = {
+		host: 'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com/',
+		port: 81,
+		path: '/product',
+		method: 'GET',
+		headers:{
+			Content-Type : 'multipart/form-data'
+		},
+		body:{
+			newProduct : newProduct,
+			image: fs.createReadStream(newProduct.imageLocation)
+		}
+	};
+
+
+
 	// Store new product object in DB
 	storeNewProduct( newProduct, function (updatedProductsList) {
 
@@ -91,37 +142,11 @@ app.post('/', function (req, res) {
 	});
 })
 
-//
-// Load existing products from the data source
-function loadExistingProducts(callback) {
 
-	// Create load params
-	var params = {
-		TableName: 'SuroorFashionsProducts',
-		Limit: 10,
-		ExpressionAttributeValues: {
-			':c': 'CLOTHING'
-		},
-		FilterExpression: 'productType = :c'
-	};
 
-	// Perform product load action
-	dddc.scan(params, function(err, fileData) {
-		if(err) throw err;
-
-		// Select only product items from output
-		existingProductsList = fileData.Items;
-
-		// Log loaded products list
-		console.log("Loaded: "+JSON.stringify(existingProductsList));
-
-		// Return existing product list to caller
-		callback(existingProductsList);
-	});
-}
 
 //
-// Store new product in the data source
+// Store new product into the product catalog
 function storeNewProduct(newProduct,callback) {
 
 	// Create params for image 'store' operation
@@ -160,6 +185,11 @@ function storeNewProduct(newProduct,callback) {
 	});
 }
 
+
+
+
+
+
 //
 // Format products list into HTML
 function formatProductHtml(productsList,callback) {
@@ -193,3 +223,114 @@ function formatProductHtml(productsList,callback) {
 	// Return to caller
 	callback(productsListHtml);
 }
+
+
+
+
+
+
+
+
+
+
+//
+//
+// Product API Operations
+//
+//
+
+//
+// Manage environment
+var AWS = require('aws-sdk');
+var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+// Create S3 service object
+var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+
+//
+// GET - product API - get all products
+app.get('/product', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: GET /product" );
+
+	// Fetch updated products list
+	loadAllProducts(function (existingProductsList) {
+
+		// Return existing product list to caller
+		res.end(JSON.stringify(existingProductsList));
+	});
+}
+
+//
+// POST - product API - capture and process product details
+app.post('/product', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /product" );
+
+
+	// Create params for image 'store' operation
+	var storeImageParams = {
+		Bucket: 'suroor.fashions.products',
+		Key: newProduct.productId+'/main',
+		Body: fs.createReadStream(newProduct.imageLocation).on('error', function(err) {
+  console.log('File Error', err);
+})
+	};
+	console.log("Uploading with: ", storeImageParams);
+	// Perform image store action
+	s3.upload(storeImageParams, function (err, data) {
+		if (err) throw err;
+
+		console.log("Upload Success", data.Location);
+		newProduct.imageLocation = data.Location;
+
+		// Create params for product 'store' operation
+		var storeProductParams = {
+			TableName: 'SuroorFashionsProducts',
+			Item: newProduct
+		};
+		console.log("Uploading with: ", storeProductParams);
+		// Perform product store action
+		dddc.put(storeProductParams, function (err, data) {
+			if(err) throw err;
+
+			// Fetch updated products list
+			loadExistingProducts(function (updatedProductsList) {
+
+				// Return updated product list to caller
+				res.end(JSON.stringify(updatedProductsList));
+			});
+		});
+	});
+}
+
+//
+// Get all products from the product catalog
+function loadAllProducts(callback) {
+
+	// Create load params
+	var params = {
+		TableName: 'SuroorFashionsProducts',
+		Limit: 10,
+		ExpressionAttributeValues: {
+			':c': 'CLOTHING'
+		},
+		FilterExpression: 'productType = :c'
+	};
+
+	// Perform product load action
+	dddc.scan(params, function(err, productsData) {
+		if(err) throw err;
+
+		// Select only product items from output
+		productsList = productsData.Items;
+
+		// Log loaded products list
+		console.log("Loaded: "+JSON.stringify(productsList));
+
+		// Return products list to caller
+		callback(productsList);
+	});
+}
+
