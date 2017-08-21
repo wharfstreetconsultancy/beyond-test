@@ -55,7 +55,7 @@ app.get('/', function (req, res) {
 		console.log( "Server responded with: " + JSON.stringify(response) + " - " + JSON.stringify(body) );
 
 		// Add dynamic elements to response page
-		formatProductHtml(arr = {[]}, function(productsListHtml) {
+		formatProductHtml({}, function(productsListHtml) {
 			fs.createReadStream(__dirname+'/index.html')
 				.pipe(replaceStream('{user.prompt}', 'Please provide product details'))
 	.pipe(replaceStream('{products.list}', productsListHtml))
