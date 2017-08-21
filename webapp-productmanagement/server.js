@@ -44,7 +44,7 @@ app.get('/', function (req, res) {
 		path: '/product',
 		method: 'GET',
 		headers:{
-			Content-Type : 'multipart/form-data'
+			'Content-Type': 'multipart/form-data'
 		}
 	};
 
@@ -114,10 +114,10 @@ app.post('/', function (req, res) {
 		path: '/product',
 		method: 'GET',
 		headers:{
-			Content-Type : 'multipart/form-data'
+			'Content-Type': 'multipart/form-data'
 		},
 		body:{
-			newProduct : newProduct,
+			newProduct: newProduct,
 			image: fs.createReadStream(newProduct.imageLocation)
 		}
 	};
