@@ -7,6 +7,7 @@
 //
 // Manage environment
 var express = require('express');
+var http = require('http');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var multer = require('multer');
@@ -25,7 +26,7 @@ var server = app.listen(8081, function() {
 
 	// Output server endpoint
 	console.log('Product Management app listening at http://'+server.address().address+':'+server.address().port+'/');
-})
+});
 
 //
 // GET - web site - index page
@@ -39,48 +40,37 @@ app.get('/', function (req, res) {
 
 	// Params for load operation
 	var loadProductParams = {
-		host: 'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com/',
+		host: 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com',
 		port: 81,
 		path: '/product',
 		method: 'GET',
 		headers:{
-			'Content-Type': 'multipart/form-data'
+			'Content-Type': 'application/json'
 		}
 	};
 
-	http.request(options, function(err, response, body) {
-		if (err) throw err;
+	var loadReq = http.request(loadProductParams, function(error, response, body) {
+		console.log("Just returned!!!! "+JSON.stringify(response));
+		// if (err) throw err;
 
 		// Log existing product list
-		console.log( "Server responded with: " + JSON.stringify(response) + " - " + JSON.stringify(body) );
+		console.log( "Server responded with: " + JSON.stringify(response) + " - " + error.toString() + " - " + JSON.stringify(body) );
 
+		var existingProductList = body.products;
 		// Add dynamic elements to response page
-		formatProductHtml({}, function(productsListHtml) {
+		formatProductHtml(existingProductList, function(productsListHtml) {
 			fs.createReadStream(__dirname+'/index.html')
 				.pipe(replaceStream('{user.prompt}', 'Please provide product details'))
 	.pipe(replaceStream('{products.list}', productsListHtml))
 				.pipe(res);
 		});
 	});
+	// loadReq.on('error', function(error) {
+        	// throw error;
+	// });
+	loadReq.end();
+});
 
-
-
-
-/*
-//	loadExistingProducts(function (existingProductsList) {
-		// Log existing product list
-		console.log( "Existing Products List: " + JSON.stringify(existingProductsList) );
-
-		// Add dynamic elements to response page
-		formatProductHtml(existingProductsList, function(productsListHtml) {
-			fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{user.prompt}', 'Please provide product details'))
-	.pipe(replaceStream('{products.list}', productsListHtml))
-				.pipe(res);
-		});
-	});
-*/
-})
 
 //
 // POST - web site - capture and process product details
@@ -140,10 +130,7 @@ app.post('/', function (req, res) {
 				.pipe(res);
 		});
 	});
-})
-
-
-
+});
 
 //
 // Store new product into the product catalog
@@ -184,11 +171,6 @@ function storeNewProduct(newProduct,callback) {
 		});
 	});
 }
-
-
-
-
-
 
 //
 // Format products list into HTML
@@ -255,11 +237,12 @@ app.get('/product', function (req, res) {
 
 	// Fetch updated products list
 	loadAllProducts(function (existingProductsList) {
-
 		// Return existing product list to caller
-		res.end(JSON.stringify(existingProductsList));
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify(existingProductsList));
+		res.end();
 	});
-}
+});
 
 //
 // POST - product API - capture and process product details
@@ -303,7 +286,7 @@ app.post('/product', function (req, res) {
 			});
 		});
 	});
-}
+});
 
 //
 // Get all products from the product catalog
