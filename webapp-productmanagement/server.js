@@ -8,17 +8,20 @@
 // Manage environment
 var express = require('express');
 var http = require('http');
-var bodyParser = require('body-parser');
+var request = require('request');
+// var bodyParser = require('body-parser');
 var fs = require('fs');
 var multer = require('multer');
 var replaceStream = require('replacestream')
+var util=require('util');
 
 //
 // Manage HTTP server container
 var app = express();
 app.use(express.static('assets'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ dest: '/tmp/'}).single('filetoupload'));
+// app.use(bodyParser.urlencoded({ extended: false }));
+var upload = multer({ dest: '/tmp/'});
+// var parser = bodyParser.urlencoded({ extended: false });
 
 //
 // Create and run web server
@@ -49,32 +52,52 @@ app.get('/', function (req, res) {
 		}
 	};
 
-	var loadReq = http.request(loadProductParams, function(error, response, body) {
-		console.log("Just returned!!!! "+JSON.stringify(response));
-		// if (err) throw err;
+	// Call to REST API to load existing products
+	var loadReq = http.request(loadProductParams, function(response) {
 
-		// Log existing product list
-		console.log( "Server responded with: " + JSON.stringify(response) + " - " + error.toString() + " - " + JSON.stringify(body) );
+                // Log status code from remote server
+                console.log( "Server responded with: " + response.statusCode );
 
-		var existingProductList = body.products;
-		// Add dynamic elements to response page
-		formatProductHtml(existingProductList, function(productsListHtml) {
-			fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{user.prompt}', 'Please provide product details'))
-	.pipe(replaceStream('{products.list}', productsListHtml))
-				.pipe(res);
+                // Set encoding for output
+                response.setEncoding('utf8');
+
+                // Output buffer`
+                var output = '';
+
+		// Next chunk of output received
+		response.on('data', function (chunk) {
+			// Append to output buffer
+			output += chunk;
+		});
+
+		// All output received
+		response.on('end', function() {
+
+			// Log response body from remote server
+			console.log( "Server responded with: " + output );
+
+			// Parse response body into existing products list
+			var existingProductList = JSON.parse(output);
+
+        	        // Dynamically add existing products list to response page and send to caller
+	                formatProductHtml(existingProductList, function(productsListHtml) {
+                        	fs.createReadStream(__dirname+'/index.html')
+                	                .pipe(replaceStream('{user.prompt}', 'Please provide product details'))
+        .pipe(replaceStream('{products.list}', productsListHtml))
+        	                        .pipe(res);
+	                });
 		});
 	});
-	// loadReq.on('error', function(error) {
-        	// throw error;
-	// });
+	loadReq.on('error', function(error) {
+        	throw error;
+	});
 	loadReq.end();
 });
 
 
 //
 // POST - web site - capture and process product details
-app.post('/', function (req, res) {
+app.post('/', upload.single('filetoupload'), function (req, res) {
 
 	// Log request received
 	console.log( "Received request: POST /" );
@@ -82,95 +105,68 @@ app.post('/', function (req, res) {
 	// Capture creation timestamp
 	var timestamp = new Date().getTime().toString();
 
-	// Create new product object
-	var newProduct = {
-		productId: timestamp,
-      	productName: req.body.product_name,
-		productType: 'CLOTHING',
-		description: req.body.product_description,
-		imageLocation: req.file.path,
-		creationTimestamp: timestamp
-  	};
-
-	// Log new product object
-	console.log( "New Product: " + JSON.stringify(newProduct) );
-
-
-
-	// Params for load operation
-	var storeProductParams = {
-		host: 'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com/',
-		port: 81,
-		path: '/product',
-		method: 'GET',
-		headers:{
-			'Content-Type': 'multipart/form-data'
-		},
-		body:{
-			newProduct: newProduct,
-			image: fs.createReadStream(newProduct.imageLocation)
-		}
+	var formData = {
+		// Pass data via Streams
+		filetoupload: fs.createReadStream(req.file.path)
 	};
+	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+timestamp+'/image', formData: formData}, function callback(error, imageStoreResponse, imageStoreBody) {
+		if (error) throw error;
 
+		// Log status code from remote server
+                console.log( "Server responded with: " + imageStoreResponse.statusCode );
+		// Log response body from remote server
+		console.log( "Server responded with: " + imageStoreBody );
 
+	        // Create new product object
+        	var newProduct = {
+                	productId: timestamp,
+	                productName: req.body.product_name,
+        	        productType: 'CLOTHING',
+                	description: req.body.product_description,
+               		imageLocation: imageStoreBody,
+	        	creationTimestamp: timestamp
+	        };
 
-	// Store new product object in DB
-	storeNewProduct( newProduct, function (updatedProductsList) {
+	        // Log new product object
+        	console.log( "New Product: " + JSON.stringify(newProduct) );
 
-		// Log updated products list
-		console.log( "Updated Products List: " + JSON.stringify(updatedProductsList) );
+		formData = {
+                	// Send new product object
+                	newProduct: JSON.stringify(newProduct)
+		};
 
-		// Add dynamic elements to response page
-		formatProductHtml(updatedProductsList, function(productsListHtml) {
+		request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product', formData: formData}, function callback(productStoreError, productStoreResponse, productStoreBody) {
+                	if (productStoreError) throw productStoreError;
 
-			// Add dynamic elements to response page
-			fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.productName)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
-				.pipe(replaceStream('{products.list}', productsListHtml))
-				.pipe(res);
-		});
+                	// Log status code from remote server
+	                console.log( "Server responded with: " + productStoreResponse.statusCode );
+        	        // Log response body from remote server
+	                console.log( "Server responded with: " + productStoreBody );
+
+			request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function callback(productLoadError, productLoadResponse, productLoadBody) {
+	                        if (productLoadError) throw productLoadError;
+
+                        	// Log status code from remote server
+                	        console.log( "Server responded with: " + productLoadResponse.statusCode );
+        	                // Log response body from remote server
+	                        console.log( "Server responded with: " + productLoadBody );
+		
+				// Parse response body into existing products list
+				// var updatedProductsList = JSON.parse(output);
+
+				// Add dynamic elements to response page
+				formatProductHtml(JSON.parse(productLoadBody), function(productsListHtml) {
+
+					// Add dynamic elements to response page
+					fs.createReadStream(__dirname+'/index.html')
+						.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.productName)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
+                                		.pipe(replaceStream('{products.list}', productsListHtml))
+                                		.pipe(res);
+				});
+			});
+	        });
 	});
 });
-
-//
-// Store new product into the product catalog
-function storeNewProduct(newProduct,callback) {
-
-	// Create params for image 'store' operation
-	var storeImageParams = {
-		Bucket: 'suroor.fashions.products',
-		Key: newProduct.productId+'/main',
-		Body: fs.createReadStream(newProduct.imageLocation).on('error', function(err) {
-  console.log('File Error', err);
-})
-	};
-	console.log("Uploading with: ", storeImageParams);
-	// Perform image store action
-	s3.upload(storeImageParams, function (err, data) {
-		if (err) throw err;
-
-		console.log("Upload Success", data.Location);
-		newProduct.imageLocation = data.Location;
-
-		// Create params for product 'store' operation
-		var storeProductParams = {
-			TableName: 'SuroorFashionsProducts',
-			Item: newProduct
-		};
-		console.log("Uploading with: ", storeProductParams);
-		// Perform product store action
-		dddc.put(storeProductParams, function (err, data) {
-			if(err) throw err;
-
-			// Fetch updated products list
-			loadExistingProducts(function (updatedProductsList) {
-
-				// Return to caller
-				callback(updatedProductsList);
-			});
-		});
-	});
-}
 
 //
 // Format products list into HTML
@@ -223,6 +219,7 @@ function formatProductHtml(productsList,callback) {
 
 //
 // Manage environment
+// var multiparty = require('multiparty');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 // Create S3 service object
@@ -246,45 +243,64 @@ app.get('/product', function (req, res) {
 
 //
 // POST - product API - capture and process product details
-app.post('/product', function (req, res) {
+app.post('/product', upload.single('filetoupload'), function (req, res) {
+
+        // Log request received
+        console.log( "Received request: POST /product" );
+
+	// Parse request body into new product object
+	var newProduct = JSON.parse(req.body.newProduct);
+
+        // Create params for product 'store' operation
+        var storeProductParams = {
+                TableName: 'SuroorFashionsProducts',
+        	Item: newProduct
+        };
+
+	// Log contents of dynamo db store operation
+        console.log("Creating new product with: "+ JSON.stringify(storeProductParams));
+
+        // Perform product store operation
+	dddc.put(storeProductParams, function (err, data) {
+                if(err) throw err;
+
+		console.log("Data returned from dynamoDB: "+JSON.stringify(data));
+                // Fetch updated products list
+                // loadExistingProducts(function (updatedProductsList) {
+
+                        // Return updated product list to caller
+                        res.end(JSON.stringify(newProduct));
+		// });
+	});
+});
+
+//
+// POST - product API - capture and process product details
+app.post('/product/:productId/image', upload.single('filetoupload'), function (req, res) {
 
 	// Log request received
-	console.log( "Received request: POST /product" );
+	console.log( "Received request: POST /product/"+req.params.productId+"/image" );
 
+	// Log image path
+	console.log("Image: "+req.file.path);
 
 	// Create params for image 'store' operation
 	var storeImageParams = {
 		Bucket: 'suroor.fashions.products',
-		Key: newProduct.productId+'/main',
-		Body: fs.createReadStream(newProduct.imageLocation).on('error', function(err) {
+		Key: req.params.productId+'/main',
+		Body: fs.createReadStream(req.file.path).on('error', function(err) {
   console.log('File Error', err);
 })
 	};
-	console.log("Uploading with: ", storeImageParams);
+	console.log("Uploading image: "+storeImageParams.Key);
 	// Perform image store action
 	s3.upload(storeImageParams, function (err, data) {
 		if (err) throw err;
 
 		console.log("Upload Success", data.Location);
-		newProduct.imageLocation = data.Location;
 
-		// Create params for product 'store' operation
-		var storeProductParams = {
-			TableName: 'SuroorFashionsProducts',
-			Item: newProduct
-		};
-		console.log("Uploading with: ", storeProductParams);
-		// Perform product store action
-		dddc.put(storeProductParams, function (err, data) {
-			if(err) throw err;
-
-			// Fetch updated products list
-			loadExistingProducts(function (updatedProductsList) {
-
-				// Return updated product list to caller
-				res.end(JSON.stringify(updatedProductsList));
-			});
-		});
+                // Return updated product list to caller
+		res.end(data.Location);
 	});
 });
 
