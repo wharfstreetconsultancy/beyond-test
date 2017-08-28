@@ -80,10 +80,11 @@ app.get('/', function (req, res) {
 			var existingProductList = JSON.parse(output);
 
         	        // Dynamically add existing products list to response page and send to caller
-	                formatProductHtml(existingProductList, function(productsListHtml) {
+	                formatProductHtml(existingProductList, function(productsListClothingHtml, productsListJewelleryHtml) {
                         	fs.createReadStream(__dirname+'/index.html')
                 	                .pipe(replaceStream('{user.prompt}', 'Please provide product details'))
-        .pipe(replaceStream('{products.list}', productsListHtml))
+        				.pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
+                                        .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
         	                        .pipe(res);
 	                });
 		});
@@ -109,8 +110,8 @@ app.post('/', upload.single('filetoupload'), function (req, res) {
 		// Pass data via Streams
 		filetoupload: fs.createReadStream(req.file.path)
 	};
-	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+timestamp+'/image', formData: formData}, function callback(error, imageStoreResponse, imageStoreBody) {
-		if (error) throw error;
+	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+timestamp+'/image', formData: formData}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
+		if (imageStoreError) throw imageStoreError;
 
 		// Log status code from remote server
                 console.log( "Server responded with: " + imageStoreResponse.statusCode );
@@ -119,12 +120,14 @@ app.post('/', upload.single('filetoupload'), function (req, res) {
 
 	        // Create new product object
         	var newProduct = {
-                	productId: timestamp,
-	                productName: req.body.product_name,
-        	        productType: 'CLOTHING',
-                	description: req.body.product_description,
+                	id: timestamp,
+	                name: req.body.name,
+        	        type: req.body.type,
+                	description: req.body.description,
+			price: req.body.price,
                		imageLocation: imageStoreBody,
-	        	creationTimestamp: timestamp
+	        	creationTimestamp: timestamp,
+			promoted: req.body.promoted
 	        };
 
 	        // Log new product object
@@ -155,12 +158,13 @@ app.post('/', upload.single('filetoupload'), function (req, res) {
 				// var updatedProductsList = JSON.parse(output);
 
 				// Add dynamic elements to response page
-				formatProductHtml(JSON.parse(productLoadBody), function(productsListHtml) {
+				formatProductHtml(JSON.parse(productLoadBody), function(productsListClothingHtml, productsListJewelleryHtml) {
 
 					// Add dynamic elements to response page
 					fs.createReadStream(__dirname+'/index.html')
-						.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.productName)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
-                                		.pipe(replaceStream('{products.list}', productsListHtml))
+						.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
+	                                        .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
+        	                                .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
                                 		.pipe(res);
 				});
 			});
@@ -172,34 +176,50 @@ app.post('/', upload.single('filetoupload'), function (req, res) {
 // Format products list into HTML
 function formatProductHtml(productsList,callback) {
 
-	// Initialise HTML section
-	var productsListHtml = '';
+	// Initialise clothing HTML section
+	var productsListClothingHtml = '';
+        // Initialise jewellery HTML section
+        var productsListJewelleryHtml = '';
 
-	// If there are any existing products
-	if(productsList.length > 0) {
+	// Iterate through product list
+	for(var product of productsList) {
 
-		// Open list element
-		productsListHtml += '<ul>';
+		if(product.type == 'CLOTHING') {
 
-		// Iterate through product list
-		for(var product of productsList) {
+			// Write product into clothing list
+			productsListClothingHtml += '<li>'+JSON.stringify(product.name)+'</li>';
+		} else if (product.type == 'JEWELLERY') {
 
-			// Write product in list item element
-			productsListHtml += '<li>';
-			productsListHtml += JSON.stringify(product.productName);
-			productsListHtml += '</li>';
+                        // Write product into jewellery list
+                        productsListJewelleryHtml += '<li>'+JSON.stringify(product.name)+'</li>';
 		}
+	}
 
-		// Close list element
-		productsListHtml += '</ul>';
-	} else {
 
-		// Provide default message
-		productsListHtml += 'No product exists';
+        // If there are no clothing products
+        if(productsListClothingHtml.length == 0) {
+
+                // Provide default message for clothing list
+                productsListClothingHtml = 'No clothing exists';
+        } else {
+
+                // Wrap list in a list container element
+                productsListClothingHtml = '<ul>'+productsListClothingHtml+'</ul>';
+	}
+
+        // If there are no jewellery products
+        if(productsListJewelleryHtml.length == 0) {
+
+                // Provide default message for jewellery list
+                productsListJewelleryHtml = 'No jewellery exists';
+        } else {
+
+		// Wrap list in a list container element
+		productsListJewelleryHtml = '<ul>'+productsListJewelleryHtml+'</ul>';
 	}
 
 	// Return to caller
-	callback(productsListHtml);
+	callback(productsListClothingHtml, productsListJewelleryHtml);
 }
 
 
@@ -311,11 +331,11 @@ function loadAllProducts(callback) {
 	// Create load params
 	var params = {
 		TableName: 'SuroorFashionsProducts',
-		Limit: 10,
-		ExpressionAttributeValues: {
-			':c': 'CLOTHING'
-		},
-		FilterExpression: 'productType = :c'
+		Limit: 10
+		// ExpressionAttributeValues: {
+			// ':c': 'CLOTHING'
+		// },
+		// FilterExpression: 'productType = :c'
 	};
 
 	// Perform product load action
