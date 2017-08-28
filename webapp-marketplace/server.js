@@ -2,6 +2,7 @@
 // Import required libraries
 var express = require('express');
 var fs = require('fs');
+var request = require('request');
 var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
 
@@ -30,17 +31,27 @@ app.get('/', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /" );
 
-	// Store new products
-	loadExistingProducts(function (existingProductsList) {
-		// Log existing product list
-		console.log( "Existing Products List: " + JSON.stringify(existingProductsList) );
+	request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function callback(productLoadError, productLoadResponse, productLoadBody) {
+                if (productLoadError) throw productLoadError;
 
-		// Add dynamic elements to response page
-		formatProductHtml(existingProductsList, function(productsCarouselHtml) {
-			fs.createReadStream(__dirname+'/index.html')
-	.pipe(replaceStream('{products.showcase.carousel}', productsCarouselHtml))
-				.pipe(res);
-		});
+                // Log status code from remote server
+                console.log( "Server responded with: " + productLoadResponse.statusCode );
+                // Log response body from remote server
+                console.log( "Server responded with: " + productLoadBody );
+
+		// Parse response body into existing products list
+                // var updatedProductsList = JSON.parse(output);
+
+                // Log existing product list
+                // console.log( "Existing Products List: " + JSON.stringify(existingProductsList) );
+
+                // Add dynamic elements to response page
+                formatProductHtml(JSON.parse(productLoadBody), function(clothingCarouselHtml, jewelleryCarouselHtml) {
+                        fs.createReadStream(__dirname+'/index.html')
+			        .pipe(replaceStream('{showcase.clothing.carousel}', clothingCarouselHtml))
+                                .pipe(replaceStream('{showcase.jewellery.carousel}', jewelleryCarouselHtml))
+                                .pipe(res);
+                });
 	});
 })
 
@@ -73,38 +84,63 @@ function loadExistingProducts(callback) {
 	});
 }
 
-
-//
-// Format products list into HTML
 function formatProductHtml(productsList,callback) {
 
-	// Initialise HTML section
-	var productsCarouselHtml = '';
+        // Initialise clothing HTML section
+        var productsListClothingHtml = '';
+        // Initialise jewellery HTML section
+        var productsListJewelleryHtml = '';
 
-	// If there are any existing products
-	if(productsList.length > 0) {
+        // Iterate through product list
+        for(var product of productsList) {
 
-		// Iterate through product list
-		for(var product of productsList) {
+		if(product.promoted == 'true') {
 
-			// Write product in showcase carousel element
-			productsCarouselHtml += '<div class="col-md-3 col-sm-6 hero-feature">'
-			productsCarouselHtml += '<div class="thumbnail">'
-			productsCarouselHtml += '<img src="'+product.imageLocation+'" alt="">'
-			productsCarouselHtml += '<div class="caption">'
-			productsCarouselHtml += '<h3>'+product.productName+'</h3>'
-			productsCarouselHtml += '<p/>'
-			productsCarouselHtml += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
-			productsCarouselHtml += '</div>'
-			productsCarouselHtml += '</div>'
-			productsCarouselHtml += '</div>'
-		}
-	} else {
+		        // Initialise current buffer
+        		var currentBuffer = '';
 
-		// Provide default message
-		productsCarouselHtml += 'No product exists';
-	}
+	                // Write product in showcase carousel element
+        	        currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">'
+                	currentBuffer += '<div class="thumbnail">'
+	                currentBuffer += '<img src="'+product.imageLocation+'" alt="">'
+        	        currentBuffer += '<div class="caption">'
+                	currentBuffer += '<h3>'+product.name+'</h3>'
+	                currentBuffer += '<p/>'
+        	        currentBuffer += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
+                	currentBuffer += '</div>'
+	                currentBuffer += '</div>'
+        	        currentBuffer += '</div>'
 
-	// Return to caller
-	callback(productsCarouselHtml);
+                	if(product.type == 'CLOTHING') {
+
+	                        // Write product into clothing list
+        	                productsListClothingHtml += currentBuffer;
+                	} else if (product.type == 'JEWELLERY') {
+
+                        	// Write product into jewellery list
+	                        productsListJewelleryHtml += currentBuffer;
+			}
+                }
+        }
+
+console.log("Clothing buffer: "+productsListClothingHtml);
+console.log("Jewellery buffer: "+productsListJewelleryHtml);
+
+        // If there are no clothing products
+        if(productsListClothingHtml.length == 0) {
+
+                // Provide default message for clothing list
+                productsListClothingHtml = 'No clothing exists';
+        }
+
+        // If there are no jewellery products
+        if(productsListJewelleryHtml.length == 0) {
+
+                // Provide default message for jewellery list
+                productsListJewelleryHtml = 'No jewellery exists';
+        }
+
+        // Return to caller
+        callback(productsListClothingHtml, productsListJewelleryHtml);
 }
+
