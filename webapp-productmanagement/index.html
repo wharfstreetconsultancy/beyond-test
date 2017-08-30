@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
   </head>
-  <body>
+  <body onLoad="{onload.action}">
     <!------------------------------ Header --------------------------->
     <!--This is the Header Content-->
   	<div class="container-fluid">
@@ -75,6 +75,7 @@
                 <div class="caption">
                     <table><tr><td width="20" valign="top">
                         <img id="img1" width="20" />
+                        <input id="imageLocation" type="hidden" name="imageLocation">
                     </td><td valign="top">
                         <b>Image 1</b> (main image for all displays):<input type="file" name="filetoupload" size="50" /><br>
                     </td></tr><tr><td width="20" valign="top">
@@ -142,6 +143,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
+function findProduct(id) {
+        console.log("Product ID: "+id);
+	var selectedProduct = document.getElementById(id);
+	selectedProduct.checked = true;
+	return selectedProduct;
+}
 function handleClick(myRadio) {
         console.log("Selected product: "+myRadio.value);
         var selectedProduct = JSON.parse(myRadio.value);
@@ -151,7 +158,8 @@ function handleClick(myRadio) {
         document.getElementById('description').value = selectedProduct.description;
         document.getElementById('price').value = selectedProduct.price;
 	document.getElementById('img1').src = selectedProduct.imageLocation;
-	document.getElementById('type_'+selectedProduct.type.toLowerCase()).checked = true;
+        document.getElementById('imageLocation').value = selectedProduct.imageLocation;
+ 	document.getElementById('type_'+selectedProduct.type.toLowerCase()).checked = true;
 	document.getElementById('promoted').checked = selectedProduct.promoted;
 }
     </script>

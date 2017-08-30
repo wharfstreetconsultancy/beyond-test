@@ -81,6 +81,7 @@ app.get('/', function (req, res) {
         	        // Dynamically add existing products list to response page and send to caller
 	                formatProductHtml(existingProductList, function(productsListClothingHtml, productsListJewelleryHtml) {
                         	fs.createReadStream(__dirname+'/index.html')
+                                        .pipe(replaceStream('{onload.action}', ''))
                 	                .pipe(replaceStream('{user.prompt}', 'Please provide product details'))
         				.pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
                                         .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
@@ -180,6 +181,7 @@ function createNewProduct(req, res) {
 
 					// Add dynamic elements to response page
 					fs.createReadStream(__dirname+'/index.html')
+	                                        .pipe(replaceStream('{onload.action}', 'handleClick(findProduct('+newProduct.id+'));'))
 						.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
 	                                        .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
         	                                .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
@@ -202,7 +204,6 @@ function updateExistingProduct(req, res) {
 
         // Update product
         imageObserver.on('update_product', function(imageLocation) {
-console.log("Product update requested");
 
                 // Create new product object
                 var updatedProduct = {
@@ -211,7 +212,7 @@ console.log("Product update requested");
                         type: req.body.type,
                         description: req.body.description,
                         price: req.body.price,
-                        imageLocation: imageLocation,
+                        imageLocation: ((imageLocation) ? imageLocation : req.body.imageLocation),
                         creationTimestamp: req.body.creationTimestamp,
                         lastUpdateTimestamp: timestamp,
                         promoted: req.body.promoted
@@ -242,6 +243,7 @@ console.log("Product update requested");
 
                                         // Add dynamic elements to response page
                                         fs.createReadStream(__dirname+'/index.html')
+                                                .pipe(replaceStream('{onload.action}', 'handleClick(findProduct('+updatedProduct.id+'));'))
                                                 .pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(updatedProduct.name)+' updated successfully at '+new Date(parseInt(updatedProduct.lastUpdateTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
                                                 .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
                                                 .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
@@ -252,7 +254,6 @@ console.log("Product update requested");
         });
 
 	if(req.file) {
-console.log("Image update requested for product: "+req.body.id+" to image: "+req.file.path);
 		// Update image if specified
 		request.put({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+req.body.id+'/image', formData: {filetoupload: fs.createReadStream(req.file.path)}}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
 	                if (imageStoreError) throw imageStoreError;
@@ -262,16 +263,12 @@ console.log("Image update requested for product: "+req.body.id+" to image: "+req
                 	// Log response body from remote server
 	                console.log( "Server responded with: " + imageStoreBody );
 
-console.log("Image update complete");
 			imageObserver.emit('update_product', imageStoreBody);
 		});
 	} else {
-console.log("Image update not requested");
 		// Trigger product update
                 imageObserver.emit('update_product');
 	}
-
-console.log("@@@@@@@@@@@@@@@@@@@ ENDED");
 }
 
 
@@ -283,7 +280,7 @@ function deleteExistingProduct(req, res) {
 
 //
 // Format products list into HTML
-function formatProductHtml(productsList,callback) {
+function formatProductHtml(productsList, callback) {
 
 	// Initialise clothing HTML section
 	var productsListClothingHtml = '';
@@ -302,7 +299,7 @@ function formatProductHtml(productsList,callback) {
 		}
 
                 // Write product into radio box choice element
-                currentProductHtml = '<input type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'handleClick(this);\' >'+currentProductHtml+'</input><br>Created on...<br>';
+                currentProductHtml = '<input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'handleClick(this);\'> '+currentProductHtml+'</input><br>Created on...<br>';
 
 		if(product.type == 'CLOTHING') {
 
