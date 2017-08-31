@@ -1,0 +1,17 @@
+{
+	"name": "saga_bankscraper",
+	"version": "1.0.0",
+	"description": "Bank Scraper - Displays the financial assets of banks.",
+	"author": "Paul Smith <wharfstreetconsulting@gmail.com>",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"express": "~4.13.3",
+		"request": "~2.81.0",
+		"htmlparser2": "~3.9.2",
+		"array-unique": "~0.3.2",
+                "replaceall": "~0.1.6"
+	}
+}
