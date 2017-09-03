@@ -8,9 +8,11 @@
 // Manage environment
 var express = require('express');
 var request = require('request');
+var throttledRequest = require('throttled-request')(request);
 var htmlparser = require("htmlparser2");
 var unique = require('array-unique');
 var replaceall = require("replaceall");
+var strutil = require("underscore.string");
 var app = express();
 var baseUrl = 'https://thebanks.eu';
 
@@ -29,43 +31,80 @@ app.get('/', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /" );
 
+        console.log( "STATUS: Begin processing stage..." );
+
+	// Configure request throttle
+        console.log("Request throttle set to "+req.query.reqpersec+"/sec");
+	var reqPerSec = ((req.query.reqpersec) ? req.query.reqpersec : 100);
+	throttledRequest.configure({requests: reqPerSec, milliseconds: 1000});
+
 	// Parse all countries
-	parseCountries(baseUrl+'/banks-by-country', function (outputCountries) {
+	parseCountries(baseUrl+'/banks-by-country', function (globalBankingData) {
 
-		var counterTotal = outputCountries.counterSuccess + outputCountries.counterConnectError + outputCountries.counterParseError;
-		var percentSuccess = Math.round((outputCountries.counterSuccess / counterTotal) * 100);
-		var percentConnectError = Math.round((outputCountries.counterConnectError / counterTotal) * 100);
-		var percentParseError = Math.round((outputCountries.counterParseError / counterTotal) * 100);
+	        console.log( "STATUS: ...end processing stage." );
+	        console.log( "STATUS: Begin presentation stage..." );
 
-                // Screen output
-                console.log();
-                console.log();
-		console.log("================================");
-                console.log("================================");
-                console.log("Processed "+counterTotal+" banks accross "+outputCountries.countries.length+" countries");
-		console.log(outputCountries.counterSuccess+" successes ("+percentSuccess+"); "+outputCountries.counterConnectError+" connection errors ("+percentConnectError+"); "+outputCountries.counterParseError+" parsing errors ("+percentParseError+")");
-                console.log("================================");
+		generateStats(globalBankingData.counterSuccess, globalBankingData.counterConnectError, globalBankingData.counterParseError, function (globalStats) {
 
-                res.writeHead(200, {'Content-Type': 'text/html'})
-		for(var outputCountry of outputCountries.countries) {
+	                // Console output
+        	        console.log();
+                	console.log();
+			console.log("================================");
+        	        console.log("================================");
+                	console.log("Processed "+globalStats.counterTotal+" banks across "+globalBankingData.countries.length+" countries");
+			console.log(globalStats.counterSuccess+" successes ("+globalStats.percentSuccess+"%); "+globalStats.counterConnectError+" connection errors ("+globalStats.percentConnectError+"%); "+globalStats.counterParseError+" parsing errors ("+globalStats.percentParseError+"%)");
+        	        console.log("================================");
 
-                        // Console output
-                        console.log(outputCountry.banks.length+" banks in "+replaceall('"','', JSON.stringify(outputCountry.name))+" (percentages....)");
+			// Web page output
+                	res.writeHead(200, {'Content-Type': 'text/html'});
+                        res.write('<h1>Processed '+globalStats.counterTotal+' banks across '+globalBankingData.countries.length+' countries</h1>');
+                        res.write('<h4>'+globalStats.counterSuccess+' successes ('+globalStats.percentSuccess+'%); '+globalStats.counterConnectError+' connection errors ('+globalStats.percentConnectError+'%); '+globalStats.counterParseError+' parsing errors ('+globalStats.percentParseError+'%)</h4>');
+			res.write('<hr>');
 
-                        // Web page output
-                        res.write('<h3>'+outputCountry.banks.length+' banks in '+JSON.stringify(outputCountry.name)+' (percentages....)</h3>');
+			for(var country of globalBankingData.countries) {
 
-			for(var outputBank of outputCountry.banks) {
+		                generateStats(country.counterSuccess, country.counterConnectError, country.counterParseError, function (countryStats) {
 
-				// Web page output
-                        	res.write(outputBank.name+','+outputBank.url+','+outputBank.assets+'<br>');
+	                        	// Console output
+	                        	console.log("Processed "+countryStats.counterTotal+" banks in "+replaceall('"','', JSON.stringify(country.name)));
+					console.log(countryStats.counterSuccess+" successes ("+countryStats.percentSuccess+"%); "+countryStats.counterConnectError+" connection errors ("+countryStats.percentConnectError+"%); "+countryStats.counterParseError+" parsing errors ("+countryStats.percentParseError+"%)");
+
+	                        	// Web page output
+                                        res.write('<h3>Processed '+countryStats.counterTotal+' banks in '+replaceall('"','', JSON.stringify(country.name))+'</h3>');
+                                        res.write('<h4>'+countryStats.counterSuccess+' successes ('+countryStats.percentSuccess+'%); '+countryStats.counterConnectError+' connection errors ('+countryStats.percentConnectError+'%); '+countryStats.counterParseError+' parsing errors ('+countryStats.percentParseError+'%)</h4>');
+
+					if(country.banks.length > 0) {
+
+						// Console output
+						console.log("| "+strutil("Name").rpad(45).value()+" | "+strutil("URL").rpad(35).value()+" | "+strutil("Assets").rpad(25).value()+" |");
+
+						// Web page output
+						res.write('<table width="80%">');
+                                                res.write('<tr bgcolor="#dddddd"><th width="40%">Bank Name</th><th width="40%">Bank Assets</th></tr>');
+
+						for(var bank of country.banks) {
+
+							// Console output
+							console.log("| "+strutil(bank.name).rpad(45).substring(0, 45).value()+" | "+strutil(bank.url).rpad(35).substring(0, 35).value()+" | "+strutil(bank.assets).rpad(25).substring(0, 25).value()+" |");
+
+							// Web page output
+	                        			res.write('<tr><td><a href="'+bank.url+'">'+bank.name+'</a></td><td>'+bank.assets+'</td></tr>');
+						}
+                                                // Console output
+                                                console.log("");
+
+                                                // Web page output
+						res.write('</table>');
+					}
+
+	                        	// Web page output
+	                        	res.write('<hr>');
+				});
 			}
 
-                        // Web page output
-                        res.write('<hr>');
-		}
-                console.log("Ending output stream.");
-                res.end();
+	                console.log( "STATUS: ...end presentation stage." );
+	                res.end();
+		});
         });
 });
 
@@ -74,8 +113,9 @@ app.get('/', function (req, res) {
 function parseCountries(url, callback) {
 
         // Download country list
-	request.get({url:url}, function (countryListError, countryListResponse, countryListBody) {
-		if (countryListError) throw countryListError;
+//	request.get({url:url}, function (countryListError, countryListResponse, countryListBody) {
+	throttledRequest({url:url}, function (countryListError, countryListResponse, countryListBody) {
+ 		if (countryListError) throw countryListError;
 
                 var counterSuccess = 0;
                 var counterConnectError = 0;
@@ -96,7 +136,7 @@ function parseCountries(url, callback) {
 			onend: function () {
 
 				unique(countries);
-                                process.stdout.write("Found "+countries.length+" countries\n");
+                                console.log("Found "+countries.length+" countries...");
 
 	                	// Iterate through each country
         	        	for (var country of countries) {
@@ -110,8 +150,7 @@ function parseCountries(url, callback) {
 
 						outputCountries.push(outputCountry);
 
-						process.stdout.write("\r\e[K");
-						process.stdout.write("Processed "+outputCountries.length+" countries");
+						console.log("----> "+outputCountries.length+":\t"+outputCountry.name+" ("+outputCountry.banks.length+" banks)");
 
                                                 if(countries.length == outputCountries.length) {
 
@@ -137,7 +176,8 @@ function parseCountries(url, callback) {
 function parseBanks(url, callback) {
 
 	// Download bank list for counntry
-        request.get({url:url}, function (bankListError, bankListResponse, bankListBody) {
+//        request.get({url:url}, function (bankListError, bankListResponse, bankListBody) {
+        throttledRequest({url:url}, function (bankListError, bankListResponse, bankListBody) {
                 if (bankListError) throw bankListError;
 
 		var urlTokens = url.split('/');
@@ -168,13 +208,15 @@ function parseBanks(url, callback) {
 
 						if(outputBank.name === 'Connect Error') {
 							counterConnectError++;
-						} else if(outputBank.name === 'Parse Error' || outputBank.asset === 'Parse Error') {
+						} else if(outputBank.name === 'Parse Error' || outputBank.assets === 'Parse Error') {
 							counterParseError++;
 						} else {
 							counterSuccess++;
 						}
 
 						outputBanks.push(outputBank);
+
+						process.stdout.write(".\r");
 
 						if(banks.length == outputBanks.length) {
 
@@ -202,7 +244,8 @@ function parseBanks(url, callback) {
 function parseBank(url, callback) {
 
         // Download bank list for counntry
-        request.get({url:url}, function (bankError, bankResponse, bankBody) {
+//        request.get({url:url}, function (bankError, bankResponse, bankBody) {
+        throttledRequest({url:url}, function (bankError, bankResponse, bankBody) {
 
                 if (bankError) {
                         callback({
@@ -250,5 +293,18 @@ function parseBank(url, callback) {
                 }, {decodeEntities: true}));
                 parser.write(bankBody);
                 parser.end();
+	});
+}
+
+function generateStats(counterSuccess, counterConnectError, counterParseError, callback) {
+	var counterTotal = counterSuccess + counterConnectError + counterParseError;
+	callback({
+		counterTotal: counterTotal,
+		counterSuccess: counterSuccess,
+		counterConnectError: counterConnectError,
+		counterParseError: counterParseError,
+		percentSuccess: Math.round((counterSuccess / counterTotal) * 100),
+		percentConnectError: Math.round((counterConnectError / counterTotal) * 100),
+		percentParseError: Math.round((counterParseError / counterTotal) * 100)
 	});
 }

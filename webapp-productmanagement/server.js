@@ -98,7 +98,7 @@ app.get('/', function (req, res) {
 
 //
 // POST '/' - Create, update or delete product
-app.post('/', upload.single('filetoupload'), function (req, res) {
+app.post('/', upload.array('image_files'), function (req, res) {
 
 	// Log request received
 	console.log( "Received request: POST /" );
@@ -134,8 +134,15 @@ function createNewProduct(req, res) {
 	// Generate product ID
 	var id = timestamp.split("").reverse().join("");
 
+	var imageArray = [];
+	if(req.files) {
+		for(var file of req.files) {
+			imageArray.push(createReadStream(file.path));
+		}
+	}
+
 	// Store product image
-	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+id+'/image', formData: {filetoupload: fs.createReadStream(req.file.path)}}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
+	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+id+'/image', formData: {image_files: imageArray}}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
 		if (imageStoreError) throw imageStoreError;
 
 		// Log status code from remote server
@@ -204,7 +211,6 @@ function updateExistingProduct(req, res) {
 
         // Update product
         imageObserver.on('update_product', function(imageLocation) {
-
                 // Create new product object
                 var updatedProduct = {
                         id: req.body.id,
@@ -212,7 +218,9 @@ function updateExistingProduct(req, res) {
                         type: req.body.type,
                         description: req.body.description,
                         price: req.body.price,
-                        imageLocation: ((imageLocation) ? imageLocation : req.body.imageLocation),
+                        images: [
+				((imageLocation) ? imageLocation : req.body.imageLocation)
+			],
                         creationTimestamp: req.body.creationTimestamp,
                         lastUpdateTimestamp: timestamp,
                         promoted: req.body.promoted
@@ -253,9 +261,17 @@ function updateExistingProduct(req, res) {
 		});
         });
 
-	if(req.file) {
+	if(req.files) {
+		console.log("New Images: "+JSON.stringify(req.files));
+                console.log("Existing Images: "+JSON.stringify(req.body));
+
+/*
+		var imageArray = [];
+		for(var file of req.files) {
+			imageArray.push(fs.createReadStream(file.path));
+		}
 		// Update image if specified
-		request.put({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+req.body.id+'/image', formData: {filetoupload: fs.createReadStream(req.file.path)}}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
+		request.put({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+req.body.id+'/image', formData: {image_files: imageArray}}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
 	                if (imageStoreError) throw imageStoreError;
 
 	                // Log status code from remote server
@@ -265,12 +281,12 @@ function updateExistingProduct(req, res) {
 
 			imageObserver.emit('update_product', imageStoreBody);
 		});
+*/
 	} else {
 		// Trigger product update
                 imageObserver.emit('update_product');
 	}
 }
-
 
 //
 // Delete existing product
@@ -371,7 +387,7 @@ app.get('/product', function (req, res) {
 
 //
 // POST - product API - Create new product details
-app.post('/product', upload.single('filetoupload'), function (req, res) {
+app.post('/product', upload.array('image_files'), function (req, res) {
 
         // Log request received
         console.log( "Received request: POST /product" );
@@ -382,7 +398,7 @@ app.post('/product', upload.single('filetoupload'), function (req, res) {
 
 //
 // PUT - product API - Update existing product details
-app.put('/product/:id', upload.single('filetoupload'), function (req, res) {
+app.put('/product/:id', upload.array('image_files'), function (req, res) {
 
         // Log request received
         console.log( "Received request: PUT /product/"+req.params.id );
@@ -421,7 +437,7 @@ function uploadProduct(req, res) {
 
 //
 // POST - product API - Create new product image
-app.post('/product/:id/image', upload.single('filetoupload'), function (req, res) {
+app.post('/product/:id/image', upload.array('image_files'), function (req, res) {
 
         // Log request received
         console.log( "Received request: POST /product/"+req.params.id+"/image" );
@@ -432,7 +448,7 @@ app.post('/product/:id/image', upload.single('filetoupload'), function (req, res
 
 //
 // PUT - product API - Updates existing product image
-app.put('/product/:id/image', upload.single('filetoupload'), function (req, res) {
+app.put('/product/:id/image', upload.array('image_files'), function (req, res) {
 
 	// Log request received
 	console.log( "Received request: PUT /product/"+req.params.id+"/image" );
@@ -445,12 +461,13 @@ app.put('/product/:id/image', upload.single('filetoupload'), function (req, res)
 // Upload image to content store
 function uploadImage(req, res) {
 	// Log image path
-	console.log("Image: "+req.file.path);
-
+        console.log("New Image: "+JSON.stringify(req.files));
+	console.log("New Image: "+JSON.stringify(req.files));
+/*
 	// Create params for image 'store' operation
 	var storeImageParams = {
 		Bucket: 'suroor.fashions.products',
-		Key: req.params.id+'/main',
+		Key: req.params.id+'/'+req.file.path.split('/')[2],
 		Body: fs.createReadStream(req.file.path).on('error', function(err) {
   console.log('File Error', err);
 })
@@ -465,6 +482,7 @@ function uploadImage(req, res) {
                 // Return updated product list to caller
 		res.end(data.Location);
 	});
+*/
 }
 
 //
@@ -475,10 +493,6 @@ function loadAllProducts(callback) {
 	var params = {
 		TableName: 'SuroorFashionsProducts',
 		Limit: 10
-		// ExpressionAttributeValues: {
-			// ':c': 'CLOTHING'
-		// },
-		// FilterExpression: 'productType = :c'
 	};
 
 	// Perform product load action

@@ -74,18 +74,20 @@
 </td><td align="left" valign="top" width="25%">
                 <div class="caption">
                     <table><tr><td width="20" valign="top">
-                        <img id="img1" width="20" />
-                        <input id="imageLocation" type="hidden" name="imageLocation">
+                        <img id="image1_src" width="20" />
+                        <input id="image1_loc" type="hidden" name="image1_loc">
                     </td><td valign="top">
-                        <b>Image 1</b> (main image for all displays):<input type="file" name="filetoupload" size="50" /><br>
+                        <b>Image 1</b> (main image for all displays):<input type="file" name="image_files" size="50" /><br>
                     </td></tr><tr><td width="20" valign="top">
-                        <img id="img2" width="20" />
+                        <img id="image2_src" width="20" />
+                        <input id="image2_loc" type="hidden" name="image2_loc">
                     </td><td valign="top">
-                        <b>Image 2</b> (optional image for slideshow displays):<input type="file" name="" size="50" /><br>
+                        <b>Image 2</b> (optional image for slideshow displays):<input type="file" name="image_files" size="50" /><br>
                     </td></tr><tr><td width="20" valign="top">
-                        <img id="img3" width="20" />
+                        <img id="image3_src" width="20" />
+                        <input id="image3_loc" type="hidden" name="image3_loc">
                     </td><td valign="top">
-                        <b>Image 3</b> (optional image for slideshow displays):<input type="file" name="" size="50" /><br>
+                        <b>Image 3</b> (optional image for slideshow displays):<input type="file" name="image_files" size="50" /><br>
                     </td></tr></table>
                 </div>
 </td><td align="left" valign="top" width="25%">
@@ -157,8 +159,10 @@ function handleClick(myRadio) {
         document.getElementById('name').value = selectedProduct.name;
         document.getElementById('description').value = selectedProduct.description;
         document.getElementById('price').value = selectedProduct.price;
-	document.getElementById('img1').src = selectedProduct.imageLocation;
-        document.getElementById('imageLocation').value = selectedProduct.imageLocation;
+	for(var image of selectedProduct.images) {
+		document.getElementById(image.key+'_src').src = image.imageLocation;
+        	document.getElementById(image.key+'_location').value = image.imageLocation;
+	}
  	document.getElementById('type_'+selectedProduct.type.toLowerCase()).checked = true;
 	document.getElementById('promoted').checked = selectedProduct.promoted;
 }

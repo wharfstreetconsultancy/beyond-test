@@ -10,8 +10,10 @@
 	"dependencies": {
 		"express": "~4.13.3",
 		"request": "~2.81.0",
+		"throttled-request": "~0.1.1",
 		"htmlparser2": "~3.9.2",
 		"array-unique": "~0.3.2",
-                "replaceall": "~0.1.6"
+                "replaceall": "~0.1.6",
+		"underscore.string": "~3.3.4"
 	}
 }
