@@ -39,60 +39,20 @@ app.get('/', function (req, res) {
 
 	//
 	// Load all existing products from REST API
+	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-	// Params for load operation
-	var loadProductParams = {
-		host: 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com',
-		port: 81,
-		path: '/product',
-		method: 'GET',
-		headers:{
-			'Content-Type': 'application/json'
-		}
-	};
+		// Add dynamic elements to response page
+		formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
 
-	// Call to REST API to load existing products
-	var loadReq = http.request(loadProductParams, function(response) {
-
-                // Log status code from remote server
-                console.log( "Server responded with: " + response.statusCode );
-
-                // Set encoding for output
-                response.setEncoding('utf8');
-
-                // Output buffer`
-                var output = '';
-
-		// Next chunk of output received
-		response.on('data', function (chunk) {
-			// Append to output buffer
-			output += chunk;
-		});
-
-		// All output received
-		response.on('end', function() {
-
-			// Log response body from remote server
-			console.log( "Server responded with: " + output );
-
-			// Parse response body into existing products list
-			var existingProductList = JSON.parse(output);
-
-        	        // Dynamically add existing products list to response page and send to caller
-	                formatProductHtml(existingProductList, function(productsListClothingHtml, productsListJewelleryHtml) {
-                        	fs.createReadStream(__dirname+'/index.html')
-                                        .pipe(replaceStream('{onload.action}', ''))
-                	                .pipe(replaceStream('{user.prompt}', 'Please provide product details'))
-        				.pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
-                                        .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
-        	                        .pipe(res);
-	                });
+			// Add dynamic elements to response page
+			fs.createReadStream(__dirname+'/index.html')
+				.pipe(replaceStream('{onload.action}', ''))
+				.pipe(replaceStream('{user.prompt}', (productLoadErrorMessage) ? productLoadErrorMessage: 'Please provide product details.'))
+				.pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
+				.pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
+				.pipe(res);
 		});
 	});
-	loadReq.on('error', function(error) {
-        	throw error;
-	});
-	loadReq.end();
 });
 
 
@@ -112,7 +72,24 @@ app.post('/', upload.array('image_files'), function (req, res) {
 	if(action == 'create') {
 
 		// Create new product
-		createNewProduct(req, res);
+		createNewProduct(req, res, function (productStoreErrorMessage, newProduct) {
+
+			// Load existing products
+			loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+
+                                // Add dynamic elements to response page
+                                formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+
+                                        // Add dynamic elements to response page
+                                        fs.createReadStream(__dirname+'/index.html')
+                                                .pipe(replaceStream('{onload.action}', (newProduct) ? 'selectProduct(findProduct('+newProduct.id+'));' : ''))
+                                                .pipe(replaceStream('{user.prompt}', (productStoreErrorMessage) ? productStoreErrorMessage : 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'. Please provide more product details.'))
+                                                .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
+                                                .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
+                                                .pipe(res);
+                                });
+			});
+		});
 	} else if(action == 'update') {
 
                 // Update existing product
@@ -126,7 +103,29 @@ app.post('/', upload.array('image_files'), function (req, res) {
 
 //
 // Create new product
-function createNewProduct(req, res) {
+function loadExistingProducts(req, res, callback) {
+
+	request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function (productLoadError, productLoadResponse, productLoadBody) {
+
+                // Log error from remote server
+                console.log( "REST API server responded with 'err': " + productLoadError );
+		// Log status code from remote server
+		console.log( "REST API server responded with 'status': " + productLoadResponse.statusCode );
+		// Log response body from remote server
+		console.log( "REST API server responded with 'body': " + productLoadBody );
+
+                // Error handling
+                if(productLoadResponse.statusCode != '200') {
+			callback('Failed to load existing products.', null);
+                }
+
+		callback(null, JSON.parse(productLoadBody));
+	});
+}
+
+//
+// Create new product
+function createNewProduct(req, res, callback) {
 
 	// Capture creation timestamp
 	var timestamp = new Date().getTime().toString();
@@ -137,66 +136,58 @@ function createNewProduct(req, res) {
 	var imageArray = [];
 	if(req.files) {
 		for(var file of req.files) {
-			imageArray.push(createReadStream(file.path));
+			imageArray.push(fs.createReadStream(file.path));
 		}
 	}
 
-	// Store product image
-	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+id+'/image', formData: {image_files: imageArray}}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
-		if (imageStoreError) throw imageStoreError;
+	// Store product images
+/*
+	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+id+'/image', formData: {image_files: imageArray}}, function (imageStoreError, imageStoreResponse, imageStoreBody) {
 
+                // Log error from remote server
+                console.log( "REST API server responded with 'err': " + imageStoreError );
 		// Log status code from remote server
-                console.log( "Server responded with: " + imageStoreResponse.statusCode );
+                console.log( "REST API server responded with 'status': " + imageStoreResponse.statusCode );
 		// Log response body from remote server
-		console.log( "Server responded with: " + imageStoreBody );
+		console.log( "REST API server responded with 'body':" + imageStoreBody );
 
-	        // Create new product object
-        	var newProduct = {
-                	id: id,
-	                name: req.body.name,
-        	        type: req.body.type,
-                	description: req.body.description,
-			price: req.body.price,
-               		imageLocation: imageStoreBody,
-	        	creationTimestamp: timestamp,
-                        lastUpdateTimestamp: timestamp,
-			promoted: req.body.promoted
-	        };
+		// Error handling
+		if(imageStoreResponse.statusCode != '200') {
+			console.log("Exiting product creation process as image failed to upload.");
+			callback('Failed to load product image for new product (name: '+req.body.name+').', null);
+		} else {
+*/
+		        // Create new product object
+	        	var newProduct = {
+        	        	id: id,
+	        	        name: req.body.name,
+        	        	type: req.body.type,
+	                	description: req.body.description,
+				price: req.body.price,
+               			// images: JSON.parse(imageStoreBody),
+	        		creationTimestamp: timestamp,
+	                        lastUpdateTimestamp: timestamp,
+				promoted: req.body.promoted
+	        	};
 
-	        // Log new product object
-        	console.log( "New Product: " + JSON.stringify(newProduct) );
+		        // Log new product object
+        		console.log( "New Product: " + JSON.stringify(newProduct) );
 
-		// Store product 
-		request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product', formData: {product: JSON.stringify(newProduct)}}, function callback(productStoreError, productStoreResponse, productStoreBody) {
-                	if (productStoreError) throw productStoreError;
+			// Store product 
+			request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product', formData: {product: JSON.stringify(newProduct)}}, function (productStoreError, productStoreResponse, productStoreBody) {
+                		if (productStoreError) throw productStoreError;
 
-                	// Log status code from remote server
-	                console.log( "Server responded with: " + productStoreResponse.statusCode );
-        	        // Log response body from remote server
-	                console.log( "Server responded with: " + productStoreBody );
+	                	// Log error from remote server
+	        	        console.log( "REST API server responded with 'err': " + productStoreError );
+        	        	// Log status code from remote server
+	        	        console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
+        	        	// Log response body from remote server
+		                console.log( "REST API server responded with 'body': " + productStoreBody );
 
-			request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function callback(productLoadError, productLoadResponse, productLoadBody) {
-	                        if (productLoadError) throw productLoadError;
-
-                        	// Log status code from remote server
-                	        console.log( "Server responded with: " + productLoadResponse.statusCode );
-        	                // Log response body from remote server
-	                        console.log( "Server responded with: " + productLoadBody );
-		
-				// Add dynamic elements to response page
-				formatProductHtml(JSON.parse(productLoadBody), function(productsListClothingHtml, productsListJewelleryHtml) {
-
-					// Add dynamic elements to response page
-					fs.createReadStream(__dirname+'/index.html')
-	                                        .pipe(replaceStream('{onload.action}', 'handleClick(findProduct('+newProduct.id+'));'))
-						.pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
-	                                        .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
-        	                                .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
-                                		.pipe(res);
-				});
+				callback(null, newProduct);
 			});
-	        });
-	});
+		// }
+	// });
 }
 
 //
@@ -251,7 +242,7 @@ function updateExistingProduct(req, res) {
 
                                         // Add dynamic elements to response page
                                         fs.createReadStream(__dirname+'/index.html')
-                                                .pipe(replaceStream('{onload.action}', 'handleClick(findProduct('+updatedProduct.id+'));'))
+                                                .pipe(replaceStream('{onload.action}', 'selectProduct(findProduct('+updatedProduct.id+'));'))
                                                 .pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(updatedProduct.name)+' updated successfully at '+new Date(parseInt(updatedProduct.lastUpdateTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
                                                 .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
                                                 .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
@@ -315,7 +306,7 @@ function formatProductHtml(productsList, callback) {
 		}
 
                 // Write product into radio box choice element
-                currentProductHtml = '<input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'handleClick(this);\'> '+currentProductHtml+'</input><br>Created on...<br>';
+                currentProductHtml = '<input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'selectProduct(this);\'> '+currentProductHtml+'</input><br>Created on...<br>';
 
 		if(product.type == 'CLOTHING') {
 
@@ -377,7 +368,8 @@ app.get('/product', function (req, res) {
 	console.log( "Received request: GET /product" );
 
 	// Fetch updated products list
-	loadAllProducts(function (existingProductsList) {
+	loadProduct(null, function (loadProductError, existingProductsList) {
+
 		// Return existing product list to caller
 		res.writeHead(200, {'Content-Type': 'application/json'});
 		res.write(JSON.stringify(existingProductsList));
@@ -393,7 +385,20 @@ app.post('/product', upload.array('image_files'), function (req, res) {
         console.log( "Received request: POST /product" );
 
         // Upload product
-        uploadProduct(req, res);
+        storeProduct(req, res, function(productStoreError, newProduct) {
+
+                if(productStoreError) {
+
+                        // Return existing product list to caller
+                        res.writeHead(500, {'Content-Type': 'application/json'});
+                        res.write(productStoreError);
+                        res.end();
+                } else {
+
+	                // Return product details to caller
+        	        res.end(JSON.stringify(newProduct));
+		}
+	});
 });
 
 //
@@ -404,12 +409,25 @@ app.put('/product/:id', upload.array('image_files'), function (req, res) {
         console.log( "Received request: PUT /product/"+req.params.id );
 
 	// Upload product
-	uploadProduct(req, res);
+	storeProduct(req, res, function(productStoreError, newProduct) {
+
+                if(productStoreError) {
+
+                        // Return existing product list to caller
+                        res.writeHead(500, {'Content-Type': 'application/json'});
+                        res.write(productStoreError);
+                        res.end();
+                } else {
+
+                        // Return product details to caller
+                        res.end(JSON.stringify(newProduct));
+                }
+	});
 });
 
 //
 // Upload new or existing product
-function uploadProduct(req, res) {
+function storeProduct(req, res, callback) {
 
 	// Parse request body into new product object
 	var product = JSON.parse(req.body.product);
@@ -425,13 +443,16 @@ function uploadProduct(req, res) {
 
         // Perform product store operation
 	dddc.put(storeProductParams, function (err, data) {
-                if(err) throw err;
+                if (err) {
+                        callback('Failed to store product(s)', null);
+                } else {
 
-		// Log output from data store
-		console.log("Data returned from data store: "+JSON.stringify(data));
+			// Log output from data store
+			console.log("Data returned from data store: "+JSON.stringify(data));
 
-                // Return product details to caller
-                res.end(JSON.stringify(product));
+	                // Return product details to caller
+        	        callback(null, JSON.stringify(data));
+		}
 	});
 }
 
@@ -442,8 +463,64 @@ app.post('/product/:id/image', upload.array('image_files'), function (req, res) 
         // Log request received
         console.log( "Received request: POST /product/"+req.params.id+"/image" );
 
-	// Upload image
-	uploadImage(req, res);
+	// Get specified product
+        loadProduct(req.params.id, function (productLoadError, product) {
+
+		if(productLoadError) {
+
+	                // Return existing product list to caller
+        	        res.writeHead(404, {'Content-Type': 'application/json'});
+                	res.write('Product ('+req.params.id+') not found');
+	                res.end();
+		} else {
+
+	        	// Upload image
+		        storeImage(req, res, function (productLoadError, image) {
+
+		                if(productLoadError) {
+
+		                        // Return failure message to caller
+		                        res.writeHead(500, {'Content-Type': 'application/json'});
+		                        res.write(productLoadError);
+		                        res.end();
+		                } else {
+
+					// New product image
+					var image = {
+						isDefault: req.body.isDefault,
+						location: image,
+						tag: req.body.image_tag
+					}
+
+					console.log("New image: "+JSON.stringify(image));
+
+	                        	// Update product with new image
+					if(!product.images) {
+						product.images = [];
+					}
+					product.images.push(image);
+					req.body.product = JSON.stringify(product);
+
+					storeProduct(req, res, function (productStoreError, updatedProduct) {
+
+				                if(productStoreError) {
+
+				                        // Return existing product list to caller
+				                        res.writeHead(500, {'Content-Type': 'application/json'});
+				                        res.write(productStoreError);
+				                        res.end();
+				                } else {
+
+	                                                // Return uploaded image locations to caller
+        	                                        res.writeHead(200, {'Content-Type': 'application/json'});
+                	                                res.write(JSON.stringify(imageLocations));
+                        	                        res.end();
+				                }
+					});
+				}
+			});
+		}
+        });
 });
 
 //
@@ -454,59 +531,105 @@ app.put('/product/:id/image', upload.array('image_files'), function (req, res) {
 	console.log( "Received request: PUT /product/"+req.params.id+"/image" );
 
         // Upload image
-        uploadImage(req, res);
+        storeImage(req, res);
 });
 
 //
 // Upload image to content store
-function uploadImage(req, res) {
+function storeImage(req, res, callback) {
 	// Log image path
-        console.log("New Image: "+JSON.stringify(req.files));
-	console.log("New Image: "+JSON.stringify(req.files));
-/*
-	// Create params for image 'store' operation
-	var storeImageParams = {
-		Bucket: 'suroor.fashions.products',
-		Key: req.params.id+'/'+req.file.path.split('/')[2],
-		Body: fs.createReadStream(req.file.path).on('error', function(err) {
-  console.log('File Error', err);
-})
-	};
-	console.log("Uploading image: "+req.file.path+" to storage path: "+storeImageParams.Key);
-	// Perform image store action
-	s3.upload(storeImageParams, function (err, data) {
-		if (err) throw err;
+	console.log("New Image List: "+JSON.stringify(req.files));
 
-		console.log("Upload Success", data.Location);
+	if(req.files.length > 0) {
 
-                // Return updated product list to caller
-		res.end(data.Location);
-	});
-*/
+        	// Declare array of uploaded image locations for output
+	        var imageLocations = [];
+
+		// Iterate through image files
+		for(var file of req.files) {
+
+			// Create params for image 'store' operation
+			var storeImageParams = {
+				Bucket: 'suroor.fashions.products',
+				Key: req.params.id+'/'+file.path.split('/')[2],
+				Body: fs.createReadStream(file.path)
+			}
+			console.log("Uploading image: "+file.path+" to storage path: "+storeImageParams.Key);
+			// Store images at data source
+			s3.upload(storeImageParams, function (err, data) {
+
+				if (err) {
+
+	        	                callback('Failed to store product image(s)', null);
+				} else {
+
+					console.log("Upload Success", data.Location);
+
+					// Add store image location to output array
+					imageLocations.push(data.Location);
+
+					if(imageLocations.length == req.files.length) {
+
+		        	        	// Log success to console
+		        	        	console.log("All images uploaded successfully");
+
+						// Return uploaded image locations to caller
+						callback(null, imageLocations);
+					}
+				}
+			});
+		}
+	} else {
+
+		// Report empty input to caller
+		callback('No files found in input stream', null);
+	}
 }
 
 //
 // Get all products from the product catalog
-function loadAllProducts(callback) {
+function loadProduct(productId, callback) {
 
+	var params;
 	// Create load params
-	var params = {
-		TableName: 'SuroorFashionsProducts',
-		Limit: 10
-	};
-
+        if(productId) {
+		params = {
+			TableName: 'SuroorFashionsProducts',
+			Limit: 10,
+                        ExpressionAttributeValues: {':p': productId},
+			FilterExpression: 'id = :p'
+		};
+	} else {
+                params = {
+                        TableName: 'SuroorFashionsProducts',
+                        Limit: 10
+                };
+	}
+	console.log("Searching for existing products with: "+JSON.stringify(params));
 	// Perform product load action
-	dddc.scan(params, function(err, productsData) {
-		if(err) throw err;
+	dddc.scan(params, function (err, productsData) {
+		if(err) {
 
-		// Select only product items from output
-		productsList = productsData.Items;
+			// Return error to caller
+			callback('Failed to load product(s)', null);
+		} else {
 
-		// Log loaded products list
-		console.log("Loaded: "+JSON.stringify(productsList));
+			if(productId) {
 
-		// Return products list to caller
-		callback(productsList);
+				// If product ID was specified then a single product is expected
+				product = productsData.Items[0];
+			} else {
+
+				// Select only product items from output
+				product = productsData.Items;
+			}
+
+			// Log loaded products list
+			console.log("Loaded product data: "+JSON.stringify(product));
+
+			// Return products list to caller
+			callback(null, product);
+		}
 	});
 }
 
