@@ -78,12 +78,12 @@ app.post('/', upload.array('image_files'), function (req, res) {
 			loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
                                 // Add dynamic elements to response page
-                                formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+                                formatProductHtml(productsList, function (productsListClothingHtml, productsListJewelleryHtml) {
 
                                         // Add dynamic elements to response page
                                         fs.createReadStream(__dirname+'/index.html')
-                                                .pipe(replaceStream('{onload.action}', (newProduct) ? 'selectProduct(findProduct('+newProduct.id+'));' : ''))
-                                                .pipe(replaceStream('{user.prompt}', (productStoreErrorMessage) ? productStoreErrorMessage : 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'. Please provide more product details.'))
+                                                .pipe(replaceStream('{onload.action}', (newProduct) ? 'selectProduct(JSON.parse(document.getElementById('+newProduct.id+').value));' : ''))
+                                                .pipe(replaceStream('{user.prompt}', (productStoreErrorMessage) ? productStoreErrorMessage : 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'. Please provide more product details...'))
                                                 .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
                                                 .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
                                                 .pipe(res);
@@ -92,8 +92,32 @@ app.post('/', upload.array('image_files'), function (req, res) {
 		});
 	} else if(action == 'update') {
 
+		console.log("!!!!!!!!!!!!!!!!!! "+util.inspect(req.body));
+
                 // Update existing product
-                updateExistingProduct(req, res);
+                updateExistingProduct(req, res, function (productStoreErrorMessage, updatedProduct) {
+
+
+                        // Load existing products
+                        loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+
+                                // Add dynamic elements to response page
+                                formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+
+
+                                        // Add dynamic elements to response page
+                                        fs.createReadStream(__dirname+'/index.html')
+                                                .pipe(replaceStream('{onload.action}', 'selectProduct(JSON.parse(document.getElementById('+updatedProduct.id+').value));'))
+                                                .pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(updatedProduct.name)+' updated successfully at '+new Date(parseInt(updatedProduct.lastUpdateTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'. Please provide more product details...'))
+                                                .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
+                                                .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
+                                                .pipe(res);
+
+
+
+                                });
+                        });
+		});
 	} else if(action == 'delete') {
 
                 // Delete existing product
@@ -106,6 +130,7 @@ app.post('/', upload.array('image_files'), function (req, res) {
 function loadExistingProducts(req, res, callback) {
 
 	request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function (productLoadError, productLoadResponse, productLoadBody) {
+		if (productLoadError) callback('Failed to load existing products.', null);
 
                 // Log error from remote server
                 console.log( "REST API server responded with 'err': " + productLoadError );
@@ -175,7 +200,7 @@ function createNewProduct(req, res, callback) {
 
 			// Store product 
 			request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product', formData: {product: JSON.stringify(newProduct)}}, function (productStoreError, productStoreResponse, productStoreBody) {
-                		if (productStoreError) throw productStoreError;
+                		if (productStoreError) callback('Failed to store new product.', null);
 
 	                	// Log error from remote server
 	        	        console.log( "REST API server responded with 'err': " + productStoreError );
@@ -183,6 +208,11 @@ function createNewProduct(req, res, callback) {
 	        	        console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
         	        	// Log response body from remote server
 		                console.log( "REST API server responded with 'body': " + productStoreBody );
+
+				// Error handling
+				if(productStoreResponse.statusCode != '200') {
+					callback('Failed to store new product.', null);
+				}
 
 				callback(null, newProduct);
 			});
@@ -192,8 +222,48 @@ function createNewProduct(req, res, callback) {
 
 //
 // Update existing product
-function updateExistingProduct(req, res) {
+function updateExistingProduct(req, res, callback) {
 
+        // Capture update timestamp
+        var timestamp = new Date().getTime().toString();
+
+	// Create new product object
+	var updatedProduct = {
+		id: req.body.id,
+		name: req.body.name,
+		type: req.body.type,
+		description: req.body.description,
+		price: req.body.price,
+		images: JSON.parse(req.body.images),
+		creationTimestamp: timestamp,
+		lastUpdateTimestamp: timestamp,
+		promoted: req.body.promoted
+	};
+
+	// Log new product object
+	console.log( "Updated Product: " + JSON.stringify(updatedProduct) );
+
+	// Store product
+	request.put({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}}, function (productStoreError, productStoreResponse, productStoreBody) {
+		if (productStoreError) callback('Failed to store existing product.', null);
+
+		// Log error from remote server
+		console.log( "REST API server responded with 'err': " + productStoreError );
+		// Log status code from remote server
+		console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
+		// Log response body from remote server
+		console.log( "REST API server responded with 'body': " + productStoreBody );
+
+		// Error handling
+		if(productStoreResponse.statusCode != '200') {
+			callback('Failed to store existing product.', null);
+		}
+
+		callback(null, updatedProduct);
+	});
+
+
+/*
         // Capture update timestamp
         var timestamp = new Date().getTime().toString();
 
@@ -242,7 +312,7 @@ function updateExistingProduct(req, res) {
 
                                         // Add dynamic elements to response page
                                         fs.createReadStream(__dirname+'/index.html')
-                                                .pipe(replaceStream('{onload.action}', 'selectProduct(findProduct('+updatedProduct.id+'));'))
+                                                .pipe(replaceStream('{onload.action}', 'selectProduct(JSON.parse(document.getElementById('+updatedProduct.id+')));'))
                                                 .pipe(replaceStream('{user.prompt}', 'Product '+JSON.stringify(updatedProduct.name)+' updated successfully at '+new Date(parseInt(updatedProduct.lastUpdateTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'<br>Please provide more product details'))
                                                 .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
                                                 .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
@@ -256,7 +326,6 @@ function updateExistingProduct(req, res) {
 		console.log("New Images: "+JSON.stringify(req.files));
                 console.log("Existing Images: "+JSON.stringify(req.body));
 
-/*
 		var imageArray = [];
 		for(var file of req.files) {
 			imageArray.push(fs.createReadStream(file.path));
@@ -272,11 +341,11 @@ function updateExistingProduct(req, res) {
 
 			imageObserver.emit('update_product', imageStoreBody);
 		});
-*/
 	} else {
 		// Trigger product update
                 imageObserver.emit('update_product');
 	}
+*/
 }
 
 //
@@ -306,7 +375,7 @@ function formatProductHtml(productsList, callback) {
 		}
 
                 // Write product into radio box choice element
-                currentProductHtml = '<input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'selectProduct(this);\'> '+currentProductHtml+'</input><br>Created on...<br>';
+                currentProductHtml = '<div id=\''+product.id+'_div\'><input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'selectProduct(JSON.parse(this.value));\'> '+currentProductHtml+'</input><br>Created on...<br></div>';
 
 		if(product.type == 'CLOTHING') {
 
@@ -378,6 +447,23 @@ app.get('/product', function (req, res) {
 });
 
 //
+// GET - product API - get specific product
+app.get('/product/:id', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: GET /product/"+req.params.id );
+
+        // Fetch updated products list
+        loadProduct(req.params.id, function (loadProductError, existingProduct) {
+
+                // Return existing product list to caller
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.write(JSON.stringify(existingProduct));
+                res.end();
+        });
+});
+
+//
 // POST - product API - Create new product details
 app.post('/product', upload.array('image_files'), function (req, res) {
 
@@ -385,7 +471,7 @@ app.post('/product', upload.array('image_files'), function (req, res) {
         console.log( "Received request: POST /product" );
 
         // Upload product
-        storeProduct(req, res, function(productStoreError, newProduct) {
+        storeProduct(JSON.parse(req.body.product), function(productStoreError, newProduct) {
 
                 if(productStoreError) {
 
@@ -407,9 +493,16 @@ app.put('/product/:id', upload.array('image_files'), function (req, res) {
 
         // Log request received
         console.log( "Received request: PUT /product/"+req.params.id );
-
+console.log("Headers: "+JSON.stringify(req.headers));
+console.log("Body: "+JSON.stringify(req.body));
+console.log("Query: "+JSON.stringify(req.query));
+console.log("Params: "+JSON.stringify(req.params));
+// for(var header of req.headers) {
+// console.log("Header: "+JSON.stringify(header));
+// }
+console.log("Done");
 	// Upload product
-	storeProduct(req, res, function(productStoreError, newProduct) {
+	storeProduct(JSON.parse(req.body.product), function(productStoreError, newProduct) {
 
                 if(productStoreError) {
 
@@ -427,10 +520,7 @@ app.put('/product/:id', upload.array('image_files'), function (req, res) {
 
 //
 // Upload new or existing product
-function storeProduct(req, res, callback) {
-
-	// Parse request body into new product object
-	var product = JSON.parse(req.body.product);
+function storeProduct(product, callback) {
 
         // Create params for product 'store' operation
         var storeProductParams = {
@@ -475,33 +565,26 @@ app.post('/product/:id/image', upload.array('image_files'), function (req, res) 
 		} else {
 
 	        	// Upload image
-		        storeImage(req, res, function (productLoadError, image) {
+		        storeImages(req.params.id, req.files, function (imageStoreError, uploadedImages) {
 
-		                if(productLoadError) {
+		                if(imageStoreError) {
 
 		                        // Return failure message to caller
 		                        res.writeHead(500, {'Content-Type': 'application/json'});
-		                        res.write(productLoadError);
+		                        res.write(imageStoreError);
 		                        res.end();
 		                } else {
 
-					// New product image
-					var image = {
-						isDefault: req.body.isDefault,
-						location: image,
-						tag: req.body.image_tag
-					}
-
-					console.log("New image: "+JSON.stringify(image));
+					var uploadedImage = uploadedImages[0];
 
 	                        	// Update product with new image
 					if(!product.images) {
 						product.images = [];
+						uploadedImage.isDefault = true;
 					}
-					product.images.push(image);
-					req.body.product = JSON.stringify(product);
+					product.images.push(uploadedImage);
 
-					storeProduct(req, res, function (productStoreError, updatedProduct) {
+					storeProduct(product, function (productStoreError, updatedProduct) {
 
 				                if(productStoreError) {
 
@@ -513,7 +596,7 @@ app.post('/product/:id/image', upload.array('image_files'), function (req, res) 
 
 	                                                // Return uploaded image locations to caller
         	                                        res.writeHead(200, {'Content-Type': 'application/json'});
-                	                                res.write(JSON.stringify(imageLocations));
+                	                                res.write(JSON.stringify(uploadedImage));
                         	                        res.end();
 				                }
 					});
@@ -531,58 +614,107 @@ app.put('/product/:id/image', upload.array('image_files'), function (req, res) {
 	console.log( "Received request: PUT /product/"+req.params.id+"/image" );
 
         // Upload image
-        storeImage(req, res);
+        storeImages(req.params.id, req.files);
 });
 
 //
-// Upload image to content store
-function storeImage(req, res, callback) {
-	// Log image path
-	console.log("New Image List: "+JSON.stringify(req.files));
+// Upload an array of images to content store
+function storeImages(productId, imageFiles, callback) {
 
-	if(req.files.length > 0) {
+	// Log image path
+	console.log("New Image List: "+JSON.stringify(imageFiles));
+
+	if(imageFiles.length > 0) {
 
         	// Declare array of uploaded image locations for output
-	        var imageLocations = [];
+	        var uploadedImages = [];
 
 		// Iterate through image files
-		for(var file of req.files) {
+		for(var imageFile of imageFiles) {
 
-			// Create params for image 'store' operation
-			var storeImageParams = {
-				Bucket: 'suroor.fashions.products',
-				Key: req.params.id+'/'+file.path.split('/')[2],
-				Body: fs.createReadStream(file.path)
-			}
-			console.log("Uploading image: "+file.path+" to storage path: "+storeImageParams.Key);
-			// Store images at data source
-			s3.upload(storeImageParams, function (err, data) {
+                        // Upload image
+                        storeImage(productId, imageFile, function (imageStoreError, uploadedImage) {
 
-				if (err) {
+                                if(imageStoreError) {
 
-	        	                callback('Failed to store product image(s)', null);
-				} else {
+                                        // Return failure message to caller
+                                        callback(imageStoreError, null);
+                                } else {
 
-					console.log("Upload Success", data.Location);
+                                        // Add store image location to output array
+                                        uploadedImages.push(uploadedImage);
 
-					// Add store image location to output array
-					imageLocations.push(data.Location);
+                                        if(uploadedImages.length == imageFiles.length) {
 
-					if(imageLocations.length == req.files.length) {
+                                                // Log success to console
+                                                console.log("All images uploaded successfully");
 
-		        	        	// Log success to console
-		        	        	console.log("All images uploaded successfully");
-
-						// Return uploaded image locations to caller
-						callback(null, imageLocations);
-					}
+                                                // Return uploaded image locations to caller
+                                                callback(null, uploadedImages);
+                                        }
 				}
-			});
+                        });
+                }
+	} else if(imageFile.length == 1) {
+
+		// Upload image
+		storeImage(productId, imageFile, function (imageStoreError, uploadedImage) {
+
+			if(imageStoreError) {
+
+				// Return failure message to caller
+				callback(imageStoreError, null);
+			} else {
+
+				// Return uploaded image locations to caller
+				callback(null, uploadedImage);
+			}
+		});
+        } else {
+
+                // Report empty input to caller
+                callback('No files found in input stream', null);
+        }
+}
+
+//
+// Upload an image to content store
+function storeImage(productId, imageFile, callback) {
+
+	if(imageFile) {
+
+		// Create params for image 'store' operation
+		var storeImageParams = {
+			Bucket: 'suroor.fashions.products',
+			Key: productId+'/'+imageFile.path.split('/')[2],
+			Body: fs.createReadStream(imageFile.path)
 		}
+		console.log("Uploading image: "+imageFile.path+" to storage path: "+storeImageParams.Key);
+		// Store images at data source
+		s3.upload(storeImageParams, function (err, data) {
+
+			if (err) {
+
+				callback('Failed to store product image(s)', null);
+			} else {
+
+				// New product image
+				var uploadedImage = {
+					isDefault: false,
+					location: data.Location,
+					tag: storeImageParams.Key.split('/')[1]
+				}
+
+				console.log("Created image: "+JSON.stringify(uploadedImage));
+
+				// Return uploaded image to caller
+				callback(null, uploadedImage);
+			}
+		});
 	} else {
 
 		// Report empty input to caller
-		callback('No files found in input stream', null);
+		callback('No file found in input stream', null);
 	}
 }
 

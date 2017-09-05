@@ -48,11 +48,12 @@
             <form id="product_details" action="/" method="post" enctype="multipart/form-data">
                 <input id="id" type="hidden" name="id">
                 <input id="creationTimestamp" type="hidden" name="creationTimestamp">
+                <input id="images" type="hidden" name="images">
                 <div class="col-lg-12">
                     <table width="100%"><tr><td>
                         <h1>Product Editor</h1>
                     </td><td align="right">
-                        <input id="post" name="action" type="submit" class="btn btn-primary" value="Create"><input id="put" name="action" type="submit" class="btn btn-primary" value="Update"><input id="delete" name="action" type="submit" class="btn btn-primary" value="Delete"><input id="reset" type="reset" class="btn btn-primary" value="Clear"><br>
+                        <input id="post" name="action" type="submit" class="btn btn-primary" value="Create"><input id="put" name="action" type="submit" class="btn btn-primary" value="Update"><input id="delete" name="action" type="submit" class="btn btn-primary" value="Delete"><input id="reset_forms" type="reset" class="btn btn-primary" value="Clear" onclick="clearAllForms()"><br>
                     </td></tr></table>
                 </div>
                 <div class="caption">
@@ -82,18 +83,14 @@
                     <input id="promoted" type="checkbox" name="promoted" value="true"> On Promotion<br>
                 </div>
             </form>
-</td><td align="left" valign="top">
-            <img id="selected_image"/>
+</td><td align="left" valign="top" width="50">
+            <img id="selected_image" width="50"/>
 </td><td align="left" valign="top">
             <form id="product_image"  method="post" enctype="multipart/form-data">
                 <input id="image_loc" type="hidden" name="image_loc">
                 <input id="image_tag" type="hidden" name="image_tag">
                 <div class="caption">
                     <table id="image_list">
-                        <!-- tr><td><input id='Image 1' type='radio' name='selected_image' value='{"default": "true", "location": "https://gd678vg76sgg76gs/", "tag": "gd678vg76sgg76gs"}' onclick='selectImage(this)'> Image 1</input></td><td><div id="gd678vg76sgg76gs_default_cell">&nbsp;</div></td><td></td></tr>
-                        <tr><td><input id='Image 2' type='radio' name='selected_image' value='{"default": "false", "location": "https://gd678vg76sgg76gt/", "tag": "gd678vg76sgg76gt"}' onclick='selectImage(this)'> Image 2</input></td><td><div id="gd678vg76sgg76gt_default_cell">&nbsp;</div></td><td></td></tr>
-                        <tr><td><input id='Image 3' type='radio' name='selected_image' value='{"default": "false", "location": "https://gd678vg76sgg76gu/", "tag": "gd678vg76sgg76gu"}' onclick='selectImage(this)'> Image 3</input></td><td><div id="gd678vg76sgg76gu_default_cell">&nbsp;</div></td><td></td></tr>
-                        <tr><td colspan='2'><b>New Image</b><input id="image_files" type="file"/></td><td></td><td><input id="create" name="action" type="submit" class="btn btn-primary" value="Upload"></td></tr -->
                     </table>
                 </div>
             </form>
@@ -135,51 +132,147 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
-function findProduct(id) {
-        console.log("Product ID: "+id);
-	var selectedProduct = document.getElementById(id);
-	selectedProduct.checked = true;
-	return selectedProduct;
+function reloadProduct(product, callback) {
+	$.get('/product/'+product.id, function(product, status){
+		displayProduct(product, function () {
+			selectProduct(JSON.parse(document.getElementById(product.id).value), function() {
+				callback();
+			});
+		});
+	});
 }
 
-function selectProduct(product) {
-	console.log("Selected product: "+product.value);
-	var selectedProduct = JSON.parse(product.value);
+function displayProduct(product, callback) {
+	document.getElementById(product.id+'_div').innerHTML = '<input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'selectProduct(JSON.parse(this.value));\'> '+product.name+'</input><br>Created on...<br>';
+	callback();
+}
+
+function selectProduct(selectedProduct, callback) {
+	console.log("Product just selected: "+JSON.stringify(selectedProduct));
 	document.getElementById('id').value = selectedProduct.id;
 	document.getElementById('creationTimestamp').value = selectedProduct.creationTimestamp;
 	document.getElementById('name').value = selectedProduct.name;
 	document.getElementById('description').value = selectedProduct.description;
 	document.getElementById('price').value = selectedProduct.price;
         document.getElementById('product_image').action = '/product/'+selectedProduct.id+'/image';
-	var imageHtmlBuffer = '';
+        document.getElementById('image_list').innerHTML = '<tr><td colspan=\'2\'><b>New Image</b><input id=\'image_files\' name=\'image_files\' type=\'file\'/></td><td></td><td><input id=\'create\' name=\'action\' type=\'submit\' class=\'btn btn-primary\' value=\'Upload\'></td></tr>';
+	var imageCounter = 1;
 	if(selectedProduct.images) {
-		for(var imageString of selectedProduct.images) {
-			var image = JSON.parse(imageString);
-			// document.getElementById('image'+counter+'_src').src = image.location;
-        		// document.getElementById('image'+counter+'_loc').value = image.location;
-			document.getElementById('image_list').innerHTML += '<tr><td><input id=\''+image.tag+'\' type=\'radio\' name=\'selected_image\' value=\'imageString\' onclick=\'selectImage(this)\'> Image 1</input></td><td><div id=\''+image.tag+'_default_cell\'>&nbsp;</div></td><td></td></tr>';
+		for(var image of selectedProduct.images) {
+			document.getElementById('image_list').innerHTML += '<tr><td><input id=\''+image.tag+'\' type=\'radio\' name=\'selected_image\' value=\''+JSON.stringify(image)+'\' onclick=\'selectImage(JSON.parse(this.value))\'> Image '+(imageCounter++)+'</input></td><td><div id=\''+image.tag+'_default_cell\'>&nbsp;</div></td><td></td></tr>';
 		}
 	}
-	document.getElementById('image_list').innerHTML += '<tr><td colspan=\'2\'><b>New Image</b><input id=\'image_files\' name=\'image_files\' type=\'file\'/></td><td></td><td><input id=\'create\' name=\'action\' type=\'submit\' class=\'btn btn-primary\' value=\'Upload\'></td></tr>';
 	document.getElementById('type_'+selectedProduct.type.toLowerCase()).checked = true;
 	document.getElementById('promoted').checked = selectedProduct.promoted;
+	document.getElementById(selectedProduct.id).checked = true;
+	if(callback) {
+		callback();}
+	else {
+		getDefaultImage(selectedProduct, function (defaultImage) {
+			selectImage(defaultImage);
+		});
+	}
 }
 
-function selectImage(image) {
-        console.log("Selected image: "+image.value);
-        var selectedImage = JSON.parse(image.value);
+function selectImage(selectedImage) {
+        console.log("Image just selected: "+JSON.stringify(selectedImage));
         document.getElementById('selected_image').src = selectedImage.location;
         document.getElementById('image_loc').value = selectedImage.location;
         document.getElementById('image_tag').value = selectedImage.tag;
-        for(var product of document.getElementById('product_catalog')) {
-		if(product.checked) {
-			console.log("Chosen product: "+JSON.stringify(product.value));
+	getSelectedProduct(function (selectedProduct) {
+                for(var image of selectedProduct.images) {
+                        document.getElementById(image.tag+'_default_cell').innerHTML = '&nbsp';
 		}
-	}
-        document.getElementById(selectedImage.tag+'_default_cell').innerHTML = '<input id="default_image" type="checkbox" checked="'+selectedImage.isDefault+'"> (default image)</input>';
+        	document.getElementById(selectedImage.tag+'_default_cell').innerHTML = '<input id=\'default_image\' type=\'checkbox\' value=\''+selectedImage.tag+'\' onchange=\'changeDefaultImage(this)\'> (default image)</input>';
+		document.getElementById('default_image').checked = selectedImage.isDefault;
+		document.getElementById(selectedImage.tag).checked = true;
+        });
 }
+
+function getSelectedProduct(callback) {
+        for(var product of document.getElementById('product_catalog')) {
+                if(product.checked) {
+                        console.log("Currently selected product: "+product.value);
+			callback(JSON.parse(product.value));
+                }
+        }
+}
+
+function getSelectedImage(callback) {
+        for(var image of document.getElementsByName('selected_image')) {
+                if(image.checked) {
+                        console.log("Currently selected image: "+image.value);
+                        callback(JSON.parse(image.value));
+                }
+        }
+}
+
+function getDefaultImage(product, callback) {
+        if(product.images) {
+		for(var image of product.images) {
+	                if(image.isDefault) {
+                        	callback(image);
+                	}
+        	}
+	}
+}
+
+function changeDefaultImage(newDefaultImageCheckbox) {
+	if(newDefaultImageCheckbox.checked == false) {
+		alert("Must have default image at all times");
+		newDefaultImageCheckbox.checked = true;
+		return false;
+	}
+	getSelectedProduct(function (product) {
+		for(var image of product.images) {
+			if(image.tag == newDefaultImageCheckbox.value) {image.isDefault = true;}
+			else {image.isDefault = false;}
+		}
+		displayProduct(product, function() {
+			selectProduct(product);
+		});
+	});
+}
+
+function clearAllForms() {
+	for(var form of document.forms) {
+		console.log("Clearing form: "+JSON.stringify(form.id));
+		form.reset();
+	}
+	document.getElementById('image_list').innerHTML = '';
+	document.getElementById('selected_image').src = '';
+}
+
+$(document).ready(function() {
+	$('#product_image').submit(function () {
+        	$('#status').empty().text('File is uploading...');
+        	$(this).ajaxSubmit({
+			error: function (xhr) {
+				status('Error: ' + xhr.status);
+				console.log("File upload error: "+xhr.status);
+			},
+			success: function (image) {
+				$('#status').empty().text(image);
+				console.log("File upload success: "+JSON.stringify(image));
+				getSelectedProduct(function (selectedProduct) {
+					reloadProduct(selectedProduct, function () {
+						selectImage(JSON.parse(document.getElementById(image.tag).value));
+                                        });
+				});
+			}
+		});
+		return false;
+	});
+        $('#product_details').submit(function () {
+		getSelectedProduct(function (product) {
+			document.getElementById('images').value = JSON.stringify(product.images);
+		});
+                return true;
+        });
+});
     </script>
   </body>
 </html>
