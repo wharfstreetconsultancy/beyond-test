@@ -8,6 +8,7 @@
 // Manage environment
 var express = require('express');
 var http = require('http');
+var https = require('https');
 var request = require('request');
 var fs = require('fs');
 var multer = require('multer');
@@ -21,14 +22,34 @@ var events = require('events');
 var app = express();
 app.use(express.static('assets'));
 var upload = multer({ dest: '/tmp/'});
+var key = fs.readFileSync('certs/domain.key');
+var cert = fs.readFileSync('certs/domain.crt');
+var options = {
+	key: key,
+	cert: cert
+};
+var productDomain = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com:444';
+/* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
+agent = new https.Agent({
+  host: 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com'
+, port: '444'
+, path: '/'
+, rejectUnauthorized: false
+});
+
+
 
 //
 // Create and run web server
+/*
 var server = app.listen(8081, function() {
 
 	// Output server endpoint
 	console.log('Product Management app listening at http://'+server.address().address+':'+server.address().port+'/');
 });
+*/
+// http.createServer(options, app).listen(81);
+https.createServer(options, app).listen(8444);
 
 //
 // GET '/' - Initial home page
@@ -112,9 +133,6 @@ app.post('/', upload.array('image_files'), function (req, res) {
                                                 .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
                                                 .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
                                                 .pipe(res);
-
-
-
                                 });
                         });
 		});
@@ -129,7 +147,8 @@ app.post('/', upload.array('image_files'), function (req, res) {
 // Create new product
 function loadExistingProducts(req, res, callback) {
 
-	request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function (productLoadError, productLoadResponse, productLoadBody) {
+	console.log("Connecting to: "+'https://'+productDomain+'/product');
+	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		if (productLoadError) callback('Failed to load existing products.', null);
 
                 // Log error from remote server
@@ -167,7 +186,7 @@ function createNewProduct(req, res, callback) {
 
 	// Store product images
 /*
-	request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+id+'/image', formData: {image_files: imageArray}}, function (imageStoreError, imageStoreResponse, imageStoreBody) {
+	request.post({url:'https://'+productDomain+'/product/'+id+'/image', formData: {image_files: imageArray}, agent: agent}, function (imageStoreError, imageStoreResponse, imageStoreBody) {
 
                 // Log error from remote server
                 console.log( "REST API server responded with 'err': " + imageStoreError );
@@ -178,7 +197,7 @@ function createNewProduct(req, res, callback) {
 
 		// Error handling
 		if(imageStoreResponse.statusCode != '200') {
-			console.log("Exiting product creation process as image failed to upload.");
+			console.log("Existing product creation process as image failed to upload.");
 			callback('Failed to load product image for new product (name: '+req.body.name+').', null);
 		} else {
 */
@@ -189,7 +208,8 @@ function createNewProduct(req, res, callback) {
         	        	type: req.body.type,
 	                	description: req.body.description,
 				price: req.body.price,
-               			// images: JSON.parse(imageStoreBody),
+				colors: JSON.parse(req.body.colors),
+				sizes: JSON.parse(req.body.sizes),
 	        		creationTimestamp: timestamp,
 	                        lastUpdateTimestamp: timestamp,
 				promoted: req.body.promoted
@@ -199,7 +219,7 @@ function createNewProduct(req, res, callback) {
         		console.log( "New Product: " + JSON.stringify(newProduct) );
 
 			// Store product 
-			request.post({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product', formData: {product: JSON.stringify(newProduct)}}, function (productStoreError, productStoreResponse, productStoreBody) {
+			request.post({url:'https://'+productDomain+'/product', formData: {product: JSON.stringify(newProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
                 		if (productStoreError) callback('Failed to store new product.', null);
 
 	                	// Log error from remote server
@@ -234,6 +254,8 @@ function updateExistingProduct(req, res, callback) {
 		type: req.body.type,
 		description: req.body.description,
 		price: req.body.price,
+		colors: JSON.parse(req.body.colors),
+                sizes: JSON.parse(req.body.sizes),
 		images: JSON.parse(req.body.images),
 		creationTimestamp: timestamp,
 		lastUpdateTimestamp: timestamp,
@@ -244,7 +266,7 @@ function updateExistingProduct(req, res, callback) {
 	console.log( "Updated Product: " + JSON.stringify(updatedProduct) );
 
 	// Store product
-	request.put({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}}, function (productStoreError, productStoreResponse, productStoreBody) {
+	request.put({url:'https://'+productDomain+'/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
 		if (productStoreError) callback('Failed to store existing product.', null);
 
 		// Log error from remote server
@@ -291,7 +313,7 @@ function updateExistingProduct(req, res, callback) {
                 console.log( "Updated Product: " + JSON.stringify(updatedProduct) );
 
                 // Store product
-                request.put({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}}, function callback(productStoreError, productStoreResponse, productStoreBody) {
+                request.put({url:'https://'+productDomain+'/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}, agent: agent}, function callback(productStoreError, productStoreResponse, productStoreBody) {
                         if (productStoreError) throw productStoreError;
 
                         // Log status code from remote server
@@ -299,7 +321,7 @@ function updateExistingProduct(req, res, callback) {
                         // Log response body from remote server
                         console.log( "Server responded with: " + productStoreBody );
 
-                        request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function callback(productLoadError, productLoadResponse, productLoadBody) {
+                        request.get({url:'https://'+productDomain+'/product', agent: agent}, function callback(productLoadError, productLoadResponse, productLoadBody) {
                                 if (productLoadError) throw productLoadError;
 
                                 // Log status code from remote server
@@ -331,7 +353,7 @@ function updateExistingProduct(req, res, callback) {
 			imageArray.push(fs.createReadStream(file.path));
 		}
 		// Update image if specified
-		request.put({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product/'+req.body.id+'/image', formData: {image_files: imageArray}}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
+		request.put({url:'https://'+productDomain+'/product/'+req.body.id+'/image', formData: {image_files: imageArray}, agent: agent}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
 	                if (imageStoreError) throw imageStoreError;
 
 	                // Log status code from remote server
