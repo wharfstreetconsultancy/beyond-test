@@ -42,8 +42,13 @@
 
 
     <!---------------------------Body ------------------------->
-		<div class="body">
-				<div class="pull-left container">
+		<div class="body container">
+
+
+			<div class="row">
+			
+			
+				<div class="col-sm-3">
 					<form id="product_catalog">
 						<div class="row">
 							<h1>Product Catalog</h1>
@@ -59,7 +64,11 @@
 						</div>
 	                </form>
 				</div>
-				<div class="pull-right container">
+				
+				
+				<div class="col-sm-6">
+				
+				
 					<!-- Title -->
 					<form id="product_details" action="/" method="post" enctype="multipart/form-data">
 						<input id="id" type="hidden" name="id"/>
@@ -78,8 +87,10 @@
 							<!-- /div -->
 						</div>
 						<hr>
-						<div class="pull-left">
-							<div class="col-sm-4">
+						<div class="row">
+						
+						
+							<div class="col-sm-6">
 								<div class="panel panel-primary">
 									<div class="panel-heading">Product Details</div>
 									<div class="panel-body">
@@ -97,8 +108,8 @@
 									</div>
 									<div class="panel-footer"></div>
 								</div>
-							</div>
-							<div class="col-sm-4">
+							<!-- /div>
+							<div class="col-sm-4" -->
 								<div class="panel panel-primary">
 									<div class="panel-heading">Color Attribute Values</div>
 									<div class="panel-body">
@@ -109,8 +120,8 @@
 									</div>
 									<div class="panel-footer"></div>
 								</div>
-							</div>
-							<div class="col-sm-4">
+							<!-- /div>
+							<div class="col-sm-4" -->
 								<div class="panel panel-primary">
 									<div class="panel-heading">Size Attribute Values</div>
 									<div class="panel-body">
@@ -122,9 +133,13 @@
 									<div class="panel-footer"></div>
 								</div>
 							</div>
-						</div>
-						<div class="pull-right">
-							<div class="col-sm-4">
+
+
+					</form>
+							
+							
+						<div class="col-sm-3">
+							<!-- div class="col-sm-4" -->
 								<div class="panel panel-primary">
 									<div class="panel-heading">Product Images</div>
 									<div class="panel-body">
@@ -147,10 +162,19 @@
 									</div>
 									<div class="panel-footer"></div>
 								</div>
-							</div>
+							<!-- /div -->
 						</div>
-					</form>
-				</div>
+
+
+						</div> <!-- End row -->
+						
+					
+				</div> <!-- End col-sm-6 -->
+				
+				
+			</div> <!-- End row -->
+
+
 		</div>
 
 		<!------------------------------- Footer --------------------->
