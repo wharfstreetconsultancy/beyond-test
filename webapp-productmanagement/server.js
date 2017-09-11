@@ -315,12 +315,12 @@ function createNewProduct(req, res, callback) {
 	        	        name: req.body.name,
         	        	type: req.body.type,
 	                	description: req.body.description,
-				price: req.body.price,
-				colors: (req.body.colors) ? JSON.parse(req.body.colors) : '',
-				sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : '',
-	        		creationTimestamp: timestamp,
-	                        lastUpdateTimestamp: timestamp,
-				promoted: req.body.promoted
+	                	price: req.body.price,
+	                	colors: (req.body.colors) ? JSON.parse(req.body.colors) : '',
+	                	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : '',
+	                	creationTimestamp: timestamp,
+	                	lastUpdateTimestamp: timestamp,
+	                	promoted: req.body.promoted
 	        	};
 
 		        // Log new product object
@@ -362,9 +362,9 @@ function updateExistingProduct(req, res, callback) {
 		type: req.body.type,
 		description: req.body.description,
 		price: req.body.price,
-		colors: JSON.parse(req.body.colors),
-                sizes: JSON.parse(req.body.sizes),
-		images: JSON.parse(req.body.images),
+    	colors: (req.body.colors) ? JSON.parse(req.body.colors) : '',
+       	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : '',
+		images: (req.body.sizes) ? JSON.parse(req.body.images) : '',
 		creationTimestamp: timestamp,
 		lastUpdateTimestamp: timestamp,
 		promoted: req.body.promoted
@@ -751,7 +751,7 @@ function storeImages(productId, imageFiles, callback) {
 	// Log image path
 	console.log("New Image List: "+JSON.stringify(imageFiles));
 
-	if(imageFiles.length > 0) {
+	if((imageFiles) && (imageFiles.length > 0)) {
 
         	// Declare array of uploaded image locations for output
 	        var uploadedImages = [];
