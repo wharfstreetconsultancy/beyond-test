@@ -71,6 +71,7 @@ console.log("Req Session: "+util.inspect(req.session));
 console.log("Req URL: "+util.inspect(req.url));
 console.log("Req Headers: "+util.inspect(req.headers));
 console.log("Req Query: "+JSON.stringify(req.query));
+		next();
 
 
 
