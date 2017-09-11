@@ -43,7 +43,7 @@
 
     <!---------------------------Body ------------------------->
 		<div class="body">
-			<div class="pull-left">
+			<div class="col-xs-3 pull-left">
 				<form id="product_catalog">
 					<div class="row">
 						<h1>Product Catalog</h1>
@@ -59,72 +59,72 @@
 					</div>
                 </form>
 			</div>
-			<div class="pull-left">
+			<div class="col-xs-6 pull-left">
 				<!-- Title -->
-				<div class="row">
-					<form id="product_details" action="/" method="post" enctype="multipart/form-data">
+				<form id="product_details" action="/" method="post" enctype="multipart/form-data">
 					<input id="id" type="hidden" name="id"/>
 					<input id="creationTimestamp" type="hidden" name="creationTimestamp"/>
 					<input id="colors" type="hidden" name="colors"/>
 					<input id="sizes" type="hidden" name="sizes"/>
 					<input id="images" type="hidden" name="images"/>
-					<div class="col-lg-12">
-						<table width="100%"><tr><td>
-							<h1>Product Details</h1>
-							{user.prompt}
-						</td><td align="right">
-							<input id="post" name="action" type="submit" class="btn btn-primary" value="Create"/><input id="put" name="action" type="submit" class="btn btn-primary" value="Update"/><!-- input id="delete" name="action" type="submit" class="btn btn-primary" value="Delete"/ --><input id="reset_forms" type="reset" class="btn btn-primary" value="Clear"/><br>
-						</td></tr></table>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="panel panel-primary">
-							<div class="panel-heading">Product Details</div>
-							<div class="panel-body">
-								<b>Name:</b><br>
-								<input id="name" type="text" name="name"><br>
-								<b>Description:</b><br>
-								<input id="description" type="text" name="description"><br>
-								<b>Price:</b><br>
-								<input id="price" type="text" name="price"><br>
-								<b>Type:</b><br>
-								<input id="type_clothing" type="radio" name="type" value="CLOTHING" checked> Clothing<br>
-								<input id="type_jewellery" type="radio" name="type" value="JEWELLERY"> Jewellery<br>
-								<b>Status:</b><br>
-								<input id="promoted" type="checkbox" name="promoted" value="true"> On Promotion<br>
-							</div>
-							<div class="panel-footer"></div>
+					<div class="row">
+						<div class="col-lg-12">
+							<table width="100%"><tr><td>
+								<h1>Product Details</h1>
+								{user.prompt}
+							</td><td align="right">
+								<input id="post" name="action" type="submit" class="btn btn-primary" value="Create"/><input id="put" name="action" type="submit" class="btn btn-primary" value="Update"/><!-- input id="delete" name="action" type="submit" class="btn btn-primary" value="Delete"/ --><input id="reset_forms" type="reset" class="btn btn-primary" value="Clear"/><br>
+							</td></tr></table>
 						</div>
 					</div>
-					<div class="col-sm-4">
-						<div class="panel panel-primary">
-							<div class="panel-heading">Color Attribute Values</div>
-							<div class="panel-body">
-								<span id="color_config" class="pull-top"></span>
-								<input id="color" type="text" name="color" size="20" class="pull-left">
-								<input id="add_color" name="add_color" type="submit"
-										value="Add" class="btn btn-secondary pull-right" />
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="panel panel-primary">
+								<div class="panel-heading">Product Details</div>
+								<div class="panel-body">
+									<b>Name:</b><br>
+									<input id="name" type="text" name="name"><br>
+									<b>Description:</b><br>
+									<input id="description" type="text" name="description"><br>
+									<b>Price:</b><br>
+									<input id="price" type="text" name="price"><br>
+									<b>Type:</b><br>
+									<input id="type_clothing" type="radio" name="type" value="CLOTHING" checked> Clothing<br>
+									<input id="type_jewellery" type="radio" name="type" value="JEWELLERY"> Jewellery<br>
+									<b>Status:</b><br>
+									<input id="promoted" type="checkbox" name="promoted" value="true"> On Promotion<br>
+								</div>
+								<div class="panel-footer"></div>
 							</div>
-							<div class="panel-footer"></div>
 						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="panel panel-primary">
-							<div class="panel-heading">Size Attribute Values</div>
-							<div class="panel-body">
-								<span id="size_config" class="pull-top"></span>
-								<input id="size" type="text" name="size" size="20" class="pull-left">
-								<input id="add_size" name="add_size" type="submit"
-										value="Add" class="btn btn-secondary pull-right" />
+						<div class="col-sm-4">
+							<div class="panel panel-primary">
+								<div class="panel-heading">Color Attribute Values</div>
+								<div class="panel-body">
+									<span id="color_config" class="pull-top"></span>
+									<input id="color" type="text" name="color" size="20" class="pull-left"/>
+									<input id="add_color" name="add_color" type="submit"
+											value="Add" class="btn btn-secondary pull-right"/>
+								</div>
+								<div class="panel-footer"></div>
 							</div>
-							<div class="panel-footer"></div>
+						</div>
+						<div class="col-sm-4">
+							<div class="panel panel-primary">
+								<div class="panel-heading">Size Attribute Values</div>
+								<div class="panel-body">
+									<span id="size_config" class="pull-top"></span>
+									<input id="size" type="text" name="size" size="20" class="pull-left"/>
+									<input id="add_size" name="add_size" type="submit"
+											value="Add" class="btn btn-secondary pull-right"/>
+								</div>
+								<div class="panel-footer"></div>
+							</div>
 						</div>
 					</div>
 				</form>
-				</div>
 			</div>
-			<div class="pull-left">
+			<div class="col-xs-3 pull-left">
 					<div class="col-sm-4">
 						<div class="panel panel-primary">
 							<div class="panel-heading">Product Images</div>
