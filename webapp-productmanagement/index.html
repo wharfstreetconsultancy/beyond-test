@@ -42,8 +42,8 @@
 
 
     <!---------------------------Body ------------------------->
-		<div class="body">
-			<div class="container col-xs-3 pull-left">
+		<div class="body container">
+			<div class="col-xs-3 pull-left">
 				<form id="product_catalog">
 					<div class="row">
 						<h1>Product Catalog</h1>
@@ -59,7 +59,7 @@
 					</div>
                 </form>
 			</div>
-			<div class="container col-xs-6 pull-left">
+			<div class="col-xs-6 pull-left">
 				<!-- Title -->
 				<form id="product_details" action="/" method="post" enctype="multipart/form-data">
 					<input id="id" type="hidden" name="id"/>
@@ -124,7 +124,7 @@
 					</div>
 				</form>
 			</div>
-			<div class="container col-xs-3 pull-left">
+			<div class="col-xs-3 pull-left">
 					<div class="col-sm-4">
 						<div class="panel panel-primary">
 							<div class="panel-heading">Product Images</div>
@@ -155,25 +155,32 @@
 			<hr>
 		</div>
 
-    <!------------------------------- Footer --------------------->
-    <footer>
-      <div class="container-fluid">
-        <div class="footer">
-          <p class="copyright">&copy 2017 Suroor Fashions | All Rights Reserved</p>
-          <p class="links"><a href="#">Terms of use </a></p>
-          <span class="links">|</span>
-          <p class="links"><a href="#">Privacy Policy </a></p>
-          <span class="links">|</span>
-          <p class="links"><a href="#">Sales & Return Policy</a></p>
-        </div>
-      </div>
-    </footer>
+		<!------------------------------- Footer --------------------->
+		<footer>
+			<div class="container-fluid pull-bottom">
+				<div class="footer">
+					<p class="copyright">&copy 2017 Suroor Fashions | All Rights
+						Reserved</p>
+					<p class="links">
+						<a href="#">Terms of use </a>
+					</p>
+					<span class="links">|</span>
+					<p class="links">
+						<a href="#">Privacy Policy </a>
+					</p>
+					<span class="links">|</span>
+					<p class="links">
+						<a href="#">Sales & Return Policy</a>
+					</p>
+				</div>
+			</div>
+		</footer>
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script>
+		<!-- Latest compiled and minified JavaScript -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	    <script>
 function reloadProduct(product, callback) {
 	$.get('/product/'+product.id, function(product, status){
 		displayProduct(product, function () {
@@ -368,6 +375,6 @@ $(document).ready(function() {
                 return false;
         });
 });
-    </script>
-  </body>
+		</script>
+	</body>
 </html>
