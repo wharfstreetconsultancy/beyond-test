@@ -42,34 +42,34 @@
     </nav>
 
     <!---------------------------Body ------------------------->
-    <div class="body">
-        <!-- Title -->
-        <div class="row">
-            <form id="product_details" action="/" method="post" enctype="multipart/form-data">
-            <input id="id" type="hidden" name="id"/>
-            <input id="creationTimestamp" type="hidden" name="creationTimestamp"/>
-            <input id="colors" type="hidden" name="colors"/>
-            <input id="sizes" type="hidden" name="sizes"/>
-            <input id="images" type="hidden" name="images"/>
-            <div class="col-lg-12">
-                <table width="100%"><tr><td>
-                    <h1>Product Details</h1>
-                    {user.prompt}
-                </td><td align="right">
-                    <input id="post" name="action" type="submit" class="btn btn-primary" value="Create"/><input id="put" name="action" type="submit" class="btn btn-primary" value="Update"/><input id="delete" name="action" type="submit" class="btn btn-primary" value="Delete"/><input id="reset_forms" type="reset" class="btn btn-primary" value="Clear"/><br>
-                </td></tr></table>
-            </div>
-        </div>
-        <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="panel panel-primary">
-                      <div class="panel-heading">Product Details</div>
-                      <div class="panel-body">
-                        <b>Name:</b><br>
-                        <input id="name" type="text" name="name"><br>
-                        <b>Description:</b><br>
-                        <input id="description" type="text" name="description"><br>
+		<div class="body">
+			<!-- Title -->
+			<div class="row">
+				<form id="product_details" action="/" method="post" enctype="multipart/form-data">
+				<input id="id" type="hidden" name="id"/>
+				<input id="creationTimestamp" type="hidden" name="creationTimestamp"/>
+				<input id="colors" type="hidden" name="colors"/>
+				<input id="sizes" type="hidden" name="sizes"/>
+				<input id="images" type="hidden" name="images"/>
+				<div class="col-lg-12">
+					<table width="100%"><tr><td>
+						<h1>Product Details</h1>
+						{user.prompt}
+					</td><td align="right">
+						<input id="post" name="action" type="submit" class="btn btn-primary" value="Create"/><input id="put" name="action" type="submit" class="btn btn-primary" value="Update"/><!-- input id="delete" name="action" type="submit" class="btn btn-primary" value="Delete"/ --><input id="reset_forms" type="reset" class="btn btn-primary" value="Clear"/><br>
+					</td></tr></table>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="panel panel-primary">
+							<div class="panel-heading">Product Details</div>
+								<div class="panel-body">
+									<b>Name:</b><br>
+									<input id="name" type="text" name="name"><br>
+									<b>Description:</b><br>
+									<input id="description" type="text" name="description"><br>
                         <b>Price:</b><br>
                         <input id="price" type="text" name="price"><br>
                         <b>Type:</b><br>
@@ -169,7 +169,7 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
 function reloadProduct(product, callback) {
@@ -233,7 +233,7 @@ function selectProduct(selectedProduct, callback) {
         document.getElementById('images').value = JSON.stringify(selectedProduct.images);
 	document.getElementById('image_upload_selector').innerHTML = '<input id=\'image_files\' name=\'image_files\' type=\'file\'/>';
         document.getElementById('image_upload_button').innerHTML = '<input id=\'image_upload\' name=\'image_upload\' type=\'submit\' value=\'Upload\' class=\'btn btn-secondary\'/>';
-        document.getElementById('image_delete_button').innerHTML = '<input id=\'image_delete\' name=\'image_delete\' type=\'submit\' value=\'Delete\' class=\'btn btn-secondary\'/>';
+        // document.getElementById('image_delete_button').innerHTML = '<input id=\'image_delete\' name=\'image_delete\' type=\'submit\' value=\'Delete\' onsubmit=\'return false;\' class=\'btn btn-secondary\'/>';
 	displayProductAttributes(selectedProduct.colors, 'color', document.getElementById('color_config'), function() {
 		displayProductAttributes(selectedProduct.sizes, 'size', document.getElementById('size_config'), function() {
 			displayProductImages(selectedProduct.images, function() {
@@ -292,7 +292,6 @@ $(document).ready(function() {
                 var selectedColor = document.getElementById('color').value;
 		if(selectedColor) {
 			selectedColor = selectedColor.toUpperCase();
-			alert(document.getElementById('colors').value);
 			var colors = document.getElementById('colors').value;
 			var existingColors = (colors) ? JSON.parse(colors) : [];
 			existingColors.push(selectedColor);
@@ -306,7 +305,6 @@ $(document).ready(function() {
                 var selectedSize = document.getElementById('size').value;
                 if(selectedSize) {
                         selectedSize = selectedSize.toUpperCase();
-                        alert(document.getElementById('sizes').value);
 			var sizes = document.getElementById('sizes').value;
 			var existingSizes = (sizes) ? JSON.parse(sizes) : [];
 			existingSizes.push(selectedSize);
@@ -349,7 +347,7 @@ $(document).ready(function() {
 		return true;
         });
         $('#product_image').submit(function () {
-                $('#status').empty().text('File is uploading...');
+		$('#status').empty().text('File is uploading...');
                 $(this).ajaxSubmit({
                         error: function (xhr) {
                                 status('Error: ' + xhr.status);
@@ -367,17 +365,6 @@ $(document).ready(function() {
                 });
                 return false;
         });
-/*
-        $('#product_details').submit(function () {
-alert("Shouldn't be here");
-                getSelectedProduct(function (product) {
-                        // document.getElementById('colors').value = JSON.stringify(product.colors);
-                        // document.getElementById('sizes').value = JSON.stringify(product.sizes);
-                        // document.getElementById('images').value = JSON.stringify(product.images);
-                });
-                return true;
-        });
-*/
 });
     </script>
   </body>

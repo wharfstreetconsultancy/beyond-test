@@ -16,7 +16,9 @@
 		"replacestream": "~4.0.2",
                 "replaceall": "~0.1.6",
 		"aws-sdk": "~2.100.0",
+		"amazon-cognito-identity-js-node": "~0.0.3",
 		"dynamodb-data-types": "~3.0.0",
-		"request": "~2.81.0"
+		"request": "~2.81.0",
+		"sha256": "~0.2.0"
 	}
 }

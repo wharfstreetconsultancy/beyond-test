@@ -16,6 +16,17 @@ var replaceStream = require('replacestream')
 var replaceall = require("replaceall");
 var util = require('util');
 var events = require('events');
+var AWS = require('aws-sdk');
+// var CognitoSDK = require('amazon-cognito-identity-js-node');
+// AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
+// AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+// AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
+var sha256 = require('sha256');
+
+// var cognito = new AWS.CognitoIdentity({apiVersion: '2014-06-30', region: 'us-west-2'});
+// var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-east-1_TcoKGbf7n',ClientId : '4pe2usejqcdmhi0a25jp4b5sh3'});
+// var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_lbDUUFePe', ClientId : '6v6h3ob7p9qip7jdm596shvoea'});
+// console.log("!!!!!! USER POOL: "+JSON.stringify(userPool));
 
 //
 // Manage HTTP server container
@@ -28,28 +39,126 @@ var options = {
 	key: key,
 	cert: cert
 };
-var productDomain = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com:444';
+var productPort = process.env.PORT;
+var productHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
+var productDomain = productHost+':'+productPort;
+var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
+var authClientId = '6v6h3ob7p9qip7jdm596shvoea';
+var authClientSecret = '57hupab0iqhlhpivubqe4quu1eeqoq0kjpunerklr4s60mrbcvv';
+
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
-  host: 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com'
-, port: '444'
-, path: '/'
-, rejectUnauthorized: false
+	host: productHost,
+	port: productPort,
+	path: '/',
+	rejectUnauthorized: false
 });
 
 
 
 //
 // Create and run web server
-/*
-var server = app.listen(8081, function() {
-
-	// Output server endpoint
-	console.log('Product Management app listening at http://'+server.address().address+':'+server.address().port+'/');
-});
-*/
-// http.createServer(options, app).listen(81);
+http.createServer(app).listen(8081);
 https.createServer(options, app).listen(8444);
+
+//
+// ALL '*' - Redirect all http traffic to https
+app.all('*', function (req, res, next) {
+
+	// Determine if request was https
+	if(req.connection.encrypted) {
+console.log("Req Session: "+util.inspect(req.session));
+console.log("Req URL: "+util.inspect(req.url));
+console.log("Req Headers: "+util.inspect(req.headers));
+console.log("Req Query: "+JSON.stringify(req.query));
+
+
+
+
+
+
+
+/*
+var cognitoUser = userPool.getCurrentUser();
+if (cognitoUser != null) {
+cognitoUser.getSession(function(err, session) {
+if (err) {console.log("ERR: could not get session");}
+
+console.log("Session found: "+JSON.stringify(session));
+                next();
+});
+}
+*/
+
+
+
+
+
+
+
+/*
+		var codeVerifier = new Buffer(authClientSecret+'us-east-1_TcoKGbf7n'+authClientId).toString('Base64');
+		console.log("Code verifier: "+codeVerifier);
+		// Request was https - check if it was authenticated
+                if(!req.query.code) {
+
+			var codeChallenge = new Buffer(sha256(codeVerifier)).toString('Base64');
+			// Request was not authenticated - redirect to login page
+			var authUrl = 'https://'+authDomain+'/login?response_type=code&client_id='+authClientId+'&redirect_uri=https://'+productDomain+req.url+'&code_challenge_method=S256&code_challenge='+codeChallenge;
+			console.log("Redirecting http request to: "+authUrl);
+			res.redirect(authUrl);
+		} else {
+
+
+
+
+
+			var authUrl = 'https://'+authDomain+'/oauth2/token';
+			var formData = {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				code: req.query.code,
+				Authorization: 'Base '+new Buffer(authClientId+':'+authClientSecret).toString('Base64'),
+				grant_type: 'authorization_code',
+				client_id: authClientId,
+				redirect_uri: 'https://'+productDomain+req.path,
+				code_verifier: codeVerifier
+			}
+			console.log("Exchanging tokens using: "+JSON.stringify(formData)+' @ '+authUrl);
+			request.put({url: authUrl, formData: formData}, function (tokenExchangeError, tokenExchangeResponse, tokenExchangeBody) {
+				if (tokenExchangeError) {
+					console.log("Error: "+tokenExchangeError);
+                                        res.writeHead(500, 'Failed to exchange tokens for code: '+req.query.code);
+                                        res.end();
+				}
+
+				// Log error from remote server
+				console.log( "REST API server responded with 'err': " + tokenExchangeError );
+				// Log status code from remote server
+				console.log( "REST API server responded with 'status': " + tokenExchangeResponse.statusCode );
+				// Log response body from remote server
+				console.log( "REST API server responded with 'body': " + tokenExchangeBody );
+
+				// Error handling
+				if(tokenExchangeResponse.statusCode != '200') {
+					res.writeHead(tokenExchangeResponse.statusCode, 'Failed to exchange tokens for code: '+req.query.code);
+					res.end();
+				} else {
+
+
+
+
+					next();
+				}
+			});
+		}
+*/
+	} else {
+
+		// Request was http - redirect caller to https
+        	console.log("Redirecting http request to: https://"+productDomain+req.url);
+		res.redirect('https://'+productDomain+req.url);
+	}
+});
 
 //
 // GET '/' - Initial home page
@@ -112,8 +221,6 @@ app.post('/', upload.array('image_files'), function (req, res) {
 			});
 		});
 	} else if(action == 'update') {
-
-		console.log("!!!!!!!!!!!!!!!!!! "+util.inspect(req.body));
 
                 // Update existing product
                 updateExistingProduct(req, res, function (productStoreErrorMessage, updatedProduct) {
@@ -208,8 +315,8 @@ function createNewProduct(req, res, callback) {
         	        	type: req.body.type,
 	                	description: req.body.description,
 				price: req.body.price,
-				colors: JSON.parse(req.body.colors),
-				sizes: JSON.parse(req.body.sizes),
+				colors: (req.body.colors) ? JSON.parse(req.body.colors) : '',
+				sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : '',
 	        		creationTimestamp: timestamp,
 	                        lastUpdateTimestamp: timestamp,
 				promoted: req.body.promoted
@@ -445,10 +552,7 @@ function formatProductHtml(productsList, callback) {
 
 //
 // Manage environment
-// var multiparty = require('multiparty');
-var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-// Create S3 service object
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 //
