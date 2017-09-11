@@ -43,7 +43,6 @@
 
     <!---------------------------Body ------------------------->
 		<div class="body container">
-			<div class="row">
 				<div class="pull-left">
 					<form id="product_catalog">
 						<div class="row">
@@ -79,82 +78,79 @@
 							<!-- /div -->
 						</div>
 						<hr>
-						<div class="row">
-							<div class="pull-left">
-								<div class="col-sm-4">
-									<div class="panel panel-primary">
-										<div class="panel-heading">Product Details</div>
-										<div class="panel-body">
-											<b>Name:</b><br>
-											<input id="name" type="text" name="name"><br>
-											<b>Description:</b><br>
-											<input id="description" type="text" name="description"><br>
-											<b>Price:</b><br>
-											<input id="price" type="text" name="price"><br>
-											<b>Type:</b><br>
-											<input id="type_clothing" type="radio" name="type" value="CLOTHING" checked> Clothing<br>
-											<input id="type_jewellery" type="radio" name="type" value="JEWELLERY"> Jewellery<br>
-											<b>Status:</b><br>
-											<input id="promoted" type="checkbox" name="promoted" value="true"> On Promotion<br>
-										</div>
-										<div class="panel-footer"></div>
+						<div class="pull-left">
+							<div class="col-sm-4">
+								<div class="panel panel-primary">
+									<div class="panel-heading">Product Details</div>
+									<div class="panel-body">
+										<b>Name:</b><br>
+										<input id="name" type="text" name="name"><br>
+										<b>Description:</b><br>
+										<input id="description" type="text" name="description"><br>
+										<b>Price:</b><br>
+										<input id="price" type="text" name="price"><br>
+										<b>Type:</b><br>
+										<input id="type_clothing" type="radio" name="type" value="CLOTHING" checked> Clothing<br>
+										<input id="type_jewellery" type="radio" name="type" value="JEWELLERY"> Jewellery<br>
+										<b>Status:</b><br>
+										<input id="promoted" type="checkbox" name="promoted" value="true"> On Promotion<br>
 									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="panel panel-primary">
-										<div class="panel-heading">Color Attribute Values</div>
-										<div class="panel-body">
-											<span id="color_config" class="pull-top"></span>
-											<input id="color" type="text" name="color" size="20" class="pull-left"/>
-											<input id="add_color" name="add_color" type="submit"
-													value="Add" class="btn btn-secondary pull-right"/>
-										</div>
-										<div class="panel-footer"></div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="panel panel-primary">
-										<div class="panel-heading">Size Attribute Values</div>
-										<div class="panel-body">
-											<span id="size_config" class="pull-top"></span>
-											<input id="size" type="text" name="size" size="20" class="pull-left"/>
-											<input id="add_size" name="add_size" type="submit"
-													value="Add" class="btn btn-secondary pull-right"/>
-										</div>
-										<div class="panel-footer"></div>
-									</div>
+									<div class="panel-footer"></div>
 								</div>
 							</div>
-							<div class="pull-right">
-								<div class="col-sm-4">
-									<div class="panel panel-primary">
-										<div class="panel-heading">Product Images</div>
-										<div class="panel-body">
-											<form id="product_image" method="post" enctype="multipart/form-data">
-												<input id="image_loc" type="hidden" name="image_loc" />
-												<input id="image_tag" type="hidden" name="image_tag" />
-												<div class="pull-top">
-													<span id="image_upload_button"></span><br> <span id="image_upload_selector"></span>
-												</div>
-												<hr>
-												<div class="pull-left">
-													<span id="image_delete_button"></span><br>
-													<span id="image_list"></span>
-												</div>
-												<div class="pull-right">
-													<span id="default_image_selector"></span><br>
-													<span id="selected_image_view"></span>
-												</div>
-											</form>
-										</div>
-										<div class="panel-footer"></div>
+							<div class="col-sm-4">
+								<div class="panel panel-primary">
+									<div class="panel-heading">Color Attribute Values</div>
+									<div class="panel-body">
+										<span id="color_config" class="pull-top"></span>
+										<input id="color" type="text" name="color" size="20" class="pull-left"/>
+										<input id="add_color" name="add_color" type="submit"
+												value="Add" class="btn btn-secondary pull-right"/>
 									</div>
+									<div class="panel-footer"></div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="panel panel-primary">
+									<div class="panel-heading">Size Attribute Values</div>
+									<div class="panel-body">
+										<span id="size_config" class="pull-top"></span>
+										<input id="size" type="text" name="size" size="20" class="pull-left"/>
+										<input id="add_size" name="add_size" type="submit"
+												value="Add" class="btn btn-secondary pull-right"/>
+									</div>
+									<div class="panel-footer"></div>
+								</div>
+							</div>
+						</div>
+						<div class="pull-right">
+							<div class="col-sm-4">
+								<div class="panel panel-primary">
+									<div class="panel-heading">Product Images</div>
+									<div class="panel-body">
+										<form id="product_image" method="post" enctype="multipart/form-data">
+											<input id="image_loc" type="hidden" name="image_loc" />
+											<input id="image_tag" type="hidden" name="image_tag" />
+											<div class="pull-top">
+												<span id="image_upload_button"></span><br> <span id="image_upload_selector"></span>
+											</div>
+											<hr>
+											<div class="pull-left">
+												<span id="image_delete_button"></span><br>
+												<span id="image_list"></span>
+											</div>
+											<div class="pull-right">
+												<span id="default_image_selector"></span><br>
+												<span id="selected_image_view"></span>
+											</div>
+										</form>
+									</div>
+									<div class="panel-footer"></div>
 								</div>
 							</div>
 						</div>
 					</form>
 				</div>
-			</div>
 		</div>
 
 		<!------------------------------- Footer --------------------->
