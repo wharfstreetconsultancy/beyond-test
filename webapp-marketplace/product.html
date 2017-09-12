@@ -52,15 +52,15 @@
 		<div class="container">
 			<div class="col-lg-4 col-lg-offset-4">
 				<div class="panel panel-primary">
-					<div class="panel-header">
+					<div class="panel-heading">
 						{product.name}
 					</div>
-					<div class="panel panel-body">
-						<span class="hero-feature">{product.image.location}</span><br>
-						<span class="hero-feature">{product.description}</span><br>
-						<button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button>
+					<div class="panel-body">
+						<p class="hero-feature"><img src="{product.image.location}" alt="{product.name}"/></p><br>
+						<p class="hero-feature">{product.description}</p><br>
+						<p><button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button></p>
 					</div>
-					<div class="panel panel-footer">
+					<div class="panel-footer">
 					</div>
 				</div>
 			</div>
