@@ -67,7 +67,7 @@ app.get('/', function (req, res) {
 	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
         // Format products into appropriate HTML
-        formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
 
             // Add dynamic elements to response page
             fs.createReadStream(__dirname+'/index.html')
@@ -79,10 +79,41 @@ app.get('/', function (req, res) {
 });
 
 //
+// GET '/product' - View product page
+app.get('/product', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: GET /product" );
+
+	//
+	// Load all specified product from REST API
+	loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
+
+		var productImageLocation = '';
+		if(product.images) {
+			for(var image of product.images) {
+				if(image.isDefault) {
+					productImageLocation = image.location;
+				}
+			}
+		}
+
+		// Add dynamic elements to response page
+        fs.createReadStream(__dirname+'/product.html')
+			.pipe(replaceStream('{product.name}', product.name))
+			.pipe(replaceStream('{product.description}', product.description))
+			.pipe(replaceStream('{product.image.location}', productImageLocation))
+			.pipe(replaceStream('{product.price}', product.price))
+			.pipe(res);
+	});
+});
+
+//
 // Load existing product from datasource
 function loadExistingProducts(req, res, callback) {
 
-	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
+	var productId = (req.query.id) ? '/'+req.query.id : '';
+	request.get({url:'https://'+productDomain+'/product'+productId, agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		
 		if (productLoadError) {
 
@@ -108,7 +139,7 @@ function loadExistingProducts(req, res, callback) {
 	});
 }
 
-function formatProductHtml(productsList,callback) {
+function formatProductsCarouselsHtml(productsList,callback) {
 
 	// Initialise clothing HTML section
 	var productsListClothingHtml = '';
@@ -126,20 +157,22 @@ function formatProductHtml(productsList,callback) {
 				var currentBuffer = '';
 
 				// Write product in showcase carousel element
-				currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">'
-				currentBuffer += '<div class="thumbnail">'
-				for(var image of product.images) {
-					if(image.isDefault) {
-						currentBuffer += '<img src="'+image.location+'" alt="">'
+				currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">';
+				currentBuffer += '<div class="thumbnail">';
+				if(product.images) {
+					for(var image of product.images) {
+						if(image.isDefault) {
+							currentBuffer += '<a href="/product?id="'+product.id+'><img src="'+image.location+'" alt=""></a>';
+						}
 					}
 				}
-				currentBuffer += '<div class="caption">'
-				currentBuffer += '<h3>'+product.name+'</h3>'
-				currentBuffer += '<p/>'
-				currentBuffer += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
-				currentBuffer += '</div>'
-				currentBuffer += '</div>'
-				currentBuffer += '</div>'
+				currentBuffer += '<div class="caption">';
+				currentBuffer += '<h3>'+product.name+'</h3>';
+				currentBuffer += '<p/>';
+				currentBuffer += '<p><a href="/product?id="'+product.id+' class="btn btn-primary disabled">View Product</a></p>';
+				currentBuffer += '</div>';
+				currentBuffer += '</div>';
+				currentBuffer += '</div>';
 				
 				if(product.type == 'CLOTHING') {
 				
