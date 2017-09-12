@@ -11,206 +11,214 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
   </head>
-  <body onLoad="{onload.action}">
-    <!------------------------------ Header --------------------------->
-    <!--This is the Header Content-->
-  	<div class="container-fluid">
-  		<div class="row">
-  			<div class="col-sm-1 header">
-  				<div class="col-xs-1 col-md-1 col-lg-1 text-center">
-  					<a href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Product Management"></a>
-  				</div>
-  			</div>
-  		</div>
-        </div>
-  	<nav class="navbar navbar-default">
-  		  <div class="container-fluid nav-con">
-  			<!--Brand and toggle get grouped for better mobile display-->
-  			<div class="navbar-header">
-  				<div class="col-sm-1 header">
-  				  <button type="button" class="navbar-toggle x collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-  					<span class="sr-only">Toggle navigation</span>
-  					<span class="icon-bar"></span>
-  					<span class="icon-bar second-bar"></span>
-  				  </button>
-  			  	</div>
-  			</div>
-  			<!--Collect the nav links, forms, and other content for toggling-->
-  			<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">Product Management</div>
-  		  </div>
-    </nav>
+	<body onLoad="{onload.action}">
+		<!------------------------------ Header --------------------------->
+		<!--This is the Header Content-->
+		<div class="container-fluid">
+
+			<div class="row">
+
+				<div class="col-lg-12 header">
+					<a href="/"><img src="img/SVGlogo.svg" class="img"	alt="Suroor Fashions - Product Management"></a>
+				</div>
+<!--
+				<div class="col-xs-1 col-md-1 col-lg-1 text-center">
+					<a href="/"><img src="img/SVGlogo.svg" class="img"	alt="Suroor Fashions - Product Management"></a>
+				</div>
+-->
+			</div>
+
+		</div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid nav-con">
+				<!--Brand and toggle get grouped for better mobile display-->
+				<div class="navbar-header">
+					<div class="col-sm-1 header">
+						<button type="button" class="navbar-toggle x collapsed"
+							data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+							aria-expanded="false">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar second-bar"></span>
+						</button>
+					</div>
+				</div>
+				<!--Collect the nav links, forms, and other content for toggling-->
+				<div class="collapse navbar-collapse cool-nav"
+					id="bs-example-navbar-collapse-1">Product Management</div>
+			</div>
+		</nav>
 
 
-    <!---------------------------Body ------------------------->
-	<div class="body">		<!-- Start body section -->
-
-		<div class="container-fluid">		<!-- Start frame 1 -->
-
-			<div class="row">		<!-- Start frame 1, row 1 -->
-			
-				<div class="col-lg-3">		<!-- Start frame 1, row 1, column 1 -->
-
-					<!-- Product image form -->
-					<form id="product_catalog">
-						<!-- div class="row" -->
-							<h1>Product Catalog</h1>
-							**displayed in showcase carousel
-						<!-- /div -->
+		<!---------------------------Body ------------------------->
+		<div class="body">		<!-- Start body section -->
+	
+			<div class="container-fluid">		<!-- Start frame 1 -->
+	
+				<div class="row">		<!-- Start frame 1, row 1 -->
+				
+					<div class="col-lg-3">		<!-- Start frame 1, row 1, column 1 -->
+	
+						<!-- Product image form -->
+						<form id="product_catalog">
+							<!-- div class="row" -->
+								<h1>Product Catalog</h1>
+								**displayed in showcase carousel
+							<!-- /div -->
+							<hr>
+							<div class="panel panel-primary">
+								<div class="panel-heading">Clothing Products</div>
+				                <div class="panel-body">{products.list.clothing}</div>
+							</div>
+							<div class="panel panel-primary">
+								<div class="panel-heading">Jewellery Products</div>
+				                <div class="panel-body">{products.list.jewellery}</div>
+							</div>
+		                </form>
+	
+					</div>		<!-- End frame 1, row 1, column 1 -->
+	
+					<div class="col-lg-9">		<!-- Start  frame 1, row 1, column 2 -->
+	
+						<div class="row">		<!-- Start frame 2, row 1 -->
+	
+							<div class="col-lg-8">		<!-- Start frame 2, row 1, column 1 -->
+	
+								<!-- Title -->
+								<h1>Product Details</h1>
+								{user.prompt}
+	
+							</div>
+	
+							<div class="col-lg-4">		<!-- Start frame 2, row 1, column 2 -->
+	
+								<!-- Buttons -->
+								<button id="post" form="product_details" name="action" type="submit" class="btn btn-primary pull-right" value="Create">Create</button>
+								<button id="put" form="product_details" name="action" type="submit" class="btn btn-primary pull-right" value="Update">Update</button>
+								<!-- button id="delete" form="product_details" name="action" type="submit" class="btn btn-primary pull-right" value="Delete">Delete</button -->
+								<button id="reset_forms" form="product_details" type="reset" class="btn btn-primary pull-right" value="Clear">Clear</button>
+	
+							</div>
+	
+						</div>		<!-- End frame 2, row 1 -->
+	
 						<hr>
-						<div class="panel panel-primary">
-							<div class="panel-heading">Clothing Products</div>
-			                <div class="panel-body">{products.list.clothing}</div>
-						</div>
-						<div class="panel panel-primary">
-							<div class="panel-heading">Jewellery Products</div>
-			                <div class="panel-body">{products.list.jewellery}</div>
-						</div>
-	                </form>
-
-				</div>		<!-- End frame 1, row 1, column 1 -->
-
-				<div class="col-lg-9">		<!-- Start  frame 1, row 1, column 2 -->
-
-					<div class="row">		<!-- Start frame 2, row 1 -->
-
-						<div class="col-lg-8">		<!-- Start frame 2, row 1, column 1 -->
-
-							<!-- Title -->
-							<h1>Product Details</h1>
-							{user.prompt}
-
-						</div>
-
-						<div class="col-lg-4">		<!-- Start frame 2, row 1, column 2 -->
-
-							<!-- Buttons -->
-							<button id="post" form="product_details" name="action" type="submit" class="btn btn-primary pull-right" value="Create">Create</button>
-							<button id="put" form="product_details" name="action" type="submit" class="btn btn-primary pull-right" value="Update">Update</button>
-							<!-- button id="delete" form="product_details" name="action" type="submit" class="btn btn-primary pull-right" value="Delete">Delete</button -->
-							<button id="reset_forms" form="product_details" type="reset" class="btn btn-primary pull-right" value="Clear">Clear</button>
-
-						</div>
-
-					</div>		<!-- End frame 2, row 1 -->
-
-					<hr>
-
-					<div class="row">		<!-- Start frame 2, row 2 -->
-
-						<div class="col-lg-9">		<!-- Start frame 2, row 2, column 1 -->
-						
-							<!-- Product details form -->
-							<form id="product_details" action="/" method="post" enctype="multipart/form-data">
-								<input id="id" type="hidden" name="id"/>
-								<input id="creationTimestamp" type="hidden" name="creationTimestamp"/>
-								<input id="colors" type="hidden" name="colors"/>
-								<input id="sizes" type="hidden" name="sizes"/>
-								<input id="images" type="hidden" name="images"/>
-
-								<div class="row">		<!-- Start frame 3, row 1 -->
 	
-									<div class="col-lg-12">		<!-- Start frame 3, row 1, column 1 -->
+						<div class="row">		<!-- Start frame 2, row 2 -->
+	
+							<div class="col-lg-9">		<!-- Start frame 2, row 2, column 1 -->
 							
-										<!-- Main product details -->
-										<div class="panel panel-primary pull-top">
-											<div class="panel-heading">Product Details</div>
-											<div class="panel-body">
-												<b>Name:</b><br>
-												<input id="name" type="text" name="name"><br>
-												<b>Description:</b><br>
-												<input id="description" type="text" name="description"><br>
-												<b>Price:</b><br>
-												<input id="price" type="text" name="price"><br>
-												<b>Type:</b><br>
-												<input id="type_clothing" type="radio" name="type" value="CLOTHING" checked> Clothing<br>
-												<input id="type_jewellery" type="radio" name="type" value="JEWELLERY"> Jewellery<br>
-												<b>Status:</b><br>
-												<input id="promoted" type="checkbox" name="promoted" value="true"> On Promotion<br>
-											</div>
-											<div class="panel-footer"></div>
-										</div>
+								<!-- Product details form -->
+								<form id="product_details" action="/" method="post" enctype="multipart/form-data">
+									<input id="id" type="hidden" name="id"/>
+									<input id="creationTimestamp" type="hidden" name="creationTimestamp"/>
+									<input id="colors" type="hidden" name="colors"/>
+									<input id="sizes" type="hidden" name="sizes"/>
+									<input id="images" type="hidden" name="images"/>
 	
-									</div>		<!-- End frame 3, row 1, column 1 -->
-	
-								</div>		<!-- End frame 3, row 1 -->
+									<div class="row">		<!-- Start frame 3, row 1 -->
+		
+										<div class="col-lg-12">		<!-- Start frame 3, row 1, column 1 -->
 								
-								<div class="row">		<!-- Start frame 3, row 2 -->
-	
-									<div class="col-lg-6">		<!-- Start frame 3, row 2, column 1 -->
-
-										<!-- Color attributes -->
-										<div class="panel panel-primary">
-											<div class="panel-heading">Color Attributes</div>
-											<div class="panel-body">
-												<span id="color_config" class="pull-top"></span>
-												<input id="color" type="text" name="color" size="20" class="pull-left"/>
-												<input id="add_color" name="add_color" type="submit"
-														value="Add" class="btn btn-secondary pull-right"/>
+											<!-- Main product details -->
+											<div class="panel panel-primary pull-top">
+												<div class="panel-heading">Product Details</div>
+												<div class="panel-body">
+													<b>Name:</b><br>
+													<input id="name" type="text" name="name"><br>
+													<b>Description:</b><br>
+													<input id="description" type="text" name="description"><br>
+													<b>Price:</b><br>
+													<input id="price" type="text" name="price"><br>
+													<b>Type:</b><br>
+													<input id="type_clothing" type="radio" name="type" value="CLOTHING" checked> Clothing<br>
+													<input id="type_jewellery" type="radio" name="type" value="JEWELLERY"> Jewellery<br>
+													<b>Status:</b><br>
+													<input id="promoted" type="checkbox" name="promoted" value="true"> On Promotion<br>
+												</div>
+												<div class="panel-footer"></div>
 											</div>
-											<div class="panel-footer"></div>
-										</div>
+		
+										</div>		<!-- End frame 3, row 1, column 1 -->
+		
+									</div>		<!-- End frame 3, row 1 -->
+									
+									<div class="row">		<!-- Start frame 3, row 2 -->
+		
+										<div class="col-lg-6">		<!-- Start frame 3, row 2, column 1 -->
 	
-									</div>		<!-- End frame 3, row 2, column 1 -->
-							
-									<div class="col-lg-6">		<!-- Start frame 3, row 2, column 2 -->
-							
-										<!-- Size attributes -->
-										<div class="panel panel-primary">
-											<div class="panel-heading">Size Attributes</div>
-											<div class="panel-body">
-												<span id="size_config" class="pull-top"></span>
-												<input id="size" type="text" name="size" size="20" class="pull-left"/>
-												<input id="add_size" name="add_size" type="submit"
-														value="Add" class="btn btn-secondary pull-right"/>
+											<!-- Color attributes -->
+											<div class="panel panel-primary">
+												<div class="panel-heading">Color Attributes</div>
+												<div class="panel-body">
+													<span id="color_config" class="pull-top"></span>
+													<input id="color" type="text" name="color" size="20" class="pull-left"/>
+													<input id="add_color" name="add_color" type="submit"
+															value="Add" class="btn btn-secondary pull-right"/>
+												</div>
+												<div class="panel-footer"></div>
 											</div>
-											<div class="panel-footer"></div>
-										</div>
-
-									</div>		<!-- End frame 3, row 2, column 2 -->
-
-								</div>		<!-- End frame 3, row 2 -->
-
-							</form>
-
-						</div>		<!-- End frame 2, row 2, column 1 -->
-					
-						<div class="col-lg-3">		<!-- Start frame 2, row 2, column 2 -->
+		
+										</div>		<!-- End frame 3, row 2, column 1 -->
+								
+										<div class="col-lg-6">		<!-- Start frame 3, row 2, column 2 -->
+								
+											<!-- Size attributes -->
+											<div class="panel panel-primary">
+												<div class="panel-heading">Size Attributes</div>
+												<div class="panel-body">
+													<span id="size_config" class="pull-top"></span>
+													<input id="size" type="text" name="size" size="20" class="pull-left"/>
+													<input id="add_size" name="add_size" type="submit"
+															value="Add" class="btn btn-secondary pull-right"/>
+												</div>
+												<div class="panel-footer"></div>
+											</div>
+	
+										</div>		<!-- End frame 3, row 2, column 2 -->
+	
+									</div>		<!-- End frame 3, row 2 -->
+	
+								</form>
+	
+							</div>		<!-- End frame 2, row 2, column 1 -->
 						
-							<!-- Product image form -->
-							<form id="product_image" method="post" enctype="multipart/form-data">
-								<input id="image_loc" type="hidden" name="image_loc" />
-								<input id="image_tag" type="hidden" name="image_tag" />
-								<div class="panel panel-primary">
-									<div class="panel-heading">Product Images</div>
-									<div class="panel-body">
-										<div class="pull-top">
-											<span id="image_upload_button"></span><br> <span id="image_upload_selector"></span>
-										</div>
-										<hr>
-										<div class="pull-left">
-											<span id="image_delete_button"></span><br>
-											<span id="image_list"></span>
-										</div>
-										<div class="pull-right">
-											<span id="default_image_selector"></span><br>
-											<span id="selected_image_view"></span>
-										</div>
-									</div>
-									<div class="panel-footer"></div>
-								</div>
-							</form>
-
-						</div>		<!-- Start frame 2, row 2, column 2 -->
-					
-					</div>		<!-- End frame 2, row 2 -->
+							<div class="col-lg-3">		<!-- Start frame 2, row 2, column 2 -->
 							
-				</div>		<!-- End frame 1, column 2 -->
-				
-			</div>		<!-- End frame 1, row 1 -->	
-				
-		</div>		<!-- End frame 1 -->
-				
-	</div>		<!-- End body section -->	
+								<!-- Product image form -->
+								<form id="product_image" method="post" enctype="multipart/form-data">
+									<input id="image_loc" type="hidden" name="image_loc" />
+									<input id="image_tag" type="hidden" name="image_tag" />
+									<div class="panel panel-primary">
+										<div class="panel-heading">Product Images</div>
+										<div class="panel-body">
+											<div class="pull-top">
+												<span id="image_upload_button"></span><br> <span id="image_upload_selector"></span>
+											</div>
+											<hr>
+											<div class="pull-left">
+												<span id="image_delete_button"></span><br>
+												<span id="image_list"></span>
+											</div>
+											<div class="pull-right">
+												<span id="default_image_selector"></span><br>
+												<span id="selected_image_view"></span>
+											</div>
+										</div>
+										<div class="panel-footer"></div>
+									</div>
+								</form>
+	
+							</div>		<!-- Start frame 2, row 2, column 2 -->
+						
+						</div>		<!-- End frame 2, row 2 -->
+								
+					</div>		<!-- End frame 1, column 2 -->
+					
+				</div>		<!-- End frame 1, row 1 -->	
+					
+			</div>		<!-- End frame 1 -->
+					
+		</div>		<!-- End body section -->	
 
 		<!------------------------------- Footer --------------------->
 		<footer>
