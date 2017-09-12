@@ -124,11 +124,15 @@ function formatProductHtml(productsList,callback) {
 	
 				// Initialise current buffer
 				var currentBuffer = '';
-	
+
 				// Write product in showcase carousel element
 				currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">'
 				currentBuffer += '<div class="thumbnail">'
-				currentBuffer += '<img src="'+product.imageLocation+'" alt="">'
+				for(var image of product.images) {
+					if(image.isDefault) {
+						currentBuffer += '<img src="'+image.location+'" alt="">'
+					}
+				}
 				currentBuffer += '<div class="caption">'
 				currentBuffer += '<h3>'+product.name+'</h3>'
 				currentBuffer += '<p/>'
