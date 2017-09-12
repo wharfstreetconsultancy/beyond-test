@@ -83,6 +83,7 @@ app.get('/', function (req, res) {
 function loadExistingProducts(req, res, callback) {
 
 	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
+		
 		if (productLoadError) {
 
 			callback(productLoadError, null);

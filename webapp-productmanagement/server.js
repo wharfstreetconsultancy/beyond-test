@@ -256,27 +256,31 @@ app.post('/', upload.array('image_files'), function (req, res) {
 // Load existing product from datasource
 function loadExistingProducts(req, res, callback) {
 
-	if (productLoadError) {
+	console.log("Connecting to: "+'https://'+productDomain+'/product');
+	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		
-		callback(productLoadError, null);
-	} else {
-
-		// Log error from remote server
-		console.log( "REST API server responded with 'err': " + productLoadError );
-		// Log status code from remote server
-		console.log( "REST API server responded with 'status': " + productLoadResponse.statusCode );
-		// Log response body from remote server
-		console.log( "REST API server responded with 'body': " + productLoadBody );
-
-		// Error handling
-		if(productLoadResponse.statusCode != '200') {
-
-			callback(productLoadBody, null);
+		if (productLoadError) {
+			
+			callback(productLoadError, null);
 		} else {
-
-			callback(null, JSON.parse(productLoadBody));
+	
+			// Log error from remote server
+			console.log( "REST API server responded with 'err': " + productLoadError );
+			// Log status code from remote server
+			console.log( "REST API server responded with 'status': " + productLoadResponse.statusCode );
+			// Log response body from remote server
+			console.log( "REST API server responded with 'body': " + productLoadBody );
+	
+			// Error handling
+			if(productLoadResponse.statusCode != '200') {
+	
+				callback(productLoadBody, null);
+			} else {
+	
+				callback(null, JSON.parse(productLoadBody));
+			}
 		}
-	}
+	});
 }
 
 //
