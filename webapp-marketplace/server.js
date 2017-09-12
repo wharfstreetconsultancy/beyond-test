@@ -92,9 +92,10 @@ app.get('/product', function (req, res) {
 
 		if((productsList) && !Array.isArray(productsList)) {
 			
+			var product = productsList;
 			var productImageLocation = '';
-			if(productsList.images) {
-				for(var image of productsList.images) {
+			if(product.images) {
+				for(var image of product.images) {
 					if(image.isDefault) {
 						productImageLocation = image.location;
 					}
