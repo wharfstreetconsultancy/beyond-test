@@ -71,6 +71,7 @@ app.get('/', function (req, res) {
 
             // Add dynamic elements to response page
             fs.createReadStream(__dirname+'/index.html')
+				.pipe(replaceStream('{error.message}', ''))
 				.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
 				.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
 				.pipe(res);
@@ -110,12 +111,13 @@ app.get('/product', function (req, res) {
 		} else {
 			
 			// Something went wrong - determine cause
-			var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' product found for id "'+req.query.id+'"';
+			var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
 	        // Format products into appropriate HTML
 	        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
 
 	            // Add dynamic elements to response page
 	            fs.createReadStream(__dirname+'/index.html')
+					.pipe(replaceStream('{error.message}', errorMessage))
 					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
 					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
 					.pipe(res);
