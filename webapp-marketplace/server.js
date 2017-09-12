@@ -183,14 +183,14 @@ console.log("Product ID: "+product.id);
 					for(var image of product.images) {
 						if(image.isDefault) {
 							console.log("Product ID: "+product.id);
-							currentBuffer += '<a href="/product?id="'+product.id+'"><img src="'+image.location+'" alt=""></a>';
+							currentBuffer += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" alt=""></a>';
 						}
 					}
 				}
 				currentBuffer += '<div class="caption">';
 				currentBuffer += '<h3>'+product.name+'</h3>';
 				currentBuffer += '<p/>';
-				currentBuffer += '<p><a href="/product?id="'+product.id+'" class="btn btn-primary">View Product</a></p>';
+				currentBuffer += '<p><a href="/product?id='+product.id+'" class="btn btn-primary">View Product</a></p>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';
