@@ -33,8 +33,8 @@ var sha256 = require('sha256');
 var app = express();
 app.use(express.static('assets'));
 var upload = multer({ dest: '/tmp/'});
-var key = fs.readFileSync('../../dom/domain.key');
-var cert = fs.readFileSync('../../dom/domain.crt');
+var key = fs.readFileSync('/home/wsc-root/dom/domain.key');
+var cert = fs.readFileSync('/home/wsc-root/dom/domain.crt');
 var options = {
 	key: key,
 	cert: cert
