@@ -67,10 +67,12 @@ app.all('*', function (req, res, next) {
 
 	// Determine if request was https
 	if(req.connection.encrypted) {
-console.log("Req Session: "+util.inspect(req.session));
-console.log("Req URL: "+util.inspect(req.url));
-console.log("Req Headers: "+util.inspect(req.headers));
-console.log("Req Query: "+JSON.stringify(req.query));
+/*
+		console.log("Req Session: "+util.inspect(req.session));
+		console.log("Req URL: "+util.inspect(req.url));
+		console.log("Req Headers: "+util.inspect(req.headers));
+		console.log("Req Query: "+JSON.stringify(req.query));
+*/
 		next();
 
 
@@ -158,6 +160,8 @@ console.log("Session found: "+JSON.stringify(session));
 		// Request was http - redirect caller to https
         	console.log("Redirecting http request to: https://"+productDomain+req.url);
 		res.redirect('https://'+productDomain+req.url);
+		res.end();
+		return;
 	}
 });
 
