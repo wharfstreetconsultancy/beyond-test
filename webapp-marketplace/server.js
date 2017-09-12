@@ -87,24 +87,40 @@ app.get('/product', function (req, res) {
 
 	//
 	// Load all specified product from REST API
-	loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
+	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-		var productImageLocation = '';
-		if(product.images) {
-			for(var image of product.images) {
-				if(image.isDefault) {
-					productImageLocation = image.location;
+		if(productsList.length == 1) {
+			
+			var productImageLocation = '';
+			if(product.images) {
+				for(var image of product.images) {
+					if(image.isDefault) {
+						productImageLocation = image.location;
+					}
 				}
 			}
-		}
 
-		// Add dynamic elements to response page
-        fs.createReadStream(__dirname+'/product.html')
-			.pipe(replaceStream('{product.name}', product.name))
-			.pipe(replaceStream('{product.description}', product.description))
-			.pipe(replaceStream('{product.image.location}', productImageLocation))
-			.pipe(replaceStream('{product.price}', product.price))
-			.pipe(res);
+			// Add dynamic elements to response page
+	        fs.createReadStream(__dirname+'/product.html')
+				.pipe(replaceStream('{product.name}', product.name))
+				.pipe(replaceStream('{product.description}', product.description))
+				.pipe(replaceStream('{product.image.location}', productImageLocation))
+				.pipe(replaceStream('{product.price}', product.price))
+				.pipe(res);
+		} else {
+			
+			// Something went wrong - determine cause
+			var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' product found for id "'+req.query.id+'"';
+	        // Format products into appropriate HTML
+	        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+
+	            // Add dynamic elements to response page
+	            fs.createReadStream(__dirname+'/index.html')
+					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
+					.pipe(res);
+	        });
+		}
 	});
 });
 
