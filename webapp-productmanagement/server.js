@@ -665,7 +665,7 @@ function storeProduct(product, callback) {
 	// Perform product store operation
 	dddc.put(storeProductParams, function (err, data) {
 		if (err) {
-			callback('Failed to store product(s)', null);
+			callback('Failed to store product named "'+product.name+'"', null);
 		} else {
 
 			// Log output from data store
