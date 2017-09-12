@@ -169,7 +169,7 @@ function formatProductsCarouselsHtml(productsList,callback) {
 				currentBuffer += '<div class="caption">';
 				currentBuffer += '<h3>'+product.name+'</h3>';
 				currentBuffer += '<p/>';
-				currentBuffer += '<p><a href="/product?id="'+product.id+' class="btn btn-primary disabled">View Product</a></p>';
+				currentBuffer += '<p><a href="/product?id="'+product.id+' class="btn btn-primary">View Product</a></p>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';
