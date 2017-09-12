@@ -321,8 +321,8 @@ function createNewProduct(req, res, callback) {
         	        	type: req.body.type,
 	                	description: req.body.description,
 	                	price: req.body.price,
-	                	colors: (req.body.colors) ? JSON.parse(req.body.colors) : '',
-	                	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : '',
+	                	colors: (req.body.colors) ? JSON.parse(req.body.colors) : [],
+	                	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : [],
 	                	creationTimestamp: timestamp,
 	                	lastUpdateTimestamp: timestamp,
 	                	promoted: req.body.promoted
@@ -367,7 +367,7 @@ function updateExistingProduct(req, res, callback) {
 	// Capture update timestamp
 	var timestamp = new Date().getTime().toString();
 
-	console.log( "Updated Product: " + (req.body.images));
+	console.log( "Updated Product: " + (req.body.images) ? JSON.parse(req.body.images) : []);
 
 	// Create new product object
 	var updatedProduct = {
@@ -376,9 +376,9 @@ function updateExistingProduct(req, res, callback) {
 		type: req.body.type,
 		description: req.body.description,
 		price: req.body.price,
-    	colors: (req.body.colors) ? JSON.parse(req.body.colors) : '',
-       	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : '',
-		images: (req.body.images) ? JSON.parse(req.body.images) : '',
+    	colors: (req.body.colors) ? JSON.parse(req.body.colors) : [],
+       	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : [],
+		images: (req.body.images) ? JSON.parse(req.body.images) : [],
 		creationTimestamp: timestamp,
 		lastUpdateTimestamp: timestamp,
 		promoted: req.body.promoted
