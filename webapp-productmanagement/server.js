@@ -376,7 +376,7 @@ function updateExistingProduct(req, res, callback) {
 		price: req.body.price,
     	colors: (req.body.colors) ? JSON.parse(req.body.colors) : '',
        	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : '',
-		images: (req.body.sizes) ? JSON.parse(req.body.images) : '',
+		images: (req.body.images) ? JSON.parse(req.body.images) : '',
 		creationTimestamp: timestamp,
 		lastUpdateTimestamp: timestamp,
 		promoted: req.body.promoted
