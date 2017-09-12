@@ -114,36 +114,39 @@ function formatProductHtml(productsList,callback) {
 	// Initialise jewellery HTML section
 	var productsListJewelleryHtml = '';
 
-	// Iterate through product list
-	for(var product of productsList) {
+	if(productList.length > 0) {
 
-		if(product.promoted == 'true') {
-
-			// Initialise current buffer
-			var currentBuffer = '';
-
-			// Write product in showcase carousel element
-			currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">'
-			currentBuffer += '<div class="thumbnail">'
-			currentBuffer += '<img src="'+product.imageLocation+'" alt="">'
-			currentBuffer += '<div class="caption">'
-			currentBuffer += '<h3>'+product.name+'</h3>'
-			currentBuffer += '<p/>'
-			currentBuffer += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
-			currentBuffer += '</div>'
-			currentBuffer += '</div>'
-			currentBuffer += '</div>'
-			
-			if(product.type == 'CLOTHING') {
-			
-				// Write product into clothing list
-				productsListClothingHtml += currentBuffer;
-			} else if (product.type == 'JEWELLERY') {
-			
-				// Write product into jewellery list
-				productsListJewelleryHtml += currentBuffer;
-			}
-        }
+		// Iterate through product list
+		for(var product of productsList) {
+	
+			if(product.promoted == 'true') {
+	
+				// Initialise current buffer
+				var currentBuffer = '';
+	
+				// Write product in showcase carousel element
+				currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">'
+				currentBuffer += '<div class="thumbnail">'
+				currentBuffer += '<img src="'+product.imageLocation+'" alt="">'
+				currentBuffer += '<div class="caption">'
+				currentBuffer += '<h3>'+product.name+'</h3>'
+				currentBuffer += '<p/>'
+				currentBuffer += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
+				currentBuffer += '</div>'
+				currentBuffer += '</div>'
+				currentBuffer += '</div>'
+				
+				if(product.type == 'CLOTHING') {
+				
+					// Write product into clothing list
+					productsListClothingHtml += currentBuffer;
+				} else if (product.type == 'JEWELLERY') {
+				
+					// Write product into jewellery list
+					productsListJewelleryHtml += currentBuffer;
+				}
+	        }
+		}
 	}
 
 	console.log("Clothing buffer: "+productsListClothingHtml);

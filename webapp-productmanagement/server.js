@@ -207,14 +207,12 @@ app.post('/', upload.array('image_files'), function (req, res) {
 
 		// Create new product
 		createNewProduct(req, res, function (productStoreErrorMessage, newProduct) {
-			console.log("1. Store error: "+productStoreErrorMessage);
+
 			// Load existing products
 			loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
-				console.log("2. Store error: "+productStoreErrorMessage);
 
 				// Add dynamic elements to response page
 				formatProductHtml(productsList, function (productsListClothingHtml, productsListJewelleryHtml) {
-					console.log("3. Store error: "+productStoreErrorMessage);
 				
 				        // Add dynamic elements to response page
 				        fs.createReadStream(__dirname+'/index.html')
@@ -230,7 +228,6 @@ app.post('/', upload.array('image_files'), function (req, res) {
 
                 // Update existing product
                 updateExistingProduct(req, res, function (productStoreErrorMessage, updatedProduct) {
-
 
                         // Load existing products
                         loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
@@ -516,43 +513,46 @@ function formatProductHtml(productsList, callback) {
 	// Initialise jewellery HTML section
 	var productsListJewelleryHtml = '';
 
-	// Iterate through product list
-	for(var product of productsList) {
+	if(productList.length > 0) {
 
-		// Initialise product HTML buffer with product name
-		var currentProductHtml = replaceall('"','', JSON.stringify(product.name));
-
-		if(product.promoted == 'true') {
-			// If product is being promoted, indicate with asterisk
-			currentProductHtml += '**';
-		}
-
-                // Write product into radio box choice element
-                currentProductHtml = '<div id=\''+product.id+'_div\'><input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'selectProduct(JSON.parse(this.value));\'> '+currentProductHtml+'</input><br>Created on...<br></div>';
-
-		if(product.type == 'CLOTHING') {
-
-			// Add product to clothing list
-			productsListClothingHtml += currentProductHtml;
-		} else if (product.type == 'JEWELLERY') {
-
-                        // Add product to jewellery list
-                        productsListJewelleryHtml += currentProductHtml;
+		// Iterate through product list
+		for(var product of productsList) {
+	
+			// Initialise product HTML buffer with product name
+			var currentProductHtml = replaceall('"','', JSON.stringify(product.name));
+	
+			if(product.promoted == 'true') {
+				// If product is being promoted, indicate with asterisk
+				currentProductHtml += '**';
+			}
+	
+	                // Write product into radio box choice element
+	                currentProductHtml = '<div id=\''+product.id+'_div\'><input id=\''+product.id+'\' type=\'radio\' name=\'product\' value=\''+JSON.stringify(product)+'\' onclick=\'selectProduct(JSON.parse(this.value));\'> '+currentProductHtml+'</input><br>Created on...<br></div>';
+	
+			if(product.type == 'CLOTHING') {
+	
+				// Add product to clothing list
+				productsListClothingHtml += currentProductHtml;
+			} else if (product.type == 'JEWELLERY') {
+	
+	                        // Add product to jewellery list
+	                        productsListJewelleryHtml += currentProductHtml;
+			}
 		}
 	}
 
-        // If there are no clothing products
-        if(productsListClothingHtml.length == 0) {
-
-                // Provide default message for clothing list
-                productsListClothingHtml = 'No clothing exists';
+	// If there are no clothing products
+	if(productsListClothingHtml.length == 0) {
+	
+		// Provide default message for clothing list
+		productsListClothingHtml = 'No clothing exists';
 	}
-
-        // If there are no jewellery products
-        if(productsListJewelleryHtml.length == 0) {
-
-                // Provide default message for jewellery list
-                productsListJewelleryHtml = 'No jewellery exists';
+	
+	// If there are no jewellery products
+	if(productsListJewelleryHtml.length == 0) {
+	
+		// Provide default message for jewellery list
+		productsListJewelleryHtml = 'No jewellery exists';
 	}
 
 	// Return to caller
