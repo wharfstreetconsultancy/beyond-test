@@ -71,7 +71,7 @@ app.get('/', function (req, res) {
 
             // Add dynamic elements to response page
             fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{error.message}', ''))
+				.pipe(replaceStream('{error.message}', '&nbsp;'))
 				.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
 				.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
 				.pipe(res);
@@ -90,7 +90,7 @@ app.get('/product', function (req, res) {
 	// Load all specified product from REST API
 	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-		if(productsList.length == 1) {
+		if((productsList) && !Array.isArray(productsList)) {
 			
 			var productImageLocation = '';
 			if(product.images) {
@@ -168,8 +168,6 @@ function formatProductsCarouselsHtml(productsList,callback) {
 
 		// Iterate through product list
 		for(var product of productsList) {
-console.log("Product: "+JSON.stringify(product));
-console.log("Product ID: "+product.id);
 
 			if(product.promoted == 'true') {
 	
