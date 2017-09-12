@@ -52,18 +52,18 @@
 
 					<!-- Product image form -->
 					<form id="product_catalog">
-						<div class="row">
+						<!-- div class="row" -->
 							<h1>Product Catalog</h1>
-							**displayed in showcase carousel<br>
-						</div>
+							**displayed in showcase carousel
+						<!-- /div -->
 						<hr>
-						<div class="row">
-							<h2>Clothing Products</h2>
-			                {products.list.clothing}
+						<div class="panel panel-primary">
+							<div class="panel-heading">Clothing Products</div>
+			                <div class="panel-body">{products.list.clothing}</div>
 						</div>
-						<div class="row">
-							<h2>Jewellery Products</h2>
-			                {products.list.jewellery}
+						<div class="panel panel-primary">
+							<div class="panel-heading">Jewellery Products</div>
+			                <div class="panel-body">{products.list.jewellery}</div>
 						</div>
 	                </form>
 
@@ -76,7 +76,7 @@
 						<div class="col-lg-8">		<!-- Start frame 2, row 1, column 1 -->
 
 							<!-- Title -->
-							<h1>Product Details</h1><br>
+							<h1>Product Details</h1>
 							{user.prompt}
 
 						</div>
@@ -84,10 +84,10 @@
 						<div class="col-lg-4">		<!-- Start frame 2, row 1, column 2 -->
 
 							<!-- Buttons -->
-							<button id="post" form="product_details" name="action" type="submit" class="btn btn-primary" value="Create"></button>
-							<button id="put" form="product_details" name="action" type="submit" class="btn btn-primary" value="Update"></button>
-							<!-- button id="delete" form="product_details" name="action" type="submit" class="btn btn-primary" value="Delete"></button -->
-							<button id="reset_forms" form="product_details" type="reset" class="btn btn-primary" value="Clear"></button>
+							<button id="post" form="product_details" name="action" type="submit" class="btn btn-primary" value="Create">Create</button>
+							<button id="put" form="product_details" name="action" type="submit" class="btn btn-primary" value="Update">Update</button>
+							<!-- button id="delete" form="product_details" name="action" type="submit" class="btn btn-primary" value="Delete">Delete</button -->
+							<button id="reset_forms" form="product_details" type="reset" class="btn btn-primary" value="Clear">Clear</button>
 
 						</div>
 
@@ -128,7 +128,7 @@
 
 								<!-- Color attributes -->
 								<div class="panel panel-primary pull-left">
-									<div class="panel-heading">Color Attribute Values</div>
+									<div class="panel-heading">Color Attributes</div>
 									<div class="panel-body">
 										<span id="color_config" class="pull-top"></span>
 										<input id="color" type="text" name="color" size="20" class="pull-left"/>
@@ -140,7 +140,7 @@
 
 								<!-- Size attributes -->
 								<div class="panel panel-primary pull-right">
-									<div class="panel-heading">Size Attribute Values</div>
+									<div class="panel-heading">Size Attributes</div>
 									<div class="panel-body">
 										<span id="size_config" class="pull-top"></span>
 										<input id="size" type="text" name="size" size="20" class="pull-left"/>
