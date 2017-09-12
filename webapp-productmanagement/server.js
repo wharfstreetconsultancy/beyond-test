@@ -235,9 +235,8 @@ app.post('/', upload.array('image_files'), function (req, res) {
                         // Load existing products
                         loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-                                // Add dynamic elements to response page
+                                // Format products into appropriate HTML
                                 formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
-
 
                                         // Add dynamic elements to response page
                                         fs.createReadStream(__dirname+'/index.html')
@@ -260,8 +259,10 @@ app.post('/', upload.array('image_files'), function (req, res) {
 // Load existing product from datasource
 function loadExistingProducts(req, res, callback) {
 
-	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
-		if (productLoadError) callback('Failed to load existing products.', null);
+	if (productLoadError) {
+		
+		callback(productLoadError, null);
+	} else {
 
 		// Log error from remote server
 		console.log( "REST API server responded with 'err': " + productLoadError );
@@ -272,11 +273,13 @@ function loadExistingProducts(req, res, callback) {
 
 		// Error handling
 		if(productLoadResponse.statusCode != '200') {
-			callback('Failed to load existing products.', null);
-		}
 
-		callback(null, JSON.parse(productLoadBody));
-	});
+			callback(productLoadBody, null);
+		} else {
+
+			callback(null, JSON.parse(productLoadBody));
+		}
+	}
 }
 
 //

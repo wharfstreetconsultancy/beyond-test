@@ -65,15 +65,14 @@ app.get('/', function (req, res) {
 	// Load all existing products from REST API
 	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-		// Add dynamic elements to response page
-		formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+        // Format products into appropriate HTML
+        formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
 
-			// Add dynamic elements to response page
-			formatProductHtml(JSON.parse(productLoadBody), function(clothingCarouselHtml, jewelleryCarouselHtml) {
-				fs.createReadStream(__dirname+'/index.html')
-					.pipe(replaceStream('{showcase.clothing.carousel}', clothingCarouselHtml))
-					.pipe(replaceStream('{showcase.jewellery.carousel}', jewelleryCarouselHtml))
-					.pipe(res);
+            // Add dynamic elements to response page
+            fs.createReadStream(__dirname+'/index.html')
+				.pipe(replaceStream('{showcase.clothing.carousel}', clothingCarouselHtml))
+				.pipe(replaceStream('{showcase.jewellery.carousel}', jewelleryCarouselHtml))
+				.pipe(res);
         });
 	});
 });
@@ -83,24 +82,29 @@ app.get('/', function (req, res) {
 function loadExistingProducts(req, res, callback) {
 
 	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
-		if (productLoadError) callback('Failed to load existing products.', null);
+		if (productLoadError) {
 
-		// Log error from remote server
-		console.log( "REST API server responded with 'err': " + productLoadError );
-		// Log status code from remote server
-		console.log( "REST API server responded with 'status': " + productLoadResponse.statusCode );
-		// Log response body from remote server
-		console.log( "REST API server responded with 'body': " + productLoadBody );
+			callback(productLoadError, null);
+		} else {
 
-		// Error handling
-		if(productLoadResponse.statusCode != '200') {
-			callback('Failed to load existing products.', null);
+			// Log error from remote server
+			console.log( "REST API server responded with 'err': " + productLoadError );
+			// Log status code from remote server
+			console.log( "REST API server responded with 'status': " + productLoadResponse.statusCode );
+			// Log response body from remote server
+			console.log( "REST API server responded with 'body': " + productLoadBody );
+	
+			// Error handling
+			if(productLoadResponse.statusCode != '200') {
+	
+				callback(productLoadBody, null);
+			} else {
+	
+				callback(null, JSON.parse(productLoadBody));
+			}
 		}
-
-		callback(null, JSON.parse(productLoadBody));
 	});
 }
-
 
 function formatProductHtml(productsList,callback) {
 
@@ -161,4 +165,3 @@ function formatProductHtml(productsList,callback) {
 	// Return to caller
 	callback(productsListClothingHtml, productsListJewelleryHtml);
 }
-
