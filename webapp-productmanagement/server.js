@@ -42,9 +42,6 @@ var options = {
 var productPort = process.env.PORT;
 var productHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
 var productDomain = productHost+':'+productPort;
-var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
-var authClientId = '6v6h3ob7p9qip7jdm596shvoea';
-var authClientSecret = '57hupab0iqhlhpivubqe4quu1eeqoq0kjpunerklr4s60mrbcvv';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
@@ -54,7 +51,9 @@ agent = new https.Agent({
 	rejectUnauthorized: false
 });
 
-
+var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
+var authClientId = '6v6h3ob7p9qip7jdm596shvoea';
+var authClientSecret = '57hupab0iqhlhpivubqe4quu1eeqoq0kjpunerklr4s60mrbcvv';
 
 //
 // Create and run web server
@@ -258,7 +257,7 @@ app.post('/', upload.array('image_files'), function (req, res) {
 });
 
 //
-// Create new product
+// Load existing product from datasource
 function loadExistingProducts(req, res, callback) {
 
 	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
@@ -511,14 +510,14 @@ function formatProductHtml(productsList, callback) {
 
 	// Initialise clothing HTML section
 	var productsListClothingHtml = '';
-        // Initialise jewellery HTML section
-        var productsListJewelleryHtml = '';
+	// Initialise jewellery HTML section
+	var productsListJewelleryHtml = '';
 
 	// Iterate through product list
 	for(var product of productsList) {
 
 		// Initialise product HTML buffer with product name
-	        var currentProductHtml = replaceall('"','', JSON.stringify(product.name));
+		var currentProductHtml = replaceall('"','', JSON.stringify(product.name));
 
 		if(product.promoted == 'true') {
 			// If product is being promoted, indicate with asterisk

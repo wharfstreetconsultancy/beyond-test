@@ -5,142 +5,160 @@ var fs = require('fs');
 var request = require('request');
 var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
+var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 //
 // Manage HTTP server container
 var app = express();
 app.use(express.static('assets'));
+var upload = multer({ dest: '/tmp/'});
+var key = fs.readFileSync('certs/domain.key');
+var cert = fs.readFileSync('certs/domain.crt');
+var options = {
+	key: key,
+	cert: cert
+};
+var productPort = process.env.PORT;
+var productHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
+var productDomain = productHost+':'+productPort;
+
+/* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
+agent = new https.Agent({
+	host: productHost,
+	port: productPort,
+	path: '/',
+	rejectUnauthorized: false
+});
 
 //
-// Manage AWS API
-var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-// Create S3 service object
-var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+// Create and run web server
+http.createServer(app).listen(8080);
+https.createServer(options, app).listen(8443);
 
 //
-// Create and run server
-var server = app.listen(8080, function () {
+//ALL '*' - Redirect all http traffic to https
+app.all('*', function (req, res, next) {
 
-	// Output server endpoint
-	console.log('Product Management app listening at http://'+server.address().address+':'+server.address().port+'/');
-})
+	// Determine if request was https
+	if(req.connection.encrypted) {
 
-// GET - root context - serve index page
+		next();
+	} else {
+
+		// Request was http - redirect caller to https
+        console.log("Redirecting http request to: https://"+productDomain+req.url);
+		res.redirect('https://'+productDomain+req.url);
+		res.end();
+		return;
+	}
+});
+
+//
+// GET '/' - Initial home page
 app.get('/', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: GET /" );
 
-	request.get({url:'http://ec2-52-10-1-150.us-west-2.compute.amazonaws.com:81/product'}, function callback(productLoadError, productLoadResponse, productLoadBody) {
-                if (productLoadError) throw productLoadError;
+	//
+	// Load all existing products from REST API
+	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-                // Log status code from remote server
-                console.log( "Server responded with: " + productLoadResponse.statusCode );
-                // Log response body from remote server
-                console.log( "Server responded with: " + productLoadBody );
+		// Add dynamic elements to response page
+		formatProductHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
 
-		// Parse response body into existing products list
-                // var updatedProductsList = JSON.parse(output);
-
-                // Log existing product list
-                // console.log( "Existing Products List: " + JSON.stringify(existingProductsList) );
-
-                // Add dynamic elements to response page
-                formatProductHtml(JSON.parse(productLoadBody), function(clothingCarouselHtml, jewelleryCarouselHtml) {
-                        fs.createReadStream(__dirname+'/index.html')
-			        .pipe(replaceStream('{showcase.clothing.carousel}', clothingCarouselHtml))
-                                .pipe(replaceStream('{showcase.jewellery.carousel}', jewelleryCarouselHtml))
-                                .pipe(res);
-                });
+			// Add dynamic elements to response page
+			formatProductHtml(JSON.parse(productLoadBody), function(clothingCarouselHtml, jewelleryCarouselHtml) {
+				fs.createReadStream(__dirname+'/index.html')
+					.pipe(replaceStream('{showcase.clothing.carousel}', clothingCarouselHtml))
+					.pipe(replaceStream('{showcase.jewellery.carousel}', jewelleryCarouselHtml))
+					.pipe(res);
+        });
 	});
-})
+});
 
 //
-// Load existing products from the data source
-function loadExistingProducts(callback) {
+// Load existing product from datasource
+function loadExistingProducts(req, res, callback) {
 
-	// Create load params
-	var params = {
-		TableName: 'SuroorFashionsProducts',
-		Limit: 10,
-		ExpressionAttributeValues: {
-			':c': 'CLOTHING'
-		},
-		FilterExpression: 'productType = :c'
-	};
+	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
+		if (productLoadError) callback('Failed to load existing products.', null);
 
-	// Perform product load action
-	dddc.scan(params, function(err, fileData) {
-		if(err) throw err;
+		// Log error from remote server
+		console.log( "REST API server responded with 'err': " + productLoadError );
+		// Log status code from remote server
+		console.log( "REST API server responded with 'status': " + productLoadResponse.statusCode );
+		// Log response body from remote server
+		console.log( "REST API server responded with 'body': " + productLoadBody );
 
-		// Select only product items from output
-		existingProductsList = fileData.Items;
+		// Error handling
+		if(productLoadResponse.statusCode != '200') {
+			callback('Failed to load existing products.', null);
+		}
 
-		// Log loaded products list
-		console.log("Loaded: "+JSON.stringify(existingProductsList));
-
-		// Return existing product list to caller
-		callback(existingProductsList);
+		callback(null, JSON.parse(productLoadBody));
 	});
 }
 
+
 function formatProductHtml(productsList,callback) {
 
-        // Initialise clothing HTML section
-        var productsListClothingHtml = '';
-        // Initialise jewellery HTML section
-        var productsListJewelleryHtml = '';
+	// Initialise clothing HTML section
+	var productsListClothingHtml = '';
+	// Initialise jewellery HTML section
+	var productsListJewelleryHtml = '';
 
-        // Iterate through product list
-        for(var product of productsList) {
+	// Iterate through product list
+	for(var product of productsList) {
 
 		if(product.promoted == 'true') {
 
-		        // Initialise current buffer
-        		var currentBuffer = '';
+			// Initialise current buffer
+			var currentBuffer = '';
 
-	                // Write product in showcase carousel element
-        	        currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">'
-                	currentBuffer += '<div class="thumbnail">'
-	                currentBuffer += '<img src="'+product.imageLocation+'" alt="">'
-        	        currentBuffer += '<div class="caption">'
-                	currentBuffer += '<h3>'+product.name+'</h3>'
-	                currentBuffer += '<p/>'
-        	        currentBuffer += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
-                	currentBuffer += '</div>'
-	                currentBuffer += '</div>'
-        	        currentBuffer += '</div>'
-
-                	if(product.type == 'CLOTHING') {
-
-	                        // Write product into clothing list
-        	                productsListClothingHtml += currentBuffer;
-                	} else if (product.type == 'JEWELLERY') {
-
-                        	// Write product into jewellery list
-	                        productsListJewelleryHtml += currentBuffer;
+			// Write product in showcase carousel element
+			currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">'
+			currentBuffer += '<div class="thumbnail">'
+			currentBuffer += '<img src="'+product.imageLocation+'" alt="">'
+			currentBuffer += '<div class="caption">'
+			currentBuffer += '<h3>'+product.name+'</h3>'
+			currentBuffer += '<p/>'
+			currentBuffer += '<p><a href="#" class="btn btn-primary disabled">View Product</a></p>'
+			currentBuffer += '</div>'
+			currentBuffer += '</div>'
+			currentBuffer += '</div>'
+			
+			if(product.type == 'CLOTHING') {
+			
+				// Write product into clothing list
+				productsListClothingHtml += currentBuffer;
+			} else if (product.type == 'JEWELLERY') {
+			
+				// Write product into jewellery list
+				productsListJewelleryHtml += currentBuffer;
 			}
-                }
         }
+	}
 
-console.log("Clothing buffer: "+productsListClothingHtml);
-console.log("Jewellery buffer: "+productsListJewelleryHtml);
+	console.log("Clothing buffer: "+productsListClothingHtml);
+	console.log("Jewellery buffer: "+productsListJewelleryHtml);
 
-        // If there are no clothing products
-        if(productsListClothingHtml.length == 0) {
-
-                // Provide default message for clothing list
-                productsListClothingHtml = 'No clothing exists';
-        }
-
-        // If there are no jewellery products
-        if(productsListJewelleryHtml.length == 0) {
-
-                // Provide default message for jewellery list
-                productsListJewelleryHtml = 'No jewellery exists';
-        }
-
-        // Return to caller
-        callback(productsListClothingHtml, productsListJewelleryHtml);
+	// If there are no clothing products
+	if(productsListClothingHtml.length == 0) {
+	
+		// Provide default message for clothing list
+		productsListClothingHtml = 'No clothing currently showcased';
+	}
+	
+	// If there are no jewellery products
+	if(productsListJewelleryHtml.length == 0) {
+	
+		// Provide default message for jewellery list
+		productsListJewelleryHtml = 'No jewellery currently showcased';
+	}
+	
+	// Return to caller
+	callback(productsListClothingHtml, productsListJewelleryHtml);
 }
 
