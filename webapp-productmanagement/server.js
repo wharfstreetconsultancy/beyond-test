@@ -333,21 +333,28 @@ function createNewProduct(req, res, callback) {
 
 			// Store product 
 			request.post({url:'https://'+productDomain+'/product', formData: {product: JSON.stringify(newProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
-                if (productStoreError) callback('1. Failed to store new product.', null);
+                
+				if (productStoreError) {
+					
+					callback(productStoreError, null);
+				} else {
 
-                // Log error from remote server
-                console.log( "REST API server responded with 'err': " + productStoreError );
-                // Log status code from remote server
-                console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
-                // Log response body from remote server
-                console.log( "REST API server responded with 'body': " + productStoreBody );
-
-				// Error handling
-				if(productStoreResponse.statusCode != '200') {
-					callback('2. Failed to store new product.', null);
+                	// Log error from remote server
+	                console.log( "REST API server responded with 'err': " + productStoreError );
+	                // Log status code from remote server
+	                console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
+	                // Log response body from remote server
+	                console.log( "REST API server responded with 'body': " + productStoreBody );
+	
+					// Error handling
+					if(productStoreResponse.statusCode != '200') {
+						
+						callback(productStoreBody, null);
+					} else {	
+						
+						callback(null, newProduct);
+					}
 				}
-
-				callback(null, newProduct);
 			});
 		// }
 	// });
