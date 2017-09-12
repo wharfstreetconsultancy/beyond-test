@@ -12,8 +12,8 @@ var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 // Manage HTTP server container
 var app = express();
 app.use(express.static('assets'));
-var key = fs.readFileSync('../../certs/domain.key');
-var cert = fs.readFileSync('../../certs/domain.crt');
+var key = fs.readFileSync('../../dom/domain.key');
+var cert = fs.readFileSync('../../dom/domain.crt');
 var options = {
 	key: key,
 	cert: cert
