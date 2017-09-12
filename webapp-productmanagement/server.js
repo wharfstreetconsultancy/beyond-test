@@ -517,7 +517,7 @@ function formatProductHtml(productsList, callback) {
 	// Initialise jewellery HTML section
 	var productsListJewelleryHtml = '';
 
-	if(producstList) {
+	if(productsList) {
 
 		// Iterate through product list
 		for(var product of productsList) {
