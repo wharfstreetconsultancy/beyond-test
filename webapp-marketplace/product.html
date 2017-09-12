@@ -56,9 +56,11 @@
 						{product.name}
 					</div>
 					<div class="panel-body">
-						<p class="hero-feature"><img src="{product.image.location}" width="75" alt="{product.name}"/></p><br>
-						<p class="hero-feature">{product.description}</p><br>
-						<p><button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button></p>
+						<div class="pull-left">
+							<p><button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button></p>
+							<p>{product.description}</p>
+						</div>
+						<img src="{product.image.location}" class="pull-right" width="175" alt="{product.name}"/></p>
 					</div>
 					<div class="panel-footer">
 					</div>
