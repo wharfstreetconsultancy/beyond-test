@@ -158,7 +158,7 @@ console.log("Session found: "+JSON.stringify(session));
 	} else {
 
 		// Request was http - redirect caller to https
-        	console.log("Redirecting http request to: https://"+productDomain+req.url);
+        console.log("Redirecting http request to: https://"+productDomain+req.url);
 		res.redirect('https://'+productDomain+req.url);
 		res.end();
 		return;
@@ -200,9 +200,6 @@ app.post('/', upload.array('image_files'), function (req, res) {
 
 	// Determine required action
 	var action = req.body.action.toLowerCase();
-
-	// Action specific error message
-	var errorMessage;
 
 	// Log requested action
 	console.log( "Requested action: " + action );
@@ -336,18 +333,18 @@ function createNewProduct(req, res, callback) {
 
 			// Store product 
 			request.post({url:'https://'+productDomain+'/product', formData: {product: JSON.stringify(newProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
-                		if (productStoreError) callback('Failed to store new product.', null);
+                if (productStoreError) callback('1. Failed to store new product.', null);
 
-	                	// Log error from remote server
-	        	        console.log( "REST API server responded with 'err': " + productStoreError );
-        	        	// Log status code from remote server
-	        	        console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
-        	        	// Log response body from remote server
-		                console.log( "REST API server responded with 'body': " + productStoreBody );
+                // Log error from remote server
+                console.log( "REST API server responded with 'err': " + productStoreError );
+                // Log status code from remote server
+                console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
+                // Log response body from remote server
+                console.log( "REST API server responded with 'body': " + productStoreBody );
 
 				// Error handling
 				if(productStoreResponse.statusCode != '200') {
-					callback('Failed to store new product.', null);
+					callback('2. Failed to store new product.', null);
 				}
 
 				callback(null, newProduct);
