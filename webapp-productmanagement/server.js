@@ -197,6 +197,9 @@ app.post('/', upload.array('image_files'), function (req, res) {
 	// Determine required action
 	var action = req.body.action.toLowerCase();
 
+	// Action specific error message
+	var errorMessage;
+
 	// Log requested action
 	console.log( "Requested action: " + action );
 
@@ -204,12 +207,14 @@ app.post('/', upload.array('image_files'), function (req, res) {
 
 		// Create new product
 		createNewProduct(req, res, function (productStoreErrorMessage, newProduct) {
-
+			console.log("Store error: "+productStoreErrorMessage);
 			// Load existing products
 			loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+				console.log("Store error: "+productStoreErrorMessage);
 
                                 // Add dynamic elements to response page
                                 formatProductHtml(productsList, function (productsListClothingHtml, productsListJewelleryHtml) {
+                        			console.log("Store error: "+productStoreErrorMessage);
 
                                         // Add dynamic elements to response page
                                         fs.createReadStream(__dirname+'/index.html')
@@ -648,27 +653,27 @@ console.log("Done");
 //
 // Upload new or existing product
 function storeProduct(product, callback) {
-
+		
         // Create params for product 'store' operation
-        var storeProductParams = {
-                TableName: 'SuroorFashionsProducts',
-        	Item: product
-        };
+	var storeProductParams = {
+			TableName: 'SuroorFashionsProducts',
+			Item: product
+	};
 
 	// Log contents of dynamo db store operation
-        console.log("Uploading product with: "+ JSON.stringify(storeProductParams));
+	console.log("Uploading product with: "+ JSON.stringify(storeProductParams));
 
-        // Perform product store operation
+	// Perform product store operation
 	dddc.put(storeProductParams, function (err, data) {
-                if (err) {
-                        callback('Failed to store product(s)', null);
-                } else {
+		if (err) {
+			callback('Failed to store product(s)', null);
+		} else {
 
 			// Log output from data store
 			console.log("Data returned from data store: "+JSON.stringify(data));
 
-	                // Return product details to caller
-        	        callback(null, JSON.stringify(data));
+			// Return product details to caller
+			callback(null, JSON.stringify(data));
 		}
 	});
 }
