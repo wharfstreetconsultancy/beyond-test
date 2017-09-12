@@ -1,8 +1,10 @@
 //
 // Import required libraries
 var express = require('express');
-var fs = require('fs');
+var http = require('http');
+var https = require('https');
 var request = require('request');
+var fs = require('fs');
 var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
