@@ -321,8 +321,8 @@ function createNewProduct(req, res, callback) {
         	        	type: req.body.type,
 	                	description: req.body.description,
 	                	price: req.body.price,
-	                	colors: (req.body.colors) ? JSON.parse(req.body.colors) : [],
-	                	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : [],
+	                	colors: (req.body.colors != 'undefined') ? JSON.parse(req.body.colors) : [],
+	                	sizes: (req.body.sizes != 'undefined') ? JSON.parse(req.body.sizes) : [],
 	                	creationTimestamp: timestamp,
 	                	lastUpdateTimestamp: timestamp,
 	                	promoted: req.body.promoted
@@ -376,8 +376,8 @@ function updateExistingProduct(req, res, callback) {
 		type: req.body.type,
 		description: req.body.description,
 		price: req.body.price,
-    	colors: (req.body.colors) ? JSON.parse(req.body.colors) : [],
-       	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : [],
+    	colors: (req.body.colors != 'undefined') ? JSON.parse(req.body.colors) : [],
+       	sizes: (req.body.sizes != 'undefined') ? JSON.parse(req.body.sizes) : [],
 		images: (req.body.images != 'undefined') ? JSON.parse(req.body.images) : [],
 		creationTimestamp: timestamp,
 		lastUpdateTimestamp: timestamp,
@@ -389,21 +389,28 @@ function updateExistingProduct(req, res, callback) {
 
 	// Store product
 	request.put({url:'https://'+productDomain+'/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
-		if (productStoreError) callback('Failed to store existing product.', null);
 
-		// Log error from remote server
-		console.log( "REST API server responded with 'err': " + productStoreError );
-		// Log status code from remote server
-		console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
-		// Log response body from remote server
-		console.log( "REST API server responded with 'body': " + productStoreBody );
+		if (productStoreError) {
 
-		// Error handling
-		if(productStoreResponse.statusCode != '200') {
-			callback('Failed to store existing product.', null);
+			callback(productStoreError, null);
+		} else {
+
+			// Log error from remote server
+			console.log( "REST API server responded with 'err': " + productStoreError );
+			// Log status code from remote server
+			console.log( "REST API server responded with 'status': " + productStoreResponse.statusCode );
+			// Log response body from remote server
+			console.log( "REST API server responded with 'body': " + productStoreBody );
+	
+			// Error handling
+			if(productStoreResponse.statusCode != '200') {
+				
+				callback(productStoreBody, null);
+			} else {
+	
+				callback(null, updatedProduct);
+			}
 		}
-
-		callback(null, updatedProduct);
 	});
 
 
