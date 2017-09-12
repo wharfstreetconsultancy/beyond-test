@@ -207,23 +207,23 @@ app.post('/', upload.array('image_files'), function (req, res) {
 
 		// Create new product
 		createNewProduct(req, res, function (productStoreErrorMessage, newProduct) {
-			console.log("Store error: "+productStoreErrorMessage);
+			console.log("1. Store error: "+productStoreErrorMessage);
 			// Load existing products
 			loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
-				console.log("Store error: "+productStoreErrorMessage);
+				console.log("2. Store error: "+productStoreErrorMessage);
 
-                                // Add dynamic elements to response page
-                                formatProductHtml(productsList, function (productsListClothingHtml, productsListJewelleryHtml) {
-                        			console.log("Store error: "+productStoreErrorMessage);
-
-                                        // Add dynamic elements to response page
-                                        fs.createReadStream(__dirname+'/index.html')
-                                                .pipe(replaceStream('{onload.action}', (newProduct) ? 'selectProduct(JSON.parse(document.getElementById('+newProduct.id+').value));' : ''))
-                                                .pipe(replaceStream('{user.prompt}', (productStoreErrorMessage) ? productStoreErrorMessage : 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'. Please provide more product details...'))
-                                                .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
-                                                .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
-                                                .pipe(res);
-                                });
+				// Add dynamic elements to response page
+				formatProductHtml(productsList, function (productsListClothingHtml, productsListJewelleryHtml) {
+					console.log("3. Store error: "+productStoreErrorMessage);
+				
+				        // Add dynamic elements to response page
+				        fs.createReadStream(__dirname+'/index.html')
+				                .pipe(replaceStream('{onload.action}', (newProduct) ? 'selectProduct(JSON.parse(document.getElementById('+newProduct.id+').value));' : ''))
+				                .pipe(replaceStream('{user.prompt}', (productStoreErrorMessage) ? productStoreErrorMessage : 'Product '+JSON.stringify(newProduct.name)+' added successfully at '+new Date(parseInt(newProduct.creationTimestamp)).toISOString().replace(/T/, ' ').replace(/\..+/, '')+'. Please provide more product details...'))
+				                .pipe(replaceStream('{products.list.clothing}', productsListClothingHtml))
+				                .pipe(replaceStream('{products.list.jewellery}', productsListJewelleryHtml))
+				                .pipe(res);
+				});
 			});
 		});
 	} else if(action == 'update') {
@@ -260,21 +260,20 @@ app.post('/', upload.array('image_files'), function (req, res) {
 // Create new product
 function loadExistingProducts(req, res, callback) {
 
-	console.log("Connecting to: "+'https://'+productDomain+'/product');
 	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		if (productLoadError) callback('Failed to load existing products.', null);
 
-                // Log error from remote server
-                console.log( "REST API server responded with 'err': " + productLoadError );
+		// Log error from remote server
+		console.log( "REST API server responded with 'err': " + productLoadError );
 		// Log status code from remote server
 		console.log( "REST API server responded with 'status': " + productLoadResponse.statusCode );
 		// Log response body from remote server
 		console.log( "REST API server responded with 'body': " + productLoadBody );
 
-                // Error handling
-                if(productLoadResponse.statusCode != '200') {
+		// Error handling
+		if(productLoadResponse.statusCode != '200') {
 			callback('Failed to load existing products.', null);
-                }
+		}
 
 		callback(null, JSON.parse(productLoadBody));
 	});
