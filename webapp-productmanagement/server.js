@@ -367,7 +367,7 @@ function updateExistingProduct(req, res, callback) {
 	// Capture update timestamp
 	var timestamp = new Date().getTime().toString();
 
-	console.log( "Updated Product: " + ((req.body.images != undefined) ? req.body.images : '[]'));
+	console.log( "Updated Product: " + ((req.body.images != 'undefined') ? req.body.images : '[]'));
 
 	// Create new product object
 	var updatedProduct = {
@@ -378,7 +378,7 @@ function updateExistingProduct(req, res, callback) {
 		price: req.body.price,
     	colors: (req.body.colors) ? JSON.parse(req.body.colors) : [],
        	sizes: (req.body.sizes) ? JSON.parse(req.body.sizes) : [],
-		images: (req.body.images != undefined) ? JSON.parse(req.body.images) : [],
+		images: (req.body.images != 'undefined') ? JSON.parse(req.body.images) : [],
 		creationTimestamp: timestamp,
 		lastUpdateTimestamp: timestamp,
 		promoted: req.body.promoted
