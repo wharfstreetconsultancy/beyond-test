@@ -71,8 +71,8 @@ app.get('/', function (req, res) {
 
             // Add dynamic elements to response page
             fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{showcase.clothing.carousel}', clothingCarouselHtml))
-				.pipe(replaceStream('{showcase.jewellery.carousel}', jewelleryCarouselHtml))
+				.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+				.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
 				.pipe(res);
         });
 	});
