@@ -168,7 +168,9 @@ function formatProductsCarouselsHtml(productsList,callback) {
 
 		// Iterate through product list
 		for(var product of productsList) {
-	
+console.log("Product: "+JSON.stringify(product));
+console.log("Product ID: "+product.id);
+
 			if(product.promoted == 'true') {
 	
 				// Initialise current buffer
