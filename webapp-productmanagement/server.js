@@ -364,8 +364,10 @@ function createNewProduct(req, res, callback) {
 // Update existing product
 function updateExistingProduct(req, res, callback) {
 
-        // Capture update timestamp
-        var timestamp = new Date().getTime().toString();
+	// Capture update timestamp
+	var timestamp = new Date().getTime().toString();
+
+	console.log( "Updated Product: " + req.body.images);
 
 	// Create new product object
 	var updatedProduct = {
