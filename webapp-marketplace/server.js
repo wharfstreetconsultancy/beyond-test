@@ -14,7 +14,7 @@ var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 //
 // Manage HTTP server container
 var app = express();
-app.use(express.static('assets'));
+// app.use(express.static('assets'));
 app.use(session({
 	secret: 'keyboard cat named leon',
 	resave: false,
