@@ -39,14 +39,15 @@ var options = {
 	key: key,
 	cert: cert
 };
-var productPort = process.env.PORT;
-var productHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
-var productDomain = productHost+':'+productPort;
+var securePort = process.env.SECURE_PORT;
+var restPort = process.env.REST_PORT;
+var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
+var restDomain = restHost+':'+restPort;
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
-	host: productHost,
-	port: productPort,
+	host: restHost,
+	port: restPort,
 	path: '/',
 	rejectUnauthorized: false
 });
@@ -106,7 +107,7 @@ console.log("Session found: "+JSON.stringify(session));
 
 			var codeChallenge = new Buffer(sha256(codeVerifier)).toString('Base64');
 			// Request was not authenticated - redirect to login page
-			var authUrl = 'https://'+authDomain+'/login?response_type=code&client_id='+authClientId+'&redirect_uri=https://'+productDomain+req.url+'&code_challenge_method=S256&code_challenge='+codeChallenge;
+			var authUrl = 'https://'+authDomain+'/login?response_type=code&client_id='+authClientId+'&redirect_uri=https://'+restDomain+req.url+'&code_challenge_method=S256&code_challenge='+codeChallenge;
 			console.log("Redirecting http request to: "+authUrl);
 			res.redirect(authUrl);
 		} else {
@@ -122,7 +123,7 @@ console.log("Session found: "+JSON.stringify(session));
 				Authorization: 'Base '+new Buffer(authClientId+':'+authClientSecret).toString('Base64'),
 				grant_type: 'authorization_code',
 				client_id: authClientId,
-				redirect_uri: 'https://'+productDomain+req.path,
+				redirect_uri: 'https://'+restDomain+req.path,
 				code_verifier: codeVerifier
 			}
 			console.log("Exchanging tokens using: "+JSON.stringify(formData)+' @ '+authUrl);
@@ -157,9 +158,9 @@ console.log("Session found: "+JSON.stringify(session));
 	} else {
 
 		// Request was http - redirect caller to https
-        console.log("Redirecting http request to: https://"+productDomain+req.url);
-		res.redirect('https://'+productDomain+req.url);
-		res.end();
+        var secureUrl = 'https://'+req.host+':'+securePort+req.url
+        console.log("Redirecting http request to: "+secureUrl);
+		res.redirect(secureUrl);
 		return;
 	}
 });
@@ -256,8 +257,8 @@ app.post('/', upload.array('image_files'), function (req, res) {
 // Load existing product from datasource
 function loadExistingProducts(req, res, callback) {
 
-	console.log("Connecting to: "+'https://'+productDomain+'/product');
-	request.get({url:'https://'+productDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
+	console.log("Connecting to: "+'https://'+restDomain+'/product');
+	request.get({url:'https://'+restDomain+'/product', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		
 		if (productLoadError) {
 			
@@ -302,7 +303,7 @@ function createNewProduct(req, res, callback) {
 
 	// Store product images
 /*
-	request.post({url:'https://'+productDomain+'/product/'+id+'/image', formData: {image_files: imageArray}, agent: agent}, function (imageStoreError, imageStoreResponse, imageStoreBody) {
+	request.post({url:'https://'+restDomain+'/product/'+id+'/image', formData: {image_files: imageArray}, agent: agent}, function (imageStoreError, imageStoreResponse, imageStoreBody) {
 
                 // Log error from remote server
                 console.log( "REST API server responded with 'err': " + imageStoreError );
@@ -335,7 +336,7 @@ function createNewProduct(req, res, callback) {
         		console.log( "New Product: " + JSON.stringify(newProduct) );
 
 			// Store product 
-			request.post({url:'https://'+productDomain+'/product', formData: {product: JSON.stringify(newProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
+			request.post({url:'https://'+restDomain+'/product', formData: {product: JSON.stringify(newProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
                 
 				if (productStoreError) {
 					
@@ -391,7 +392,7 @@ function updateExistingProduct(req, res, callback) {
 	console.log( "Updated Product: " + JSON.stringify(updatedProduct) );
 
 	// Store product
-	request.put({url:'https://'+productDomain+'/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
+	request.put({url:'https://'+restDomain+'/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}, agent: agent}, function (productStoreError, productStoreResponse, productStoreBody) {
 
 		if (productStoreError) {
 
@@ -445,7 +446,7 @@ function updateExistingProduct(req, res, callback) {
                 console.log( "Updated Product: " + JSON.stringify(updatedProduct) );
 
                 // Store product
-                request.put({url:'https://'+productDomain+'/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}, agent: agent}, function callback(productStoreError, productStoreResponse, productStoreBody) {
+                request.put({url:'https://'+restDomain+'/product/'+updatedProduct.id, formData: {product: JSON.stringify(updatedProduct)}, agent: agent}, function callback(productStoreError, productStoreResponse, productStoreBody) {
                         if (productStoreError) throw productStoreError;
 
                         // Log status code from remote server
@@ -453,7 +454,7 @@ function updateExistingProduct(req, res, callback) {
                         // Log response body from remote server
                         console.log( "Server responded with: " + productStoreBody );
 
-                        request.get({url:'https://'+productDomain+'/product', agent: agent}, function callback(productLoadError, productLoadResponse, productLoadBody) {
+                        request.get({url:'https://'+restDomain+'/product', agent: agent}, function callback(productLoadError, productLoadResponse, productLoadBody) {
                                 if (productLoadError) throw productLoadError;
 
                                 // Log status code from remote server
@@ -485,7 +486,7 @@ function updateExistingProduct(req, res, callback) {
 			imageArray.push(fs.createReadStream(file.path));
 		}
 		// Update image if specified
-		request.put({url:'https://'+productDomain+'/product/'+req.body.id+'/image', formData: {image_files: imageArray}, agent: agent}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
+		request.put({url:'https://'+restDomain+'/product/'+req.body.id+'/image', formData: {image_files: imageArray}, agent: agent}, function callback(imageStoreError, imageStoreResponse, imageStoreBody) {
 	                if (imageStoreError) throw imageStoreError;
 
 	                // Log status code from remote server

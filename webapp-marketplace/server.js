@@ -20,14 +20,15 @@ var options = {
 	key: key,
 	cert: cert
 };
-var productPort = process.env.PORT;
-var productHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
-var productDomain = productHost+':'+productPort;
+var securePort = process.env.SECURE_PORT;
+var restPort = process.env.REST_PORT;
+var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
+var restDomain = restHost+':'+restPort;
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
-	host: productHost,
-	port: productPort,
+	host: restHost,
+	port: restPort,
 	path: '/',
 	rejectUnauthorized: false
 });
@@ -48,8 +49,9 @@ app.all('*', function (req, res, next) {
 	} else {
 
 		// Request was http - redirect caller to https
-        console.log("Redirecting http request to: https://"+productDomain+req.url);
-		res.redirect('https://'+productDomain+req.url);
+        var secureUrl = 'https://'+req.host+':'+securePort+req.url
+        console.log("Redirecting http request to: "+secureUrl);
+		res.redirect(secureUrl);
 		res.end();
 		return;
 	}
@@ -131,7 +133,7 @@ app.get('/product', function (req, res) {
 function loadExistingProducts(req, res, callback) {
 
 	var productId = (req.query.id) ? '/'+req.query.id : '';
-	request.get({url:'https://'+productDomain+'/product'+productId, agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
+	request.get({url:'https://'+restDomain+'/product'+productId, agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		
 		if (productLoadError) {
 
@@ -342,7 +344,7 @@ app.post('/cart/:id/image', upload.array('image_files'), function (req, res) {
         var id = '09876543';
 		// Return new cart item product list to caller
 		res.writeHead(201, {'Content-Type': 'application/json'});
-		res.writeHead({Location: 'https://'+productDomain+'/cart/item/'+id});
+		res.writeHead({Location: 'https://'+restDomain+'/cart/item/'+id});
 		res.write(JSON.stringify({productId: '111', quantity: 2, color: '333', size: '444', cost: '6.66'}));
 		res.end();
 });
