@@ -260,10 +260,10 @@ function formatProductViewHtml(product,callback) {
 				}
 */
 				// Construct item indicator for current image
-				itemIndicatorHtml += '<li data-target=\'#productCarousel\' data-slide-to=\''+(imageCounter++)+'\''+((image.isDefault) ' class=\'active\'' ? : '')+'></li>';
+				itemIndicatorHtml += '<li data-target=\'#productCarousel\' data-slide-to=\''+(imageCounter++)+'\''+((image.isDefault) ? ' class=\'active\'' : '')+'></li>';
 
 				// Construct image item reference for current image
-				itemImageHtml += '<div class=\'carousel-item'+((image.isDefault) ' active' ? : '')+'\'>';
+				itemImageHtml += '<div class=\'carousel-item'+((image.isDefault) ? ' active' : '')+'\'>';
 				itemImageHtml += '<img class=\'d-block img-fluid\' src=\''+image.location+'\' alt=\''+product.name+'\'>';
 				itemImageHtml += '</div>';
 			}
