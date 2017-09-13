@@ -257,8 +257,8 @@ function formatProductViewHtml(product,callback) {
 		// If the product has colors
 		if(product.colors) {
 
-			productColorSelectorHtml = '<p>Color Choices:</p>';
-			productColorSelectorHtml = '<p><select name=\'selected_color\'>';
+			productColorSelectorHtml = '<p>Color Choices:<br>';
+			productColorSelectorHtml += '<select name=\'selected_color\'>';
 
 			// For each color that the product has
 			for(var color of product.colors) {
@@ -273,8 +273,8 @@ function formatProductViewHtml(product,callback) {
 		// If the product has sizes
 		if(product.sizes) {
 
-			productSizeSelectorHtml = '<p>Size Choices:</p>';
-			productSizeSelectorHtml += '<p><select name=\'selected_size\'>';
+			productSizeSelectorHtml = '<p>Size Choices:<br>';
+			productSizeSelectorHtml += '<select name=\'selected_size\'>';
 
 			// For each size that the product has
 			for(var size of product.sizes) {
