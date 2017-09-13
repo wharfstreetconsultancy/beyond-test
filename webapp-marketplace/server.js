@@ -235,13 +235,42 @@ function formatProductViewHtml(product,callback) {
 	// Initialise product size selector HTML buffer
 	var productSizeSelectorHtml = '&nbsp;';
 
-
-
 	// If the product exists
 	if(product) {
 
+		// If the product has colors
+		if(product.colors) {
+
+			productColorSelectorHtml = 'Color Choices:<br>';
+			productColorSelectorHtml += '<select name=\'selected_color\'>';
+
+			// For each color that the product has
+			for(var color of product.colors) {
+
+					// Add current color as an option to the selector
+					productColorSelectorHtml += '<option value=\''+color+'\'>'+color+'</option>';
+			}
+			productColorSelectorHtml += '</select>';
+
+		}
+
+		// If the product has sizes
+		if(product.sizes) {
+
+			productSizeSelectorHtml = 'Size Choices:<br>';
+			productSizeSelectorHtml += '<select name=\'selected_size\'>';
+
+			// For each size that the product has
+			for(var size of product.sizes) {
+
+					// Add current size as an option to the selector
+					productSizeSelectorHtml += '<option value=\''+size+'\'>'+size+'</option>';
+			}
+			productSizeSelectorHtml += '</select>';
+
+		}
 		// If the product has images
-		if(product.images) {
+		if(product.images.length > 0) {
 
 			// Initialise indicator item HTML buffer
 			var itemIndicatorHtml = '';
@@ -254,13 +283,6 @@ function formatProductViewHtml(product,callback) {
 
 			// For each image that the product has
 			for(var image of product.images) {
-/*
-				if(image.isDefault) {
-
-					// This is the default image
-					productDefaultImageHtml = '<img src=\''+image.location+'\' width=\'175\' alt=\''+product.name+'\'/></p>';
-				}
-*/
 
 				// Construct item indicator for current image
 				itemIndicatorHtml += '<li data-target=\'#productCarousel\' data-slide-to=\''+(imageCounter++)+'\''+((image.isDefault) ? ' class=\'active\'' : '')+'></li>';
@@ -279,37 +301,6 @@ function formatProductViewHtml(product,callback) {
 			carouselStream.on('data', function (data) {productImageCarouselHtml += data;});
 			carouselStream.on('end', function () {
 				console.log("Constructed carousel HTML: "+productImageCarouselHtml);
-				// If the product has colors
-				if(product.colors) {
-
-					productColorSelectorHtml = 'Color Choices:<br>';
-					productColorSelectorHtml += '<select name=\'selected_color\'>';
-
-					// For each color that the product has
-					for(var color of product.colors) {
-
-							// Add current color as an option to the selector
-							productColorSelectorHtml += '<option value=\''+color+'\'>'+color+'</option>';
-					}
-					productColorSelectorHtml += '</select>';
-
-				}
-
-				// If the product has sizes
-				if(product.sizes) {
-
-					productSizeSelectorHtml = 'Size Choices:<br>';
-					productSizeSelectorHtml += '<select name=\'selected_size\'>';
-
-					// For each size that the product has
-					for(var size of product.sizes) {
-
-							// Add current size as an option to the selector
-							productSizeSelectorHtml += '<option value=\''+size+'\'>'+size+'</option>';
-					}
-					productSizeSelectorHtml += '</select>';
-
-				}
 				
 				// Return to caller
 				callback(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml);
