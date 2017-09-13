@@ -64,7 +64,7 @@
 								{product.image.carousel}
 							</div>
 							<div class="col-lg-4">
-								<form id="cart_control" name="cart_control" action="/cart/{cart.identifier}/item" method="post">
+								<form id="cart_control" name="cart_control" action="{form.action}" method="post">
 									<p><button id="purchase" form="product_purchase" name="purchase" value="purchase">Add To Cart - ${product.price}</button></p>
 									<p>{product.color.selector}</p>
 									<p>{product.size.selector}</p>
@@ -100,6 +100,7 @@
 $(document).ready(function() {
 	$('#cart_control').submit(function () {
 		$('#status').empty().text('Cart is updating...');
+		console.log("Cart is updating...");
 		$(this).ajaxSubmit({
 			error: function (xhr) {
 				$('#status').empty().text('Cart update error: '+xhr.status);
