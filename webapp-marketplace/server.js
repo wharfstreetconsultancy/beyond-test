@@ -249,6 +249,8 @@ function formatProductViewHtml(product,callback) {
 			var itemImageHtml = '';
 			// Initialise image counter
 			var imageCounter = 0;
+			// Reset carousel HTML buffer as we have images
+			productImageCarouselHtml = '';
 
 			// For each image that the product has
 			for(var image of product.images) {
@@ -259,30 +261,21 @@ function formatProductViewHtml(product,callback) {
 					productDefaultImageHtml = '<img src=\''+image.location+'\' width=\'175\' alt=\''+product.name+'\'/></p>';
 				}
 */
-				// Construct item indicator for current image
-				itemIndicatorHtml += '<li data-target="#productCarousel" data-slide-to="'+(imageCounter++)+'"'+((image.isDefault) ? ' class="active"' : '')+'></li>';
 
-				// Construct image item reference for current image
-				itemImageHtml += '<div class="carousel-item'+((image.isDefault) ? ' active' : '')+'">';
-				itemImageHtml += '<img class="d-block img-fluid" src="'+image.location+'" width="175" alt="'+product.name+'">';
-				itemImageHtml += '</div>';
-
-/*
 				// Construct item indicator for current image
 				itemIndicatorHtml += '<li data-target=\'#productCarousel\' data-slide-to=\''+(imageCounter++)+'\''+((image.isDefault) ? ' class=\'active\'' : '')+'></li>';
 
 				// Construct image item reference for current image
-				itemImageHtml += '<div class=\'carousel-item'+((image.isDefault) ? ' active' : '')+'\'>';
-				itemImageHtml += '<img class=\'d-block img-fluid\' src=\''+image.location+'\' width=\'175\' alt=\''+product.name+'\'>';
+				itemImageHtml += '<div class=\'item'+((image.isDefault) ? ' active' : '')+'\'>';
+				itemImageHtml += '<img src=\''+image.location+'\' width=\'175\' alt=\''+product.name+'\'>';
 				itemImageHtml += '</div>';
-*/
+
 			}
 			
 			// Load carousel template and replace item indicators and references
 			var carouselStream = fs.createReadStream(__dirname+'/carousel.html', 'utf8')
 				.pipe(replaceStream('{item.indicators}', itemIndicatorHtml))
 				.pipe(replaceStream('{item.images}', itemImageHtml));
-			carouselStream.on('open', function (data) {productImageCarouselHtml = '';});
 			carouselStream.on('data', function (data) {productImageCarouselHtml += data;});
 			carouselStream.on('end', function () {
 				console.log("Constructed carousel HTML: "+productImageCarouselHtml);
