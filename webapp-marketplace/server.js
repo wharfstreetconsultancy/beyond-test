@@ -180,7 +180,7 @@ function formatProductsCarouselsHtml(productsList,callback) {
 					for(var image of product.images) {
 						if(image.isDefault) {
 							console.log("Product ID: "+product.id);
-							currentBuffer += '<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' alt=\''+product.name+''\'></a>';
+							currentBuffer += '<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' alt=\''+product.name+'\'></a>';
 						}
 					}
 				}
