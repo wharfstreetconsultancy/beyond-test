@@ -93,22 +93,20 @@ app.get('/product', function (req, res) {
 		if((productsList) && !Array.isArray(productsList)) {
 			
 			var product = productsList;
-			var productImageLocation = '';
-			if(product.images) {
-				for(var image of product.images) {
-					if(image.isDefault) {
-						productImageLocation = image.location;
-					}
-				}
-			}
 
-			// Add dynamic elements to response page
-	        fs.createReadStream(__dirname+'/product.html')
-				.pipe(replaceStream('{product.name}', product.name))
-				.pipe(replaceStream('{product.description}', product.description))
-				.pipe(replaceStream('{product.image.location}', productImageLocation))
-				.pipe(replaceStream('{product.price}', product.price))
-				.pipe(res);
+	        // Format product into appropriate HTML
+	        formatProductViewHtml(product, function(productDefaultImageHtml, productColorSelectorHtml, productSizeSelectorHtml) {
+
+				// Add dynamic elements to response page
+		        fs.createReadStream(__dirname+'/product.html')
+					.pipe(replaceStream('{product.name}', product.name))
+					.pipe(replaceStream('{product.description}', product.description))
+					.pipe(replaceStream('{product.price}', product.price))
+					.pipe(replaceStream('{product.default.image}', productDefaultImageHtml))
+					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
+					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
+					.pipe(res);
+	        });
 		} else {
 			
 			// Something went wrong - determine cause
@@ -176,20 +174,20 @@ function formatProductsCarouselsHtml(productsList,callback) {
 				var currentBuffer = '';
 
 				// Write product in showcase carousel element
-				currentBuffer += '<div class="col-md-3 col-sm-6 hero-feature">';
-				currentBuffer += '<div class="thumbnail">';
+				currentBuffer += '<div class=\'col-md-3 col-sm-6 hero-feature\'>';
+				currentBuffer += '<div class=\'thumbnail\'>';
 				if(product.images) {
 					for(var image of product.images) {
 						if(image.isDefault) {
 							console.log("Product ID: "+product.id);
-							currentBuffer += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" alt=""></a>';
+							currentBuffer += '<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' alt=\''+product.name+''\'></a>';
 						}
 					}
 				}
-				currentBuffer += '<div class="caption">';
+				currentBuffer += '<div class=\'caption\'>';
 				currentBuffer += '<h3>'+product.name+'</h3>';
 				currentBuffer += '<p/>';
-				currentBuffer += '<p><a href="/product?id='+product.id+'" class="btn btn-primary">View Product</a></p>';
+				currentBuffer += '<p><a href=\'/product?id='+product.id+'\' class=\'btn btn-primary\'>View Product</a></p>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';
@@ -226,4 +224,67 @@ function formatProductsCarouselsHtml(productsList,callback) {
 	
 	// Return to caller
 	callback(productsListClothingHtml, productsListJewelleryHtml);
+}
+
+function formatProductViewHtml(product,callback) {
+
+	// Initialise default image HTML section
+	var productDefaultImageHtml = '&nbsp;';
+	// Initialise product color selector HTML section
+	var productColorSelectorHtml = '&nbsp;';
+	// Initialise product size selector HTML section
+	var productSizeSelectorHtml = '&nbsp;';
+
+
+
+	// If the product exists
+	if(product) {
+
+		// If the product has images
+		if(product.images) {
+
+			// For each image that the product has
+			for(var image of product.images) {
+
+				if(image.isDefault) {
+
+					// This is the default image
+					productDefaultImageHtml = '<img src=\''+image.location+'\' width=\'175\' alt=\''+product.name+'\'/></p>';
+				}
+			}
+		}
+
+		// If the product has colors
+		if(product.colors) {
+
+			productColorSelectorHtml = '<select name=\'Color Choices:\'>';
+
+			// For each color that the product has
+			for(var color of product.colors) {
+
+					// Add current color as an option to the selector
+					productColorSelectorHtml += '<option value=\''+color+'\'>'+color+'</option>';
+			}
+			productColorSelectorHtml += '</select>';
+
+		}
+
+		// If the product has sizes
+		if(product.sizes) {
+
+			productSizeSelectorHtml = '<select name=\'Size Choices:\'>';
+
+			// For each size that the product has
+			for(var size of product.sizes) {
+
+					// Add current size as an option to the selector
+					productSizeSelectorHtml += '<option value=\''+size+'\'>'+size+'</option>';
+			}
+			productSizeSelectorHtml += '</select>';
+
+		}
+	}
+		
+	// Return to caller
+	callback(productDefaultImageHtml, productColorSelectorHtml, productSizeSelectorHtml);
 }

@@ -61,10 +61,12 @@
 								{product.description}
 							</div>
 							<div class="col-lg-4">
-								<img src="{product.image.location}" class="pull-right" width="175" alt="{product.name}"/></p>
+								{product.default.image}
 							</div>
 							<div class="col-lg-4">
-								<button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button>
+								<button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button><br>
+								<div>{product.color.selector}</div><br>
+								<div>{product.size.selector}</div>
 							</div>
 						</div>
 					</div>
