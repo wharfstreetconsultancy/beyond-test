@@ -1,7 +1,7 @@
 //
 // Import required libraries
 var express = require('express');
-var express = require('express-session');
+var session = require('express-session');
 var http = require('http');
 var https = require('https');
 var request = require('request');
