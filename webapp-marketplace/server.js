@@ -228,11 +228,11 @@ function formatProductsCarouselsHtml(productsList,callback) {
 
 function formatProductViewHtml(product,callback) {
 
-	// Initialise default image HTML section
+	// Initialise default image HTML buffer
 	var productDefaultImageHtml = '&nbsp;';
-	// Initialise product color selector HTML section
+	// Initialise product color selector HTML buffer
 	var productColorSelectorHtml = '&nbsp;';
-	// Initialise product size selector HTML section
+	// Initialise product size selector HTML buffer
 	var productSizeSelectorHtml = '&nbsp;';
 
 
@@ -257,7 +257,8 @@ function formatProductViewHtml(product,callback) {
 		// If the product has colors
 		if(product.colors) {
 
-			productColorSelectorHtml = '<select name=\'Color Choices:\'>';
+			productColorSelectorHtml = '<p>Color Choices:</p>';
+			productColorSelectorHtml = '<p><select name=\'selected_color\'>';
 
 			// For each color that the product has
 			for(var color of product.colors) {
@@ -265,14 +266,15 @@ function formatProductViewHtml(product,callback) {
 					// Add current color as an option to the selector
 					productColorSelectorHtml += '<option value=\''+color+'\'>'+color+'</option>';
 			}
-			productColorSelectorHtml += '</select>';
+			productColorSelectorHtml += '</select></p>';
 
 		}
 
 		// If the product has sizes
 		if(product.sizes) {
 
-			productSizeSelectorHtml = '<select name=\'Size Choices:\'>';
+			productSizeSelectorHtml = '<p>Size Choices:</p>';
+			productSizeSelectorHtml += '<p><select name=\'selected_size\'>';
 
 			// For each size that the product has
 			for(var size of product.sizes) {
@@ -280,7 +282,7 @@ function formatProductViewHtml(product,callback) {
 					// Add current size as an option to the selector
 					productSizeSelectorHtml += '<option value=\''+size+'\'>'+size+'</option>';
 			}
-			productSizeSelectorHtml += '</select>';
+			productSizeSelectorHtml += '</select></p>';
 
 		}
 	}
