@@ -269,9 +269,9 @@ function formatProductViewHtml(product,callback) {
 			}
 			
 			// Load carousel template and replace item indicators and references
-			productImageCarouselHtml = fs.createReadStream(__dirname+'/index.html')
+			productImageCarouselHtml = JSON.stringify(fs.createReadStream(__dirname+'/carousel.html')
 				.pipe(replaceStream('{item.indicators}', itemIndicatorHtml))
-				.pipe(replaceStream('{item.images}', itemImageHtml)).toString();
+				.pipe(replaceStream('{item.images}', itemImageHtml)).toString());
 			console.log("Constructed carousel HTML: "+productImageCarouselHtml);
 		}
 
