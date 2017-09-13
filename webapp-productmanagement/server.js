@@ -673,41 +673,13 @@ console.log("Done");
 });
 
 //
-// Upload new or existing product
-function storeProduct(product, callback) {
-		
-        // Create params for product 'store' operation
-	var storeProductParams = {
-			TableName: 'SuroorFashionsProducts',
-			Item: product
-	};
-
-	// Log contents of dynamo db store operation
-	console.log("Uploading product with: "+ JSON.stringify(storeProductParams));
-
-	// Perform product store operation
-	dddc.put(storeProductParams, function (err, data) {
-		if (err) {
-			callback('Failed to store product named "'+product.name+'"', null);
-		} else {
-
-			// Log output from data store
-			console.log("Data returned from data store: "+JSON.stringify(data));
-
-			// Return product details to caller
-			callback(null, JSON.stringify(data));
-		}
-	});
-}
-
-//
 // POST - product API - Create new product image
 app.post('/product/:id/image', upload.array('image_files'), function (req, res) {
 
         // Log request received
         console.log( "Received request: POST /product/"+req.params.id+"/image" );
 
-	// Get specified product
+        // Get specified product
         loadProduct(req.params.id, function (productLoadError, product) {
 
 		if(productLoadError) {
@@ -770,6 +742,34 @@ app.put('/product/:id/image', upload.array('image_files'), function (req, res) {
         // Upload image
         storeImages(req.params.id, req.files);
 });
+
+//
+// Upload new or existing product
+function storeProduct(product, callback) {
+		
+        // Create params for product 'store' operation
+	var storeProductParams = {
+			TableName: 'SuroorFashionsProducts',
+			Item: product
+	};
+
+	// Log contents of dynamo db store operation
+	console.log("Uploading product with: "+ JSON.stringify(storeProductParams));
+
+	// Perform product store operation
+	dddc.put(storeProductParams, function (err, data) {
+		if (err) {
+			callback('Failed to store product named "'+product.name+'"', null);
+		} else {
+
+			// Log output from data store
+			console.log("Data returned from data store: "+JSON.stringify(data));
+
+			// Return product details to caller
+			callback(null, JSON.stringify(data));
+		}
+	});
+}
 
 //
 // Upload an array of images to content store
@@ -919,3 +919,17 @@ function loadProduct(productId, callback) {
 	});
 }
 
+//
+// POST - cart API - Create new cart item
+app.post('/cart/:id/image', upload.array('image_files'), function (req, res) {
+
+        // Log request received
+        console.log( "Received request: POST /cart/"+req.params.id+"/item" );
+
+        var id = '09876543';
+		// Return new cart item product list to caller
+		res.writeHead(201, {'Content-Type': 'application/json'});
+		res.writeHead({Location: 'https://'+productDomain+'/cart/item/'+id});
+		res.write(JSON.stringify({productId: '111', quantity: 2, color: '333', size: '444', cost: '6.66'}));
+		res.end();
+});

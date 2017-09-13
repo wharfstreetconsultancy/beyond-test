@@ -105,6 +105,7 @@ app.get('/product', function (req, res) {
 					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
+					.pipe(replaceStream('{cart.identifier}', req.sessionID))
 					.pipe(res);
 	        });
 		} else {
