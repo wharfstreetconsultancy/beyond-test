@@ -257,7 +257,7 @@ function formatProductViewHtml(product,callback) {
 		// If the product has colors
 		if(product.colors) {
 
-			productColorSelectorHtml = '<p>Color Choices:<br>';
+			productColorSelectorHtml = 'Color Choices:<br>';
 			productColorSelectorHtml += '<select name=\'selected_color\'>';
 
 			// For each color that the product has
@@ -266,14 +266,14 @@ function formatProductViewHtml(product,callback) {
 					// Add current color as an option to the selector
 					productColorSelectorHtml += '<option value=\''+color+'\'>'+color+'</option>';
 			}
-			productColorSelectorHtml += '</select></p>';
+			productColorSelectorHtml += '</select>';
 
 		}
 
 		// If the product has sizes
 		if(product.sizes) {
 
-			productSizeSelectorHtml = '<p>Size Choices:<br>';
+			productSizeSelectorHtml = 'Size Choices:<br>';
 			productSizeSelectorHtml += '<select name=\'selected_size\'>';
 
 			// For each size that the product has
@@ -282,7 +282,7 @@ function formatProductViewHtml(product,callback) {
 					// Add current size as an option to the selector
 					productSizeSelectorHtml += '<option value=\''+size+'\'>'+size+'</option>';
 			}
-			productSizeSelectorHtml += '</select></p>';
+			productSizeSelectorHtml += '</select>';
 
 		}
 	}
