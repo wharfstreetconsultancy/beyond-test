@@ -289,7 +289,7 @@ function formatProductViewHtml(product,callback) {
 
 				// Construct image item reference for current image
 				itemImageHtml += '<div class=\'item'+((image.isDefault) ? ' active' : '')+'\'>';
-				itemImageHtml += '<img src=\''+image.location+'\' width=\'200\' alt=\''+product.name+'\'>';
+				itemImageHtml += '<img src=\''+image.location+'\' width=\'210\' alt=\''+product.name+'\'>';
 				itemImageHtml += '</div>';
 
 			}
