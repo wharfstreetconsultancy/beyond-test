@@ -1,6 +1,7 @@
 //
 // Import required libraries
 var express = require('express');
+var express = require('express-session');
 var http = require('http');
 var https = require('https');
 var request = require('request');
@@ -14,6 +15,12 @@ var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 // Manage HTTP server container
 var app = express();
 app.use(express.static('assets'));
+app.use(session({
+	secret: 'keyboard cat named leon',
+	resave: false,
+	saveUninitialized: true,
+	cookie: {secure: true}
+}));
 var key = fs.readFileSync('certs/domain.key');
 var cert = fs.readFileSync('certs/domain.crt');
 var options = {
@@ -107,7 +114,7 @@ app.get('/product', function (req, res) {
 					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-					.pipe(replaceStream('{cart.identifier}', req.sessionID))
+					.pipe(replaceStream('{cart.identifier}', req.session.id))
 					.pipe(res);
 	        });
 		} else {
