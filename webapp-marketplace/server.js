@@ -95,14 +95,14 @@ app.get('/product', function (req, res) {
 			var product = productsList;
 
 	        // Format product into appropriate HTML
-	        formatProductViewHtml(product, function(productDefaultImageHtml, productColorSelectorHtml, productSizeSelectorHtml) {
+	        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
 
 				// Add dynamic elements to response page
 		        fs.createReadStream(__dirname+'/product.html')
 					.pipe(replaceStream('{product.name}', product.name))
 					.pipe(replaceStream('{product.description}', product.description))
 					.pipe(replaceStream('{product.price}', product.price))
-					.pipe(replaceStream('{product.default.image}', productDefaultImageHtml))
+					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
 					.pipe(res);
@@ -229,7 +229,7 @@ function formatProductsCarouselsHtml(productsList,callback) {
 function formatProductViewHtml(product,callback) {
 
 	// Initialise default image HTML buffer
-	var productDefaultImageHtml = '&nbsp;';
+	var productImageCarouselHtml = '&nbsp;';
 	// Initialise product color selector HTML buffer
 	var productColorSelectorHtml = '&nbsp;';
 	// Initialise product size selector HTML buffer
@@ -243,15 +243,36 @@ function formatProductViewHtml(product,callback) {
 		// If the product has images
 		if(product.images) {
 
+			// Initialise indicator item HTML buffer
+			var itemIndicatorHtml = '';
+			// Initialise image item HTML buffer
+			var itemImageHtml = '';
+			// Initialise image counter
+			var imageCounter = 0;
+
 			// For each image that the product has
 			for(var image of product.images) {
-
+/*
 				if(image.isDefault) {
 
 					// This is the default image
 					productDefaultImageHtml = '<img src=\''+image.location+'\' width=\'175\' alt=\''+product.name+'\'/></p>';
 				}
+*/
+				// Construct item indicator for current image
+				itemIndicatorHtml += '<li data-target=\'#productCarousel\' data-slide-to=\''+(imageCounter++)+'\''+((image.isDefault) ' class=\'active\'' ? : '')+'></li>';
+
+				// Construct image item reference for current image
+				itemImageHtml += '<div class=\'carousel-item'+((image.isDefault) ' active' ? : '')+'\'>';
+				itemImageHtml += '<img class=\'d-block img-fluid\' src=\''+image.location+'\' alt=\''+product.name+'\'>';
+				itemImageHtml += '</div>';
 			}
+			
+			// Load carousel template and replace item indicators and references
+			productImageCarouselHtml = fs.createReadStream(__dirname+'/index.html')
+				.pipe(replaceStream('{item.indicators}', itemIndicatorHtml))
+				.pipe(replaceStream('{item.images}', itemImageHtml)).toString();
+			console.log("Constructed carousel HTML: "+productImageCarouselHtml);
 		}
 
 		// If the product has colors
@@ -288,5 +309,5 @@ function formatProductViewHtml(product,callback) {
 	}
 		
 	// Return to caller
-	callback(productDefaultImageHtml, productColorSelectorHtml, productSizeSelectorHtml);
+	callback(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml);
 }
