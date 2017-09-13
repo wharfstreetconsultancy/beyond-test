@@ -50,17 +50,23 @@
     <!---------------------------Body ------------------------->
 	<div class="body">
 		<div class="container">
-			<div class="col-lg-6 col-lg-offset-3">
+			<div class="col-lg-8 col-lg-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						{product.name}
 					</div>
 					<div class="panel-body">
-						<div class="pull-left">
-							<p><button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button></p>
-							<p>{product.description}</p>
+						<div class="row">
+							<div class="col-lg-4">
+								{product.description}
+							</div>
+							<div class="col-lg-4">
+								<img src="{product.image.location}" class="pull-right" width="175" alt="{product.name}"/></p>
+							</div>
+							<div class="col-lg-4">
+								<button id="purchase" form="product_purchase" name="purchase" value="purchase">Purchase - ${product.price}</button>
+							</div>
 						</div>
-						<img src="{product.image.location}" class="pull-right" width="175" alt="{product.name}"/></p>
 					</div>
 					<div class="panel-footer">
 					</div>
