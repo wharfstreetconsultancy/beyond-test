@@ -331,7 +331,7 @@ function formatProductViewHtml(product,callback) {
 
 //
 // POST - cart API - Create new cart item
-app.post('/cart/:id/image', function (req, res) {
+app.post('/cart/:id/item', function (req, res) {
 
         // Log request received
         console.log( "Received request: POST /cart/"+req.params.id+"/item" );
