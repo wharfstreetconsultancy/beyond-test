@@ -114,7 +114,8 @@ app.get('/product', function (req, res) {
 					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-					.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
+					.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/123456/item'))
+//					.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
 					.pipe(res);
 	        });
 		} else {
