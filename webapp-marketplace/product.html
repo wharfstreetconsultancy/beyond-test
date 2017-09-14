@@ -99,6 +99,7 @@
 	<script>
 $(document).ready(function() {
 	$('#cart_control').submit(function () {
+		alert("Should be here!");
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating...");
 		$(this).ajaxSubmit({
