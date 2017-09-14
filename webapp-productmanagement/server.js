@@ -922,7 +922,7 @@ function loadProduct(productId, callback) {
 
 //
 // POST - cart API - Create new cart item
-app.post('/cart/:id/image', function (req, res) {
+app.post('/cart/:id/image', upload.array('image_files'), function (req, res) {
 
         // Log request received
         console.log( "Received request: POST /cart/"+req.params.id+"/item" );
