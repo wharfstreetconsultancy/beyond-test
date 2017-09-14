@@ -99,19 +99,23 @@
 	<script>
 $(document).ready(function() {
 	$('#cart_control').submit(function () {
-		alert("Should be here!");
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating...");
 		$(this).ajaxSubmit({
 			error: function (xhr) {
+				alert("Should not be here!");
 				$('#status').empty().text('Cart update error: '+xhr.status);
 				console.log("Cart update error: "+xhr.status);
+				alert("Should not be here!");
 			},
 			success: function (cartLocation) {
+				alert("Should be here!");
 				$('#status').empty().text('Cart update success');
 				console.log("Cart update success: "+JSON.stringify(cartLocation));
+				alert("Should be here!");
 			}
 		});
+		alert("Should finally be here!");
 		return false;
 	});
 });
