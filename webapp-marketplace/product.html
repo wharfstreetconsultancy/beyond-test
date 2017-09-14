@@ -64,7 +64,7 @@
 								{product.image.carousel}
 							</div>
 							<div class="col-lg-4">
-								<form id="cart_control" name="cart_control" action="{form.action}" method="post" enctype="multipart/form-data">
+								<form id="cart_control" name="cart_control" action="{form.action}" method="post">
 									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart - ${product.price}"/></p>
 									<p>{product.color.selector}</p>
 									<p>{product.size.selector}</p>
@@ -96,7 +96,8 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	<script>
+		<script>
+/*
 $(document).ready(function() {
 	$('#cart_control').submit(function () {
 		$('#status').empty().text('Cart is updating...');
@@ -123,6 +124,7 @@ $(document).ready(function() {
 		return false;
 	});
 });
-	</script>
-  </body>
+*/
+		</script>
+	</body>
 </html>
