@@ -101,6 +101,7 @@ $(document).ready(function() {
 	$('#cart_control').submit(function () {
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating...");
+/*
 		$(this).ajaxSubmit({
 			error: function (xhr) {
 				alert("Should not be here!");
@@ -115,6 +116,9 @@ $(document).ready(function() {
 				alert("Should be here!");
 			}
 		});
+*/
+		alert("Should be here!");
+		document.getElementById('cart_control').submit(function(){alert("Inside callback.");});
 		alert("Should finally be here!");
 		return false;
 	});
