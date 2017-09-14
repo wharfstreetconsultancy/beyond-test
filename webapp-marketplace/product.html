@@ -64,7 +64,7 @@
 								{product.image.carousel}
 							</div>
 							<div class="col-lg-4">
-								<form id="cart_control" name="cart_control" action="{form.action}" method="post">
+								<form id="cart_control" name="cart_control" action="{form.action}" method="post" enctype="multipart/form-data">
 									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart - ${product.price}"/></p>
 									<p>{product.color.selector}</p>
 									<p>{product.size.selector}</p>
