@@ -114,8 +114,8 @@ app.get('/product', function (req, res) {
 					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-//					.pipe(replaceStream('{form.action}', '/cart/123456/item'))
-					.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
+					.pipe(replaceStream('{form.action}', '/cart/'+req.session.id+'/item'))
+//					.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
 					.pipe(res);
 	        });
 		} else {
@@ -328,3 +328,18 @@ function formatProductViewHtml(product,callback) {
 		callback(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml);
 	}
 }
+
+//
+// POST - cart API - Create new cart item
+app.post('/cart/:id/image', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: POST /cart/"+req.params.id+"/item" );
+
+        var id = '09876543';
+		// Return new cart item product list to caller
+		res.writeHead(201, {'Content-Type': 'application/json'});
+		res.writeHead({Location: 'https://'+restDomain+'/cart/item/'+id});
+		res.write(JSON.stringify({productId: '111', quantity: 2, color: '333', size: '444', cost: '6.66'}));
+		res.end();
+});

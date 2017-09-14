@@ -919,18 +919,3 @@ function loadProduct(productId, callback) {
 		}
 	});
 }
-
-//
-// POST - cart API - Create new cart item
-app.post('/cart/:id/image', upload.array('image_files'), function (req, res) {
-
-        // Log request received
-        console.log( "Received request: POST /cart/"+req.params.id+"/item" );
-
-        var id = '09876543';
-		// Return new cart item product list to caller
-		res.writeHead(201, {'Content-Type': 'application/json'});
-		res.writeHead({Location: 'https://'+restDomain+'/cart/item/'+id});
-		res.write(JSON.stringify({productId: '111', quantity: 2, color: '333', size: '444', cost: '6.66'}));
-		res.end();
-});
