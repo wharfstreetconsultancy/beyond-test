@@ -369,9 +369,10 @@ app.post('/cart/:id/item', function (req, res) {
         // Create new cart item
         console.log("Request params in body: "+JSON.stringify(req.body));
         console.log("Cookies: "+JSON.stringify(req.cookies));
-        var id = '09876543';
-    	var timestamp = new Date().getTime().toString();
+
+        var timestamp = new Date().getTime().toString();
         var newCartItem = {
+			id: '09876543',
 			productId: '111',
 			quantity: 2,
 			color: '333',
@@ -379,21 +380,27 @@ app.post('/cart/:id/item', function (req, res) {
 			cost: '5.55',
 			lastUpdated: timestamp
         }
-
-        console.log("Requested new cart item: "+newCartItem);
-
+        console.log("Requested new cart item: "+JSON.stringify(newCartItem));
+        var cart = {}
+        
 		if (req.params.id == 0) {
+
 			// Cart does not exist
 			console.log("Cart does not exist - create and store cart");
-			
+
 			// Create cart id
-			var cartId = Math.random().toString();
-			cartId = cartId.substring(2,cartId.length);
+			var id = Math.random().toString();
+			id = id.substring(2,cartId.length);
 
 			// Store cart in DB
-			
+			cart = {
+				id: cartId,
+				items: [newCartItem]
+			}
+			console.log("Cart created: "+cart)
+
 			// Set cookie with cart id
-			res.cookie(cartCookieName,cartId, { maxAge: 900000, httpOnly: true });
+			res.cookie(cartCookieName, id, {maxAge: 900000, httpOnly: true});
 		} else {
 			
 			// Cart exists 
@@ -401,7 +408,7 @@ app.post('/cart/:id/item', function (req, res) {
 		}
 
 		// Return new cart item to caller
-		res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/item/'+id});
+		res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
 		res.write(JSON.stringify(newCartItem));
 		res.end();
 });
