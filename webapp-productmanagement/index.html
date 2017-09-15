@@ -426,14 +426,14 @@ $(document).ready(function() {
 		document.getElementById('image_list').innerHTML = '';
 		document.getElementById('default_image_selector').innerHTML = '';
 		document.getElementById('image_upload_selector').innerHTML = '';
-                document.getElementById('image_upload_button').innerHTML = '';
-                document.getElementById('image_delete_button').innerHTML = '';
+		document.getElementById('image_upload_button').innerHTML = '';
+		document.getElementById('image_delete_button').innerHTML = '';
 		document.getElementById('selected_image_view').innerHTML = '';
 		document.getElementById('color_config').innerHTML = '';
 		document.getElementById('size_config').innerHTML = '';
 		return true;
-        });
-        $('#product_image').submit(function () {
+	});
+	$('#product_image').submit(function () {
 			$('#status').empty().text('File is uploading...');
                 $(this).ajaxSubmit({
                         error: function (xhr) {
@@ -451,7 +451,7 @@ $(document).ready(function() {
                         }
                 });
                 return false;
-        });
+	});
 });
 		</script>
 	</body>

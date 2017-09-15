@@ -99,6 +99,11 @@
 		<script>
 
 $(document).ready(function() {
+	$('#cart_control').ajaxForm(function (data) {
+		alert(data);
+		return false;
+	});
+/*
 	$('#cart_control').submit(function () {
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating - call "+this.action);
@@ -122,6 +127,8 @@ $(document).ready(function() {
 		// document.getElementById('cart_control').submit(function(){alert("Inside callback.");});
 		alert("Should finally be here!");
 		return false;
+*/
+
 	});
 });
 
