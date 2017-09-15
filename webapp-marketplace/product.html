@@ -115,8 +115,8 @@ $(document).ready(function() {
 	$('#cart_control').submit(function () {
 
 		alert("Current cookie (entire): "+document.cookie);
-		var cartId = 0;
-		if(document.cookie) {
+		// var cartId = 0;
+		if(document.cookie.length > 0) {
 			var cookieParts = document.cookie.split('=');
 			alert("Current cookie (key): "+cookieParts[0]);
 			alert("Current cookie (value): "+cookieParts[1]);

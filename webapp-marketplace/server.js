@@ -404,7 +404,7 @@ app.post('/cart/:id/item', function (req, res) {
 			// Create params for cart 'store' operation
 			var storeCartParams = {
 				TableName: 'SuroorFashionsCarts',
-				Cart: newCart
+				Item: newCart
 			};
 
 			// Log contents of dynamo db store operation
