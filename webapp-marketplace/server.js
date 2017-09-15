@@ -414,7 +414,11 @@ app.post('/cart/:id/item', function (req, res) {
 			dddc.put(storeCartParams, function (err, data) {
 				if (err) {
 
-					callback('Failed to store cart id "'+cart.id+'"', null);
+					console.log('Failed to store cart id "'+cart.id+'"');
+					
+					// Return new cart item to caller
+					res.writeHead(500, 'Failed to store cart id "'+cart.id+'"');
+					res.end();
 				} else {
 
 					// Log output from data store
