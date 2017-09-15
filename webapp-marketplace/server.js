@@ -380,7 +380,6 @@ app.post('/cart/:id/item', function (req, res) {
 			lastUpdated: timestamp
         }
         console.log("Requested new cart item: "+JSON.stringify(newCartItem));
-        var cart = {}
         
 		if (req.params.id != 0 && req.params.id != 'undefined') {
 			
@@ -395,19 +394,39 @@ app.post('/cart/:id/item', function (req, res) {
 			var id = Math.random().toString();
 			id = id.substring(2, id.length);
 
-			// Store cart in DB
-			cart = {
+			// Create new cart
+			var newCart = {
 				id: id,
 				items: [newCartItem]
 			}
-			console.log("Cart created: "+JSON.stringify(cart))
+			console.log("Cart created: "+JSON.stringify(newCart))
 
-			// Set cookie with cart id
-			res.cookie(cartCookieName, id, {maxAge: (30*24*60*60*1000), httpOnly: false});
+			// Create params for cart 'store' operation
+			var storeCartParams = {
+				TableName: 'SuroorFashionsCarts',
+				Cart: newCart
+			};
+
+			// Log contents of dynamo db store operation
+			console.log("Uploading cart with: "+ JSON.stringify(storeCartParams));
+
+			// Perform product store operation
+			dddc.put(storeCartParams, function (err, data) {
+				if (err) {
+
+					callback('Failed to store cart id "'+cart.id+'"', null);
+				} else {
+
+					// Log output from data store
+					console.log("Data returned from data store: "+JSON.stringify(data));
+
+					// Set cart id into a cookie with the response
+					res.cookie(cartCookieName, id, {maxAge: (30*24*60*60*1000), httpOnly: false});
+					// Return new cart item to caller
+					res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+					res.write(JSON.stringify(newCartItem));
+					res.end();
+				}
+			});
 		}
-
-		// Return new cart item to caller
-		res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
-		res.write(JSON.stringify(newCartItem));
-		res.end();
 });
