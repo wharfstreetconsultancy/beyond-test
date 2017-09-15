@@ -115,7 +115,6 @@ $(document).ready(function() {
 	$('#cart_control').submit(function () {
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating - call "+this.action);
-		alert("Should be here! "+this.action);
 
 		$(this).ajaxSubmit({
 			error: function (xhr) {
@@ -124,16 +123,13 @@ $(document).ready(function() {
 				console.log("Cart update error: "+xhr.status);
 				alert("Should not be here!");
 			},
-			success: function (cartLocation) {
-				alert("Should be here! 1");
+			success: function (newCartItem) {
+				alert("Cookies before: "+document.cookie);
 				$('#status').empty().text('Cart update success');
-				console.log("Cart update success: "+JSON.stringify(cartLocation));
-				alert("Should be here! 2");
+				console.log("Cart update success: "+JSON.stringify(newCartItem));
+				alert("Cookies after: "+document.cookie);
 			}
 		});
-
-		// document.getElementById('cart_control').submit(function(){alert("Inside callback.");});
-		alert("Should finally be here!");
 		return false;
 	});
 });
