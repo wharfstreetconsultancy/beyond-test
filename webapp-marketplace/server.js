@@ -403,7 +403,7 @@ app.post('/cart/:id/item', function (req, res) {
 			console.log("Cart created: "+JSON.stringify(cart))
 
 			// Set cookie with cart id
-			res.cookie(cartCookieName, id, {maxAge: 900000, httpOnly: false});
+			res.cookie(cartCookieName, id, {maxAge: (30*24*60*60*1000), httpOnly: false});
 		}
 
 		// Return new cart item to caller
