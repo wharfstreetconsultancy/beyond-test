@@ -347,21 +347,21 @@ function selectImage(selectedImage) {
 }
 
 function getSelectedProduct(callback) {
-        for(var product of document.getElementById('product_catalog')) {
-                if(product.checked) {
-                        console.log("Currently selected product: "+product.value);
+	for(var product of document.getElementById('product_catalog')) {
+		if(product.checked) {
+			console.log("Currently selected product: "+product.value);
 			callback(JSON.parse(product.value));
-                }
-        }
+		}
+	}
 }
 
 function getSelectedImage(callback) {
-        for(var image of document.getElementsByName('selected_image')) {
-                if(image.checked) {
-                        console.log("Currently selected image: "+image.value);
-                        callback(JSON.parse(image.value));
-                }
-        }
+	for(var image of document.getElementsByName('selected_image')) {
+		if(image.checked) {
+			console.log("Currently selected image: "+image.value);
+			callback(JSON.parse(image.value));
+		}
+	}
 }
 
 function getDefaultImage(product, callback) {
