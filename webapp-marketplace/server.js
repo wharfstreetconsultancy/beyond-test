@@ -400,7 +400,7 @@ app.post('/cart/:id/item', function (req, res) {
 			console.log("Cart created: "+JSON.stringify(cart))
 
 			// Set cookie with cart id
-			res.cookie(cartCookieName, id, {maxAge: 900000, httpOnly: true});
+			res.cookie(cartCookieName, id, {maxAge: 900000, httpOnly: false});
 		} else {
 			
 			// Cart exists 
