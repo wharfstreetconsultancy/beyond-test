@@ -392,7 +392,7 @@ app.post('/cart/:id/item', function (req, res) {
 
 			// Create new cart
 			var newCart = {
-				id: Math.random().toString().substring(2, id.length),
+				id: timestamp.split("").reverse().join(""),
 				items: [newCartItem]
 			}
 			console.log("Cart created: "+JSON.stringify(newCart))
