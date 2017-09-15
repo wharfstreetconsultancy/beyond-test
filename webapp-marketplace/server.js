@@ -382,7 +382,11 @@ app.post('/cart/:id/item', function (req, res) {
         console.log("Requested new cart item: "+JSON.stringify(newCartItem));
         var cart = {}
         
-		if (req.params.id == 0) {
+		if (req.params.id) {
+			
+			// Cart exists 
+			console.log("Cart exists - load cart");
+		} else {
 
 			// Cart does not exist
 			console.log("Cart does not exist - create and store cart");
@@ -400,10 +404,6 @@ app.post('/cart/:id/item', function (req, res) {
 
 			// Set cookie with cart id
 			res.cookie(cartCookieName, id, {maxAge: 900000, httpOnly: false});
-		} else {
-			
-			// Cart exists 
-			console.log("Cart exists - load cart");
 		}
 
 		// Return new cart item to caller
