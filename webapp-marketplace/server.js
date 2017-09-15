@@ -382,7 +382,7 @@ app.post('/cart/:id/item', function (req, res) {
         console.log("Requested new cart item: "+JSON.stringify(newCartItem));
         var cart = {}
         
-		if (req.params.id) {
+		if (req.params.id != 0 && req.params.id != 'undefined') {
 			
 			// Cart exists 
 			console.log("Cart exists - load cart");
