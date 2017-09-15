@@ -380,10 +380,9 @@ app.post('/cart/:id/item', function (req, res) {
 			lastUpdated: timestamp
         }
 
-		// Check if cart exists
-		var cartCookieId = req.cookies.cartCookieName;
-		console.log("Cart id from the wire: "+cartCookieId);
-		if (cartCookieId == 0) {
+        console.log("Requested new cart item: "+newCartItem);
+
+		if (req.params.id == 0) {
 			// Cart does not exist
 			console.log("Cart does not exist - create and store cart");
 			
