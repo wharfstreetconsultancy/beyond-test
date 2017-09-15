@@ -390,11 +390,11 @@ app.post('/cart/:id/item', function (req, res) {
 
 			// Create cart id
 			var id = Math.random().toString();
-			id = id.substring(2,cartId.length);
+			id = id.substring(2, id.length);
 
 			// Store cart in DB
 			cart = {
-				id: cartId,
+				id: id,
 				items: [newCartItem]
 			}
 			console.log("Cart created: "+cart)
