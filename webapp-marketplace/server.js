@@ -390,13 +390,9 @@ app.post('/cart/:id/item', function (req, res) {
 			// Cart does not exist
 			console.log("Cart does not exist - create and store cart");
 
-			// Create cart id
-			var id = Math.random().toString();
-			id = id.substring(2, id.length);
-
 			// Create new cart
 			var newCart = {
-				id: id,
+				id: Math.random().toString().substring(2, id.length),
 				items: [newCartItem]
 			}
 			console.log("Cart created: "+JSON.stringify(newCart))
@@ -414,11 +410,11 @@ app.post('/cart/:id/item', function (req, res) {
 			dddc.put(storeCartParams, function (err, data) {
 				if (err) {
 
-					console.log('Failed to store cart id "'+cart.id+'"');
+					console.log('Failed to store cart id "'+newCart.id+'"');
 					
 					// Return error to caller
                     res.writeHead(500, {'Content-Type': 'application/json'});
-                    res.write('Failed to store cart id "'+cart.id+'"');
+                    res.write('Failed to store cart id "'+newCart.id+'"');
 					res.end();
 				} else {
 
@@ -426,9 +422,9 @@ app.post('/cart/:id/item', function (req, res) {
 					console.log("Data returned from data store: "+JSON.stringify(data));
 
 					// Set cart id into a cookie with the response
-					res.cookie(cartCookieName, id, {maxAge: (30*24*60*60*1000), httpOnly: false});
+					res.cookie(cartCookieName, newCart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
 					// Return new cart item to caller
-					res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+					res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+newCart.id+'/item/'+newCartItem.id});
 					res.write(JSON.stringify(newCartItem));
 					res.end();
 				}
