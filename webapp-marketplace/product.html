@@ -64,7 +64,7 @@
 								{product.image.carousel}
 							</div>
 							<div class="col-lg-4">
-								<form id="cart_control" name="cart_control" action="{form.action}" method="post" enctype="application/json">
+								<form id="cart_control" name="cart_control" method="post" enctype="application/json">
 									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart - ${product.price}"/></p>
 									<p>{product.color.selector}</p>
 									<p>{product.size.selector}</p>
@@ -113,21 +113,22 @@ $(document).ready(function() {
 	});
 */
 	$('#cart_control').submit(function () {
+
+		alert("Current cookie (entire): "+document.cookie);
+		alert("Current cookie (key): "+document.cookie.key);
+		alert("Current cookie (value): "+document.cookie.value);
+		this.action = '/cart/'+document.cookie.value+'/item';
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating - call "+this.action);
 
 		$(this).ajaxSubmit({
 			error: function (xhr) {
-				alert("Should not be here!");
 				$('#status').empty().text('Cart update error: '+xhr.status);
 				console.log("Cart update error: "+xhr.status);
-				alert("Should not be here!");
 			},
 			success: function (newCartItem) {
-				alert("Cookies before: "+document.cookie);
 				$('#status').empty().text('Cart update success');
 				console.log("Cart update success: "+JSON.stringify(newCartItem));
-				alert("Cookies after: "+document.cookie);
 			}
 		});
 		return false;
