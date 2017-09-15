@@ -31,6 +31,7 @@ var securePort = process.env.SECURE_PORT;
 var restPort = process.env.REST_PORT;
 var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
 var restDomain = restHost+':'+restPort;
+var cartCookieName = 'suroor-cart-id';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
@@ -100,8 +101,13 @@ app.get('/product', function (req, res) {
 	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
 		if((productsList) && !Array.isArray(productsList)) {
-			
+
+			// Expecting single product
 			var product = productsList;
+			// Check if cart exists
+			console.log("Cart id from the wire: "+req.cookies.cartCookieName);
+			var cartCookieId = (req.cookies.cartCookieName === undefined) ? 0 : req.cookies.cartCookieName;
+			console.log("Derived cart id: "+cartCookieId);
 
 	        // Format product into appropriate HTML
 	        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
@@ -114,7 +120,7 @@ app.get('/product', function (req, res) {
 					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-					.pipe(replaceStream('{form.action}', '/cart/'+req.session.id+'/item'))
+					.pipe(replaceStream('{form.action}', '/cart/'+cartCookieId+'/item'))
 //					.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
 					.pipe(res);
 	        });
@@ -330,18 +336,67 @@ function formatProductViewHtml(product,callback) {
 }
 
 //
+// GET - cart API - Get entire cart for current user
+app.get('/cart/:id/item', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: GET /cart/"+req.params.id );
+
+        var cartItems = [];
+        if(req.params.id == 0) {
+        	console.log("Cart is empty.");
+        }
+        
+		// Return cart items to caller
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify(cartItems));
+		res.end();
+});
+
+//
 // POST - cart API - Create new cart item
 app.post('/cart/:id/item', function (req, res) {
 
         // Log request received
         console.log( "Received request: POST /cart/"+req.params.id+"/item" );
 
+        // Create new cart item
+        console.log("Request params in body: "+JSON.stringify(req.body));
+        console.log("Cookies: "+JSON.stringify(req.cookies));
         var id = '09876543';
     	var timestamp = new Date().getTime().toString();
-        var cartSize = 0;
-		// Return new cart item product list to caller
-		res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/item/'+id, CartSize: cartSize++});
-//		res.setHeader({Location: 'https://'+restDomain+'/cart/item/'+id});
-		res.write(JSON.stringify({productId: '111', quantity: 2, color: '333', size: '444', cost: '6.66', lastUpdated: timestamp}));
+        var newCartItem = {
+			productId: '111',
+			quantity: 2,
+			color: '333',
+			size: '444',
+			cost: '5.55',
+			lastUpdated: timestamp
+        }
+
+		// Check if cart exists
+		var cartCookieId = req.cookies.cartCookieName;
+		console.log("Cart id from the wire: "+cartCookieId);
+		if (cartCookieId == 0) {
+			// Cart does not exist
+			console.log("Cart does not exist - create and store cart");
+			
+			// Create cart id
+			var cartId = Math.random().toString();
+			cartId = cartId.substring(2,cartId.length);
+
+			// Store cart in DB
+			
+			// Set cookie with cart id
+			res.cookie(cartCookieName,cartId, { maxAge: 900000, httpOnly: true });
+		} else {
+			
+			// Cart exists 
+			console.log("Cart exists - load cart");
+		}
+
+		// Return new cart item to caller
+		res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/item/'+id});
+		res.write(JSON.stringify(newCartItem));
 		res.end();
 });

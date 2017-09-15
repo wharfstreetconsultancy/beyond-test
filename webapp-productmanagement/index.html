@@ -312,15 +312,15 @@ function selectProduct(selectedProduct, callback) {
 	document.getElementById('name').value = selectedProduct.name;
 	document.getElementById('description').value = selectedProduct.description;
 	document.getElementById('price').value = selectedProduct.price;
-        document.getElementById('type_'+selectedProduct.type.toLowerCase()).checked = true;
-        document.getElementById('promoted').checked = selectedProduct.promoted;
-        document.getElementById('product_image').action = '/product/'+selectedProduct.id+'/image';
-        document.getElementById('colors').value = JSON.stringify(selectedProduct.colors);
-        document.getElementById('sizes').value = JSON.stringify(selectedProduct.sizes);
-        document.getElementById('images').value = JSON.stringify(selectedProduct.images);
+	document.getElementById('type_'+selectedProduct.type.toLowerCase()).checked = true;
+	document.getElementById('promoted').checked = selectedProduct.promoted;
+	document.getElementById('product_image').action = '/product/'+selectedProduct.id+'/image';
+	document.getElementById('colors').value = JSON.stringify(selectedProduct.colors);
+	document.getElementById('sizes').value = JSON.stringify(selectedProduct.sizes);
+	document.getElementById('images').value = JSON.stringify(selectedProduct.images);
 	document.getElementById('image_upload_selector').innerHTML = '<input id=\'image_files\' name=\'image_files\' type=\'file\'/>';
-        document.getElementById('image_upload_button').innerHTML = '<input id=\'image_upload\' name=\'image_upload\' type=\'submit\' value=\'Upload\' class=\'btn btn-secondary\'/>';
-        // document.getElementById('image_delete_button').innerHTML = '<input id=\'image_delete\' name=\'image_delete\' type=\'submit\' value=\'Delete\' onsubmit=\'return false;\' class=\'btn btn-secondary\'/>';
+	document.getElementById('image_upload_button').innerHTML = '<input id=\'image_upload\' name=\'image_upload\' type=\'submit\' value=\'Upload\' class=\'btn btn-secondary\'/>';
+	// document.getElementById('image_delete_button').innerHTML = '<input id=\'image_delete\' name=\'image_delete\' type=\'submit\' value=\'Delete\' onsubmit=\'return false;\' class=\'btn btn-secondary\'/>';
 	displayProductAttributes(selectedProduct.colors, 'color', document.getElementById('color_config'), function() {
 		displayProductAttributes(selectedProduct.sizes, 'size', document.getElementById('size_config'), function() {
 			displayProductImages(selectedProduct.images, function() {
