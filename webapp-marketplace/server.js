@@ -416,8 +416,9 @@ app.post('/cart/:id/item', function (req, res) {
 
 					console.log('Failed to store cart id "'+cart.id+'"');
 					
-					// Return new cart item to caller
-					res.writeHead(500, 'Failed to store cart id "'+cart.id+'"');
+					// Return error to caller
+                    res.writeHead(500, {'Content-Type': 'application/json'});
+                    res.write('Failed to store cart id "'+cart.id+'"');
 					res.end();
 				} else {
 
