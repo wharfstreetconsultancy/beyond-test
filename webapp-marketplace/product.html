@@ -115,10 +115,14 @@ $(document).ready(function() {
 	$('#cart_control').submit(function () {
 
 		alert("Current cookie (entire): "+document.cookie);
-		var cookieParts = document.cookie.split('=');
-		alert("Current cookie (key): "+cookieParts[0]);
-		alert("Current cookie (value): "+cookieParts[1]);
-		this.action = '/cart/'+cookieParts[1]+'/item';
+		var cartId = 0;
+		if(document.cookie) {
+			var cookieParts = document.cookie.split('=');
+			alert("Current cookie (key): "+cookieParts[0]);
+			alert("Current cookie (value): "+cookieParts[1]);
+			cartId = cookieParts[1];
+		}
+		this.action = '/cart/'+cartId+'/item';
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating - call "+this.action);
 
