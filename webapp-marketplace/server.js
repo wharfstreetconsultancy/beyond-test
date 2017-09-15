@@ -410,11 +410,11 @@ app.post('/cart/:id/item', function (req, res) {
 			dddc.put(storeCartParams, function (err, data) {
 				if (err) {
 
-					console.log('Failed to store cart id "'+newCart.id+'"');
+					console.log('Failed to store cart id "'+newCart.id+'". '+err);
 					
 					// Return error to caller
                     res.writeHead(500, {'Content-Type': 'application/json'});
-                    res.write('Failed to store cart id "'+newCart.id+'"');
+                    res.write('Failed to store cart id "'+newCart.id+'". '+err);
 					res.end();
 				} else {
 
