@@ -105,8 +105,14 @@ app.get('/product', function (req, res) {
 			// Expecting single product
 			var product = productsList;
 			// Check if cart exists
-			console.log("Cart id from the wire: "+req.cookies.cartCookieName);
-			var cartCookieId = (req.cookies.cartCookieName === undefined) ? 0 : req.cookies.cartCookieName;
+			console.log("Cart id from the wire: "+req.cookies);
+			var cartCookieId = 0;
+			if(req.cookies) {
+				if(req.cookies.cartCookieName) {
+					
+					cartCookieId = req.cookies.cartCookieName;				
+				}
+			}
 			console.log("Derived cart id: "+cartCookieId);
 
 	        // Format product into appropriate HTML
