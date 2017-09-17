@@ -969,7 +969,7 @@ app.get('/cart/:id/item', function (req, res) {
 
 //
 // POST - cart API - Create new cart item
-app.post('/cart/:id/item', upload.array('image_files'), function (req, res) {
+app.post('/cart/:id/item', function (req, res) {
 
         // Log request received
         console.log( "Received request: POST /cart/"+req.params.id+"/item" );
