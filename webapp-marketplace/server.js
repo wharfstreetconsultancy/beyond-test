@@ -93,7 +93,7 @@ app.get('/', function (req, res) {
 					.pipe(replaceStream('{error.message}', '&nbsp;'))
 					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
 					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
-					.pipe(replaceStream('{cart.items}', JSON.stringify(cart.items)))
+					.pipe(replaceStream('{cart.items}', (cart.items) ? JSON.stringify(cart.items) : '[]'))
 					.pipe(res);
 	        });
 		});
