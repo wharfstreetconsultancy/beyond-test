@@ -206,7 +206,7 @@ function loadExistingProducts(req, res, callback) {
 function loadExistingCart(req, res, callback) {
 
 	var cartId = 0;
-	request.headers.cookie && request.headers.cookie.split(';').forEach(function( cookie ) {
+	req.headers.cookie && req.headers.cookie.split(';').forEach(function( cookie ) {
 		var parts = cookie.split('=');
 		if(parts(0) == cartCookieName) {
 			cartId = parts(1);
