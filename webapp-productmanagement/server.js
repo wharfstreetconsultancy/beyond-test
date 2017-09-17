@@ -974,7 +974,6 @@ app.post('/cart/:id/item', function (req, res) {
 
         // Create new cart item
         console.log("Request params in body: "+JSON.stringify(req.body));
-        console.log("Cookies: "+JSON.stringify(req.cookies));
 
         var timestamp = new Date().getTime().toString();
         var newCartItem = {
