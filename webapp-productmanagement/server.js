@@ -976,6 +976,7 @@ app.post('/cart/:id/item', upload.array('image_files'), function (req, res) {
 
         // Create new cart item
         console.log("Request params in body: "+JSON.stringify(req.body));
+        console.log("Request params in body (product_id): "+JSON.stringify(req.body.product_id));
 
         var timestamp = new Date().getTime().toString();
         var newCartItem = {
