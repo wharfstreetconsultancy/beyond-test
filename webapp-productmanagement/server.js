@@ -33,7 +33,7 @@ var sha256 = require('sha256');
 // Manage HTTP server container
 var app = express();
 app.use(express.static('assets'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 var upload = multer({ dest: '/tmp/'});
 var key = fs.readFileSync('certs/domain.key');
