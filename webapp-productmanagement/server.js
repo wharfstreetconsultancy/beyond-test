@@ -1099,7 +1099,7 @@ function loadCart(cartId, callback) {
 				console.log("Loaded cart data: "+JSON.stringify(cartData));
 	
 				// Check only one cart loaded.
-				if(cartData.Items.length = 0) {
+				if(cartData.Items.length == 0) {
 					
 					callback('No carts found for: '+cartId);
 					return;
