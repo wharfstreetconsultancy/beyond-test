@@ -1069,7 +1069,6 @@ function loadCart(cartId, callback) {
 			callback('Failed to load cart', null);
 		} else {
 
-
 			// Log loaded  cart
 			console.log("Loaded cart data: "+JSON.stringify(cartData));
 
