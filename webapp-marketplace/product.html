@@ -110,12 +110,7 @@ function reloadCart(callback) {
 }
 
 $(document).ready(function() {
-/*
-	$('#cart_control').ajaxForm(function () {
-		alert("Should be here! 1");
-		return false;
-	});
-*/
+
 	$('#cart_control').submit(function () {
 
 		alert("Current cookie (entire): "+document.cookie);
@@ -138,6 +133,7 @@ $(document).ready(function() {
 			success: function (newCartItem) {
 				$('#status').empty().text('Cart update success');
 				console.log("Cart update success: "+JSON.stringify(newCartItem));
+				cartItems.push(newCartItem, 0);
 			}
 		});
 		return false;
