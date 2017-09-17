@@ -31,6 +31,7 @@ var securePort = process.env.SECURE_PORT;
 var restPort = process.env.REST_PORT;
 var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
 var restDomain = restHost+':'+restPort;
+var cartCookieName = 'suroor-cart-id';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
