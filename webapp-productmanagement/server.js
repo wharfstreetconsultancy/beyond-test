@@ -979,6 +979,7 @@ app.post('/cart/:id/item', function (req, res) {
         console.log("Request params in body: "+JSON.stringify(req.body));
 
         var timestamp = new Date().getTime().toString();
+/*
         var newCartItem = {
 			id: '09876543',
 			productId: req.body.selected_product_id,
@@ -988,6 +989,10 @@ app.post('/cart/:id/item', function (req, res) {
 			cost: '5.55',
 			lastUpdated: timestamp
         }
+*/
+        var newCartItem = req.body.newProductItem;
+        newCartItem.id = timestamp.split("").reverse().join("");
+        newCartItem.lastUpdated = timestamp;
         console.log("Requested new cart item: "+JSON.stringify(newCartItem));
         
 		if (req.params.id != 0 && req.params.id != 'undefined') {
@@ -999,6 +1004,7 @@ app.post('/cart/:id/item', function (req, res) {
 			// Cart does not exist
 			console.log("Cart does not exist - create and store cart");
 
+	        timestamp = new Date().getTime().toString();
 			// Create new cart
 			var newCart = {
 				id: timestamp.split("").reverse().join(""),
