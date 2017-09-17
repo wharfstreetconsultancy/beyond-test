@@ -1080,7 +1080,7 @@ function loadCart(cartId, callback) {
 			}
 			
 			// Return  cart to caller
-			callback(null, cartData.Items(0));
+			callback(null, cartData.Items[0]);
 			return;
 		}
 	});
