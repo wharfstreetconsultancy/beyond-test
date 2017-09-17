@@ -96,59 +96,64 @@ app.get('/product', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /product" );
 
-	//
-	// Load all specified product from REST API
-	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+	// Load cart from REST API
+	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
 
-		if((productsList) && !Array.isArray(productsList)) {
-
-			// Expecting single product
-			var product = productsList;
-			// Check if cart exists
-			console.log("Cart id from the wire: "+req.cookies);
-			var cartCookieId = 0;
-			if(req.cookies) {
-				if(req.cookies.cartCookieName) {
-					
-					cartCookieId = req.cookies.cartCookieName;				
+		// Load all specified product from REST API
+		loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
+	
+			// Check that only one product found
+			if((product) && !Array.isArray(products)) {
+	
+				// Check if cart exists
+				var cartId = 0;
+				if(req.cookies) {
+					if(req.cookies.cartCookieName) {
+						
+						cartId = req.cookies.cartCookieName;				
+					}
 				}
+				console.log("Derived cart id: "+cartId);
+	
+		        // Format product into appropriate HTML
+		        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
+	
+		        // Load current shopping cart
+		        
+					// Add dynamic elements to response page
+			        fs.createReadStream(__dirname+'/product.html')
+						.pipe(replaceStream('{product.name}', product.name))
+						.pipe(replaceStream('{product.description}', product.description))
+						.pipe(replaceStream('{product.price}', product.price))
+						.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
+						.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
+						.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
+//						.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
+						.pipe(replaceStream('{cart.items}', cart.items))
+						.pipe(res);
+		        });
+			} else {
+				
+				// Something went wrong - multiple products found - determine cause
+				var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
+		        // Format products into appropriate HTML
+		        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+	
+		            // Add dynamic elements to response page
+		            fs.createReadStream(__dirname+'/index.html')
+						.pipe(replaceStream('{error.message}', errorMessage))
+						.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+						.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
+						.pipe(replaceStream('{cart.items}', cart.items))
+						.pipe(res);
+		        });
 			}
-			console.log("Derived cart id: "+cartCookieId);
-
-	        // Format product into appropriate HTML
-	        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
-
-				// Add dynamic elements to response page
-		        fs.createReadStream(__dirname+'/product.html')
-					.pipe(replaceStream('{product.name}', product.name))
-					.pipe(replaceStream('{product.description}', product.description))
-					.pipe(replaceStream('{product.price}', product.price))
-					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
-					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
-					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-//					.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
-					.pipe(res);
-	        });
-		} else {
-			
-			// Something went wrong - determine cause
-			var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
-	        // Format products into appropriate HTML
-	        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
-
-	            // Add dynamic elements to response page
-	            fs.createReadStream(__dirname+'/index.html')
-					.pipe(replaceStream('{error.message}', errorMessage))
-					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
-					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
-					.pipe(res);
-	        });
-		}
+		});
 	});
 });
 
 //
-// Load existing product from datasource
+// Load existing product from data source
 function loadExistingProducts(req, res, callback) {
 
 	var productId = (req.query.id) ? '/'+req.query.id : '';
@@ -173,6 +178,45 @@ function loadExistingProducts(req, res, callback) {
 			} else {
 	
 				callback(null, JSON.parse(productLoadBody));
+			}
+		}
+	});
+}
+
+
+//
+// Load existing cart from data source
+function loadExistingCart(req, res, callback) {
+
+	var cartId = 0;
+	request.headers.cookie && request.headers.cookie.split(';').forEach(function( cookie ) {
+		var parts = cookie.split('=');
+		if(parts(0) == cartCookieName) {
+			cartId = parts(1);
+		}
+	});
+
+	request.get({url:'https://'+restDomain+'/cart'+cartId, agent: agent}, function (cartLoadError, cartLoadResponse, cartLoadBody) {
+		
+		if (cartLoadError) {
+
+			callback(cartLoadError, null);
+		} else {
+
+			// Log error from remote server
+			console.log( "REST API server responded with 'err': " + cartLoadError );
+			// Log status code from remote server
+			console.log( "REST API server responded with 'status': " + cartLoadResponse.statusCode );
+			// Log response body from remote server
+			console.log( "REST API server responded with 'body': " + cartLoadBody );
+	
+			// Error handling
+			if(cartLoadResponse.statusCode != '200') {
+	
+				callback(cartLoadBody, null);
+			} else {
+	
+				callback(null, JSON.parse(cartLoadBody));
 			}
 		}
 	});
@@ -340,6 +384,40 @@ function formatProductViewHtml(product,callback) {
 	}
 }
 
+
+
+
+
+
+
+
+
+//
+// GET - cart API - Get entire cart for current user
+app.get('/cart/:id', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: GET /cart/"+req.params.id );
+
+        loadCart(req.params.id, function (cartError, existingCart) {
+
+        	// Handle error
+        	if(cartError) {
+        		
+        		// Return cart items to caller
+				res.writeHead(404, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(cartError));
+				res.end();
+        	} else {
+
+        		// Return cart items to caller
+				res.writeHead(200, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(existingCart));
+				res.end();
+        	}
+        });
+});
+
 //
 // GET - cart API - Get entire cart for current user
 app.get('/cart/:id/item', function (req, res) {
@@ -431,3 +509,50 @@ app.post('/cart/:id/item', function (req, res) {
 			});
 		}
 });
+
+//
+// Get specified cart from the product catalog
+function loadCart(cartId, callback) {
+
+	var params;
+	// Create load params
+	if(!cartId || cartId == 0) {
+
+		callback('No cart specified', null);
+		return;
+	} else {
+
+		// Cart id specified, create params
+		params = {
+			TableName: 'SuroorFashionsCarts',
+			// Limit: 10,
+            ExpressionAttributeValues: {':c': cartId},
+			FilterExpression: 'id = :c'
+		};
+	}
+	console.log("Searching for existing cart with: "+JSON.stringify(params));
+	// Perform product load action
+	dddc.scan(params, function (err, cartData) {
+
+		if(err) {
+
+			// Return error to caller
+			callback('Failed to load cart', null);
+		} else {
+
+
+			// Log loaded  cart
+			console.log("Loaded cart data: "+JSON.stringify(carData));
+
+			// Check only one cart loaded.
+			if(cartData.Items.length > 1) {
+				callback('More than one cart found for: '+cartId);
+				return;
+			}
+			
+			// Return  cart to caller
+			callback(null, cartData.Items(0));
+			return;
+		}
+	});
+}

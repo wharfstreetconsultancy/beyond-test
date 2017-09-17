@@ -608,7 +608,7 @@ app.get('/product/:id', function (req, res) {
         // Log request received
         console.log( "Received request: GET /product/"+req.params.id );
 
-        // Fetch updated products list
+        // Fetch products list
         loadProduct(req.params.id, function (loadProductError, existingProduct) {
 
                 // Return existing product list to caller
@@ -879,18 +879,18 @@ function loadProduct(productId, callback) {
 
 	var params;
 	// Create load params
-        if(productId) {
+	if(productId) {
 		params = {
 			TableName: 'SuroorFashionsProducts',
 			Limit: 10,
-                        ExpressionAttributeValues: {':p': productId},
+			ExpressionAttributeValues: {':p': productId},
 			FilterExpression: 'id = :p'
 		};
 	} else {
-                params = {
-                        TableName: 'SuroorFashionsProducts',
-                        Limit: 10
-                };
+        params = {
+	        TableName: 'SuroorFashionsProducts',
+	        Limit: 10
+        };
 	}
 	console.log("Searching for existing products with: "+JSON.stringify(params));
 	// Perform product load action
