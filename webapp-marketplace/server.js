@@ -145,7 +145,7 @@ app.get('/product', function (req, res) {
 						.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 						.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 						.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-//						.pipe(replaceStream('{form.action}', 'https://'+restDomain+'/cart/'+req.session.id+'/item'))
+						.pipe(replaceStream('{rest.domain}', restDomain))
 						.pipe(replaceStream('{cart.items}', JSON.stringify(cart.items)))
 						.pipe(res);
 		        });

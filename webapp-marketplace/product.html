@@ -99,6 +99,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script>
 /* #### START DYNAMIC DATA DECLARATIONS #### */
+var restDomain = {rest.domain};
 var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
@@ -121,7 +122,7 @@ $(document).ready(function() {
 			alert("Current cookie (value): "+cookieParts[1]);
 			cartId = cookieParts[1];
 		}
-		this.action = '/cart/'+cartId+'/item';
+		this.action = 'https://'+restDomain+'/cart/'+cartId+'/item';
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating - call "+this.action);
 
