@@ -34,7 +34,7 @@ var sha256 = require('sha256');
 var app = express();
 app.use(express.static('assets'));
 app.use(bodyParser.json());
-app.use(express.urlencoded());
+app.use(bodyParser.urlencoded());
 var upload = multer({ dest: '/tmp/'});
 var key = fs.readFileSync('certs/domain.key');
 var cert = fs.readFileSync('certs/domain.crt');
