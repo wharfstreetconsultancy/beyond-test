@@ -64,7 +64,8 @@
 								{product.image.carousel}
 							</div>
 							<div class="col-lg-4">
-								<form id="cart_control" name="cart_control" method="post" enctype="application/json">
+								<!-- form id="cart_control" name="cart_control" method="post" enctype="application/json" -->
+								<form id="cart_control" name="cart_control" method="post">
 									<input type="hidden" id="product_id" name="product_id" value="{product.id}"/>
 									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart - ${product.price}"/></p>
 									<p>{product.color.selector}</p>
