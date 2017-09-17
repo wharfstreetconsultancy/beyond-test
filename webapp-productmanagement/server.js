@@ -972,83 +972,84 @@ app.get('/cart/:id/item', function (req, res) {
 // POST - cart API - Create new cart item
 app.post('/cart/:id/item', function (req, res) {
 
-        // Log request received
-        console.log( "Received request: POST /cart/"+req.params.id+"/item" );
+    // Log request received
+    console.log( "Received request: POST /cart/"+req.params.id+"/item" );
 
-        // Create new cart item
-        console.log("Request params in body: "+JSON.stringify(req.body));
+    // Create new cart item
+    console.log("Request params in body: "+JSON.stringify(req.body));
 
-        var timestamp = new Date().getTime().toString();
-/*
-        var newCartItem = {
-			id: '09876543',
-			productId: req.body.selected_product_id,
-			quantity: req.body.quantity,
-			color: '333',
-			size: '444',
-			cost: '5.55',
-			lastUpdated: timestamp
-        }
-*/
-        var newCartItem = req.body.newProductItem;
-        newCartItem.id = timestamp.split("").reverse().join("");
-        newCartItem.lastUpdated = timestamp;
-        console.log("Requested new cart item: "+JSON.stringify(newCartItem));
-        
-		if (req.params.id != 0 && req.params.id != 'undefined') {
-			
-			// Cart exists 
-			console.log("Cart exists - load cart");
-		} else {
+    // Create a cart update observer object
+    var cartUpdateObserver = new events.EventEmitter();
 
-			// Cart does not exist
-			console.log("Cart does not exist - create and store cart");
+    // Update product
+    imageObserver.on('store_cart', function(cart) {
 
-	        timestamp = new Date().getTime().toString();
-			// Create new cart
-			var newCart = {
-				id: timestamp.split("").reverse().join(""),
-				items: [newCartItem]
+    	// Store cart into data source
+    	storeCart(cart, function (storeCartError) {
+    		if(storeCartError) {
+
+	    		// Return error to caller
+	            res.writeHead(500, {'Content-Type': 'application/json'});
+	            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
+				res.end();
+    		}
+    	});
+    });
+
+    var timestamp = new Date().getTime().toString();
+    var newCartItem = {
+		id: timestamp.split("").reverse().join(""),
+		productId: req.body.newCartItem.id,
+		quantity: req.body.newCartItem.quantity,
+		color: (req.body.newCartItem.color) ? req.body.newCartItem.color : undefined,
+		size: (req.body.newCartItem.size) ? req.body.newCartItem.size : undefined,
+		cost: '5.55',
+		created: timestamp,
+		lastUpdated: timestamp
+    }
+    console.log("Requested new cart item: "+JSON.stringify(newCartItem));
+
+	if (req.params.id != 0 && req.params.id != 'undefined') {
+		
+		// Cart exists - load cart
+		console.log("Cart exists - load cart");
+		
+		// Load existing cart
+		loadCart(req.params.id, function (loadCartError, existingCart) {
+
+			// Handle error
+			if(loadCartError) {
+
+				// Return error to caller
+                res.writeHead(500, {'Content-Type': 'application/json'});
+                res.write('Failed to load cart id "'+req.params.id+'": '+loadCartError);
+				res.end();
+				return;
 			}
-			console.log("Cart created: "+JSON.stringify(newCart))
+			
+			// Trigger cart store
+			cartUpdateObserver.emit('store_cart', existingCart);
+		});
+	} else {
 
-			// Create params for cart 'store' operation
-			var storeCartParams = {
-				TableName: 'SuroorFashionsCarts',
-				Item: newCart
-			};
+		// Cart does not exist - create and store cart
+		console.log("Cart does not exist - create and store cart");
 
-			// Log contents of dynamo db store operation
-			console.log("Uploading cart with: "+ JSON.stringify(storeCartParams));
-
-			// Perform product store operation
-			dddc.put(storeCartParams, function (err, data) {
-				if (err) {
-
-					console.log('Failed to store cart id "'+newCart.id+'". '+err);
-					
-					// Return error to caller
-                    res.writeHead(500, {'Content-Type': 'application/json'});
-                    res.write('Failed to store cart id "'+newCart.id+'". '+err);
-					res.end();
-				} else {
-
-					// Log output from data store
-					console.log("Data returned from data store: "+JSON.stringify(data));
-
-					// Set cart id into a cookie with the response
-					res.cookie(cartCookieName, newCart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
-					// Return new cart item to caller
-					res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+newCart.id+'/item/'+newCartItem.id});
-					res.write(JSON.stringify(newCartItem));
-					res.end();
-				}
-			});
+        timestamp = new Date().getTime().toString();
+		// Create new cart
+		var newCart = {
+			id: timestamp.split("").reverse().join(""),
+			items: [newCartItem]
 		}
+		console.log("Cart created: "+JSON.stringify(newCart))
+
+		// Trigger cart store
+		cartUpdateObserver.emit('store_cart', newCart);
+	}
 });
 
 //
-// Get specified cart from the product catalog
+// Load specified cart from the product catalog
 function loadCart(cartId, callback) {
 
 	var params;
@@ -1066,29 +1067,65 @@ function loadCart(cartId, callback) {
             ExpressionAttributeValues: {':c': cartId},
 			FilterExpression: 'id = :c'
 		};
-	}
-	console.log("Searching for existing cart with: "+JSON.stringify(params));
-	// Perform product load action
-	dddc.scan(params, function (err, cartData) {
 
-		if(err) {
-
-			// Return error to caller
-			callback('Failed to load cart', null);
-		} else {
-
-			// Log loaded  cart
-			console.log("Loaded cart data: "+JSON.stringify(cartData));
-
-			// Check only one cart loaded.
-			if(cartData.Items.length > 1) {
-				callback('More than one cart found for: '+cartId);
+		console.log("Searching for existing cart with: "+JSON.stringify(params));
+		// Perform product load action
+		dddc.scan(params, function (err, cartData) {
+	
+			if(err) {
+	
+				// Return error to caller
+				callback(err, null);
+			} else {
+	
+				// Log loaded  cart
+				console.log("Loaded cart data: "+JSON.stringify(cartData));
+	
+				// Check only one cart loaded.
+				if(cartData.Items.length > 1) {
+					callback('More than one cart found for: '+cartId);
+					return;
+				}
+				
+				// Return  cart to caller
+				callback(null, cartData.Items[0]);
 				return;
 			}
-			
-			// Return  cart to caller
-			callback(null, cartData.Items[0]);
+		});
+	}
+}
+
+//
+// Store cart into the data source
+function storeCart(cart, callback) {
+
+	// Create params for cart 'store' operation
+	var storeCartParams = {
+		TableName: 'SuroorFashionsCarts',
+		Item: cart
+	};
+
+	// Log contents of dynamo db store operation
+	console.log("Uploading cart with: "+ JSON.stringify(storeCartParams));
+
+	// Perform product store operation
+	dddc.put(storeCartParams, function (err, data) {
+		if (err) {
+
+			console.log("Failed to store cart id '"+cart.id+"'. "+err);
+			callback('Failed to store cart id "'+cart.id+'. '+err);
 			return;
+		} else {
+
+			// Log output from data store
+			console.log("Data returned from data store: "+JSON.stringify(data));
+
+			// Set cart id into a cookie with the response
+			res.cookie(cartCookieName, cart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
+			// Return new cart item to caller
+			res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+			res.write(JSON.stringify(newCartItem));
+			res.end();
 		}
 	});
 }
