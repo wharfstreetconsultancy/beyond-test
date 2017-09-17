@@ -999,7 +999,7 @@ app.post('/cart/:id/item', function (req, res) {
     cartUpdateObserver.on('store_cart', function(cart) {
 
 		// Add new cart item to cart
-		cart.push(newCartItem);
+		cart.items.push(newCartItem);
 
     	// Store cart into data source
     	storeCart(cart, function (storeCartError) {
