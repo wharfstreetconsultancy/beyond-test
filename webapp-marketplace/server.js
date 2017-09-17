@@ -213,7 +213,7 @@ function loadExistingCart(req, res, callback) {
 		}
 	});
 
-	request.get({url:'https://'+restDomain+'/cart'+cartId, agent: agent}, function (cartLoadError, cartLoadResponse, cartLoadBody) {
+	request.get({url:'https://'+restDomain+'/cart/'+cartId, agent: agent}, function (cartLoadError, cartLoadResponse, cartLoadBody) {
 		
 		if (cartLoadError) {
 
