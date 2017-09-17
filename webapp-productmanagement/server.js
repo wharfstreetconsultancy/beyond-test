@@ -12,6 +12,7 @@ var https = require('https');
 var request = require('request');
 var fs = require('fs');
 var multer = require('multer');
+var bodyParser = require('body-parser');
 var replaceStream = require('replacestream')
 var replaceall = require("replaceall");
 var util = require('util');
@@ -32,6 +33,7 @@ var sha256 = require('sha256');
 // Manage HTTP server container
 var app = express();
 app.use(express.static('assets'));
+app.use(bodyParser.json());
 var upload = multer({ dest: '/tmp/'});
 var key = fs.readFileSync('certs/domain.key');
 var cert = fs.readFileSync('certs/domain.crt');
