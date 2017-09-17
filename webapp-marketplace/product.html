@@ -66,9 +66,10 @@
 							<div class="col-lg-4">
 								<form id="cart_control" name="cart_control" method="post" enctype="application/json">
 									<input type="hidden" name="newCartItem[productId]" value="{selected.product.id}"/>
-									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart - ${product.price}"/></p>
+									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart"/></p>
 									<p>{product.color.selector}</p>
 									<p>{product.size.selector}</p>
+									<p>Price:<br>${product.price}</p>
 									<p><select name="newCartItem[quantity]"><option value="1" selected/><option value="2"/><option value="3"/><option value="4"/><option value="5"/></select></p>
 								</form>
 							</div>
