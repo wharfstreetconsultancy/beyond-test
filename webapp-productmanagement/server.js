@@ -978,24 +978,6 @@ app.post('/cart/:id/item', function (req, res) {
     // Create new cart item
     console.log("Request params in body: "+JSON.stringify(req.body));
 
-    // Create a cart update observer object
-    var cartUpdateObserver = new events.EventEmitter();
-
-    // Update product
-    imageObserver.on('store_cart', function(cart) {
-
-    	// Store cart into data source
-    	storeCart(cart, function (storeCartError) {
-    		if(storeCartError) {
-
-	    		// Return error to caller
-	            res.writeHead(500, {'Content-Type': 'application/json'});
-	            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
-				res.end();
-    		}
-    	});
-    });
-
     var timestamp = new Date().getTime().toString();
     var newCartItem = {
 		id: timestamp.split("").reverse().join(""),
@@ -1007,7 +989,36 @@ app.post('/cart/:id/item', function (req, res) {
 		created: timestamp,
 		lastUpdated: timestamp
     }
+
     console.log("Requested new cart item: "+JSON.stringify(newCartItem));
+    // Create a cart update observer object
+    var cartUpdateObserver = new events.EventEmitter();
+
+    // Update product
+    cartUpdateObserver.on('store_cart', function(cart) {
+
+    	// Store cart into data source
+    	storeCart(cart, function (storeCartError) {
+    		if(storeCartError) {
+
+	    		// Return error to caller
+	            res.writeHead(500, {'Content-Type': 'application/json'});
+	            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
+				res.end();
+				return;
+    		} else {
+
+    			// Set cart id into a cookie with the response
+    			res.cookie(cartCookieName, cart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
+    			
+    			// Return new cart item to caller
+    			res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+    			res.write(JSON.stringify(newCartItem));
+    			res.end();
+    			return
+    		}
+    	});
+    });
 
 	if (req.params.id != 0 && req.params.id != 'undefined') {
 		
@@ -1120,12 +1131,7 @@ function storeCart(cart, callback) {
 			// Log output from data store
 			console.log("Data returned from data store: "+JSON.stringify(data));
 
-			// Set cart id into a cookie with the response
-			res.cookie(cartCookieName, cart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
-			// Return new cart item to caller
-			res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
-			res.write(JSON.stringify(newCartItem));
-			res.end();
+			callback(null);
 		}
 	});
 }
