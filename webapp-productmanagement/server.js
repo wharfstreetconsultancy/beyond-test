@@ -998,6 +998,9 @@ app.post('/cart/:id/item', function (req, res) {
     // Update product
     cartUpdateObserver.on('store_cart', function(cart) {
 
+		// Add new cart item to cart
+		cart.push(newCartItem);
+
     	// Store cart into data source
     	storeCart(cart, function (storeCartError) {
     		if(storeCartError) {
@@ -1038,7 +1041,7 @@ app.post('/cart/:id/item', function (req, res) {
 				res.end();
 				return;
 			}
-			
+
 			// Trigger cart store
 			cartUpdateObserver.emit('store_cart', existingCart);
 		});
