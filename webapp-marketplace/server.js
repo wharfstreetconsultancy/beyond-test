@@ -147,7 +147,7 @@ app.get('/product', function (req, res) {
 						.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
 						.pipe(replaceStream('{selected.product.id}', product.id))
 						.pipe(replaceStream('{rest.domain}', JSON.stringify(restDomain)))
-						.pipe(replaceStream('{cart.items}', JSON.stringify(cart.items)))
+						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
 						.pipe(res);
 		        });
 			} else {
@@ -162,7 +162,7 @@ app.get('/product', function (req, res) {
 						.pipe(replaceStream('{error.message}', errorMessage))
 						.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
 						.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
-						.pipe(replaceStream('{cart.items}', JSON.stringify(cart.items)))
+						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
 						.pipe(res);
 		        });
 			}
