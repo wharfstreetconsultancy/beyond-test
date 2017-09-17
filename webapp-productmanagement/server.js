@@ -977,13 +977,12 @@ app.post('/cart/:id/item', function (req, res) {
 
         // Create new cart item
         console.log("Request params in body: "+JSON.stringify(req.body));
-        console.log("Request params in body (product_id): "+JSON.stringify(req.body.product_id));
 
         var timestamp = new Date().getTime().toString();
         var newCartItem = {
 			id: '09876543',
-			productId: '111',
-			quantity: 2,
+			productId: req.body.selected_product_id,
+			quantity: req.body.quantity,
 			color: '333',
 			size: '444',
 			cost: '5.55',

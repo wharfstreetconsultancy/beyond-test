@@ -145,6 +145,7 @@ app.get('/product', function (req, res) {
 						.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 						.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 						.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
+						.pipe(replaceStream('{selected.product.id}', product.id))
 						.pipe(replaceStream('{rest.domain}', JSON.stringify(restDomain)))
 						.pipe(replaceStream('{cart.items}', JSON.stringify(cart.items)))
 						.pipe(res);
@@ -325,7 +326,7 @@ function formatProductViewHtml(product,callback) {
 		if(product.colors) {
 
 			productColorSelectorHtml = 'Color Choices:<br>';
-			productColorSelectorHtml += '<select name=\'selected_color\'>';
+			productColorSelectorHtml += '<select name=\'newCartItem[color]\'>';
 
 			// For each color that the product has
 			for(var color of product.colors) {
@@ -341,7 +342,7 @@ function formatProductViewHtml(product,callback) {
 		if(product.sizes) {
 
 			productSizeSelectorHtml = 'Size Choices:<br>';
-			productSizeSelectorHtml += '<select name=\'selected_size\'>';
+			productSizeSelectorHtml += '<select name=\'newCartItem[size]\'>';
 
 			// For each size that the product has
 			for(var size of product.sizes) {
