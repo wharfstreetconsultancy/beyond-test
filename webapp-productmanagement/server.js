@@ -1071,7 +1071,7 @@ function loadCart(cartId, callback) {
 
 
 			// Log loaded  cart
-			console.log("Loaded cart data: "+JSON.stringify(carData));
+			console.log("Loaded cart data: "+JSON.stringify(cartData));
 
 			// Check only one cart loaded.
 			if(cartData.Items.length > 1) {
