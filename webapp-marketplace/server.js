@@ -120,7 +120,7 @@ app.get('/product', function (req, res) {
 		loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
 	
 			// Check that only one product found
-			if((product) && !Array.isArray(products)) {
+			if((product) && !Array.isArray(product)) {
 	
 				// Check if cart exists
 				var cartId = 0;
