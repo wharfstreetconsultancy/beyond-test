@@ -72,20 +72,31 @@ app.get('/', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /" );
 
-	//
-	// Load all existing products from REST API
-	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-        // Format products into appropriate HTML
-        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+	// Load cart from REST API
+	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
 
-            // Add dynamic elements to response page
-            fs.createReadStream(__dirname+'/index.html')
-				.pipe(replaceStream('{error.message}', '&nbsp;'))
-				.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
-				.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
-				.pipe(res);
-        });
+		if(cartLoadErrorMessage) {
+			
+			// Log error and continue
+			console.log(cartLoadErrorMessage);
+		}
+
+		// Load all existing products from REST API
+		loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+	
+	        // Format products into appropriate HTML
+	        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+	
+	            // Add dynamic elements to response page
+	            fs.createReadStream(__dirname+'/index.html')
+					.pipe(replaceStream('{error.message}', '&nbsp;'))
+					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
+					.pipe(replaceStream('{cart.items}', cart.items))
+					.pipe(res);
+	        });
+		});
 	});
 });
 
@@ -99,6 +110,12 @@ app.get('/product', function (req, res) {
 	// Load cart from REST API
 	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
 
+		if(cartLoadErrorMessage) {
+			
+			// Log error and continue
+			console.log(cartLoadErrorMessage);
+		}
+		
 		// Load all specified product from REST API
 		loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
 	
