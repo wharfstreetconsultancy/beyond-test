@@ -937,16 +937,18 @@ app.get('/cart/:id', function (req, res) {
         	// Handle error
         	if(cartError) {
         		
-        		// Return cart items to caller
+        		// Throw 'cart not found' response to caller
 				res.writeHead(404, {'Content-Type': 'application/json'});
 				res.write(JSON.stringify(cartError));
 				res.end();
+				return;
         	} else {
 
         		// Return cart items to caller
 				res.writeHead(200, {'Content-Type': 'application/json'});
 				res.write(JSON.stringify(existingCart));
 				res.end();
+				return;
         	}
         });
 });
@@ -1097,14 +1099,20 @@ function loadCart(cartId, callback) {
 				console.log("Loaded cart data: "+JSON.stringify(cartData));
 	
 				// Check only one cart loaded.
-				if(cartData.Items.length > 1) {
+				if(cartData.Items.length = 0) {
+					
+					callback('No carts found for: '+cartId);
+					return;
+				} else if(cartData.Items.length > 1) {
+
 					callback('More than one cart found for: '+cartId);
 					return;
+				} else {
+
+					// Return  cart to caller
+					callback(null, cartData.Items[0]);
+					return;
 				}
-				
-				// Return  cart to caller
-				callback(null, cartData.Items[0]);
-				return;
 			}
 		});
 	}
