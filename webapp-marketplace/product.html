@@ -119,7 +119,7 @@ function reloadCart() {
 		document.getElementById("cart-items").innerHtml = '';
 		for(var cartItem of cartItems) {
 			console.log("Current cart item: "+JSON.stringify(cartItem));
-			document.getElementById("cart-items").innerHtml = cartItem.quantity' x <a class="dropdown-item" href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
+			document.getElementById("cart-items").innerHtml += cartItem.quantity+' x <a class="dropdown-item" href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 		}
 	}
 }
