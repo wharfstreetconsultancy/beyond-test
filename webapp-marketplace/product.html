@@ -145,7 +145,7 @@ $(document).ready(function() {
 			success: function (newCartItem) {
 				$('#status').empty().text('Cart update success');
 				console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
-				cartItems.push(newCartItem, 0);
+				cartItems.push(newCartItem);
 				console.log("Local cart update success - full cart: "+JSON.stringify(cartItems));
 				reloadCart();
 			}
