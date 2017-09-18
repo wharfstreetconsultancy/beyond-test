@@ -116,6 +116,7 @@
 // var cartItems = {cart.items};		
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 function reloadCart() {
+	var localCart = JSON.parse(localStorage.getItem('cart'));
 	console.log("Current cart: "+JSON.stringify(localCart));
 	if(!localCart || localCart.length == 0) { 
 		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
