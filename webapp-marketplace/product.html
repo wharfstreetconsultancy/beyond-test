@@ -116,9 +116,9 @@ function reloadCart() {
 	if(!cartItems || cartItems.length == 0) { 
 		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
 	} else {
-		document.getElementById("cart-items").innerHtml = '';
+		// document.getElementById("cart-items").innerHtml = '';
 		for(var cartItem of cartItems) {
-			alert(document.getElementById("cart-items"));
+			alert(document.getElementById("cart-items").name);
 			document.getElementById("cart-items").innerHtml += 'Hindrious<br>';
 			// document.getElementById("cart-items").innerHtml += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
