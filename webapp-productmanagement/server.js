@@ -987,7 +987,7 @@ app.post('/cart/:id/item', function (req, res) {
     var newCartItem = {
 		id: timestamp.split("").reverse().join(""),
 		productId: req.body.newCartItem.productId,
-		productName: req.body.newCartItem.name, 
+		productName: req.body.newCartItem.productName, 
 		quantity: req.body.newCartItem.quantity,
 		color: (req.body.newCartItem.color) ? req.body.newCartItem.color : undefined,
 		size: (req.body.newCartItem.size) ? req.body.newCartItem.size : undefined,
