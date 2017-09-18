@@ -43,9 +43,11 @@ var options = {
 	cert: cert
 };
 var securePort = process.env.SECURE_PORT;
+var allowedOriginPort = process.env.ALLOWED_ORIGIN_PORT;
 var restPort = process.env.REST_PORT;
 var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
 var restDomain = restHost+':'+restPort;
+var allowedOriginDomain = restHost+':'+allowedOriginPort;
 var cartCookieName = 'suroor-cart-id';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
@@ -1018,7 +1020,7 @@ app.post('/cart/:id/item', function (req, res) {
     			res.cookie(cartCookieName, cart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
     			
     			// Return new cart item to caller
-    			res.writeHead(201, {'Content-Type': 'application/json', Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+    			res.writeHead(201, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
     			res.write(JSON.stringify(newCartItem));
     			res.end();
     			return
