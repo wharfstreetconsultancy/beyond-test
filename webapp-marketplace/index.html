@@ -119,9 +119,9 @@ function reloadCart() {
 	var localCart = JSON.parse(localStorage.getItem('cart'));
 	console.log("Current cart: "+JSON.stringify(localCart));
 	if(!localCart || localCart.length == 0) { 
-		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
+		document.getElementById("cart-items").innerHTML = '<p>Cart is empty</p>';
 	} else {
-		document.getElementById("cart-items").innerHtml = '';
+		document.getElementById("cart-items").innerHTML = '';
 		for(var cartItem of localCart) {
 			document.getElementById("cart-items").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
