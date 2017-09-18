@@ -39,10 +39,13 @@
   			<!--Collect the nav links, forms, and other content for toggling-->
   			<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
   			  <ul class="myNav nav navbar-nav">
-            <li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
-  					<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
-  					<li><a href="contact.html">Contact</a></li>
-            <li><a href="coming_soon.html"><span class="fa fa-shopping-cart"></span> Cart</a></li>
+				<li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
+  				<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
+  				<li><a href="contact.html">Contact</a></li>
+            	<li class="dropdown">
+            		<a class="dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cart</a>
+            		<div aria-labelledby="navbarDropdownMenuLink" id="cart-items" class="fa fa-shopping-cart"></div> 
+            	</li>
   			  </ul>
   			</div>
   		  </div>
@@ -65,7 +68,8 @@
 							</div>
 							<div class="col-lg-4">
 								<form id="cart_control" name="cart_control" method="post" enctype="application/json">
-									<input type="hidden" name="newCartItem[productId]" value="{selected.product.id}"/>
+									<input type="hidden" name="newCartItem[productId]" value="{product.id}"/>
+									<input type="hidden" name="newCartItem[productName]" value="{product.name}"/>
 									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart"/></p>
 									<p>{product.color.selector}</p>
 									<p>{product.size.selector}</p>
@@ -107,11 +111,17 @@ var restDomain = {rest.domain};
 var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
-function reloadCart(callback) {
-	$.get('/cart/', function(cart, status){
-		console.log("Latest cart details: "+JSON.stringify(cart));
-		console.log("Latest cart size: "+cart.length);
-	});
+function reloadCart() {
+	console.log("Current cart: "+JSON.stringify(cartItems));
+	if(!cartItems || cartItems.length == 0) { 
+		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
+	} else {
+		document.getElementById("cart-items").innerHtml = '';
+		for(var cartItem of cartItems) {
+			console.log("Current cart item: "+JSON.stringify(cartItem));
+			document.getElementById("cart-items").innerHtml = cartItem.quantity' x <a class="dropdown-item" href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
+		}
+	}
 }
 
 $(document).ready(function() {
@@ -134,8 +144,10 @@ $(document).ready(function() {
 			},
 			success: function (newCartItem) {
 				$('#status').empty().text('Cart update success');
-				console.log("Cart update success: "+JSON.stringify(newCartItem));
+				console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
 				cartItems.push(newCartItem, 0);
+				console.log("Local cart update success - full cart: "+JSON.stringify(cartItems));
+				reloadCart();
 			}
 		});
 		return false;

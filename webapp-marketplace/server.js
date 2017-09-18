@@ -139,13 +139,13 @@ app.get('/product', function (req, res) {
 		        
 					// Add dynamic elements to response page
 			        fs.createReadStream(__dirname+'/product.html')
+						.pipe(replaceStream('{product.id}', product.id))
 						.pipe(replaceStream('{product.name}', product.name))
 						.pipe(replaceStream('{product.description}', product.description))
 						.pipe(replaceStream('{product.price}', product.price))
 						.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
 						.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 						.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-						.pipe(replaceStream('{selected.product.id}', product.id))
 						.pipe(replaceStream('{rest.domain}', JSON.stringify(restDomain)))
 						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
 						.pipe(res);
