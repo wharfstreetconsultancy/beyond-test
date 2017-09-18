@@ -1027,7 +1027,7 @@ app.post('/cart/:id/item', function (req, res) {
     			// console.log("Cookie created");
     			
     			// Return new cart item to caller
-    			res.writeHead(201, {'Content-Type': 'application/json','CartId':cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
     			res.write(JSON.stringify(newCartItem));
     			res.end();
     			return
