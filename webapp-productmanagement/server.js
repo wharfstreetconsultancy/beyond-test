@@ -1012,7 +1012,7 @@ app.post('/cart/:id/item', function (req, res) {
     		if(storeCartError) {
 
 	    		// Return error to caller
-	            res.writeHead(500, {'Content-Type': 'application/json'});
+	            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
 	            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
 				res.end();
 				return;
@@ -1042,7 +1042,7 @@ app.post('/cart/:id/item', function (req, res) {
 			if(loadCartError) {
 
 				// Return error to caller
-                res.writeHead(500, {'Content-Type': 'application/json'});
+                res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
                 res.write('Failed to load cart id "'+req.params.id+'": '+loadCartError);
 				res.end();
 				return;
