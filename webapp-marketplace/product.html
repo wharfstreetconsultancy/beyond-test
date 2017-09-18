@@ -147,6 +147,7 @@ $(document).ready(function() {
 				console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
 				// cartItems.push(newCartItem);
 				var localCart = localStorage.getItem('cart');
+				alert(JSON.stringify(localCart));
 				if(!localCart || localCart.length == 0) {
 					localCart = [];
 				}
