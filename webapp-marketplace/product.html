@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
   </head>
-  <body>
+  <body onload="reloadCart()">
     <!------------------------------ Header --------------------------->
     <!--This is the Header Content-->
   	<div class="container-fluid">
@@ -111,7 +111,8 @@ var restDomain = {rest.domain};
 // var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
-function reloadCart(localCart) {
+function reloadCart() {
+	var localCart = JSON.parse(localStorage.getItem('cart'));
 	console.log("Current cart: "+JSON.stringify(localCart));
 	if(!localCart || localCart.length == 0) { 
 		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
@@ -154,9 +155,7 @@ $(document).ready(function() {
 				localCart.push(newCartItem);
 				localStorage.setItem('cart', JSON.stringify(localCart));
 				console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
-				reloadCart(localCart, function () {
-					console.log("Cart reloaded in browser");
-				});
+				reloadCart();
 			}
 		});
 		return false;		

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
   </head>
-  <body>
+  <body onload="reloadCart()">
     <!------------------------------ Header --------------------------->
     <!--This is the Header Content-->
   	<div class="container-fluid">
@@ -39,10 +39,13 @@
   			<!--Collect the nav links, forms, and other content for toggling-->
   			<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
   			  <ul class="myNav nav navbar-nav">
-            <li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
-  					<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
-  					<li><a href="contact.html">Contact</a></li>
-            <li><a href="coming_soon.html"><span class="fa fa-shopping-cart"></span> Cart</a></li>
+            	<li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
+  				<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
+  				<li><a href="contact.html">Contact</a></li>
+            	<li>
+           			<a id="navbarDropdownMenuLink" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
+           			<div id="cart-items" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"></div>
+            	</li>
   			  </ul>
   			</div>
   		  </div>
@@ -110,8 +113,21 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script>
 /* #### START DYNAMIC DATA DECLARATIONS #### */
-var cartItems = {cart.items};		
+// var cartItems = {cart.items};		
 /* #### END DYNAMIC DATA DECLARATIONS #### */
+function reloadCart() {
+	console.log("Current cart: "+JSON.stringify(localCart));
+	if(!localCart || localCart.length == 0) { 
+		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
+	} else {
+		document.getElementById("cart-items").innerHtml = '';
+		for(var cartItem of localCart) {
+			document.getElementById("cart-items").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
+			console.log("Current cart item: "+JSON.stringify(cartItem));
+		}
+	}
+}
+
 		</script>
   </body>
 </html>
