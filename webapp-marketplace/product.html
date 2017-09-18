@@ -118,6 +118,7 @@ function reloadCart() {
 	} else {
 		document.getElementById("cart-items").innerHtml = '';
 		for(var cartItem of cartItems) {
+			alert(document.getElementById("cart-items"));
 			document.getElementById("cart-items").innerHtml += 'Hindrious<br>';
 			// document.getElementById("cart-items").innerHtml += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
