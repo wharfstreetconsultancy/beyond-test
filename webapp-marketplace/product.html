@@ -108,16 +108,16 @@
 		
 /* #### START DYNAMIC DATA DECLARATIONS #### */
 var restDomain = {rest.domain};
-var cartItems = {cart.items};
+// var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
-function reloadCart() {
-	console.log("Current cart: "+JSON.stringify(cartItems));
-	if(!cartItems || cartItems.length == 0) { 
+function reloadCart(localCart) {
+	console.log("Current cart: "+JSON.stringify(localCart));
+	if(!localCart || localCart.length == 0) { 
 		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
 	} else {
 		document.getElementById("cart-items").innerHtml = '';
-		for(var cartItem of cartItems) {
+		for(var cartItem of localCart) {
 			document.getElementById("cart-items").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
 		}
@@ -142,13 +142,18 @@ $(document).ready(function() {
 				$('#status').empty().text('Cart update error: '+xhr.status);
 				console.log("Cart update error: "+xhr.status);
 			},
-			success: function (newCartItem, textStatus, xhr) {
+			success: function (newCartItem) {
 				$('#status').empty().text('Cart update success');
 				console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
-				cartItems.push(newCartItem);
-				console.log("Local cart update success - full cart: "+JSON.stringify(cartItems));
-				alert("Cart ID: "+xhr.getResponseHeader('Location'));
-				reloadCart(function () {
+				// cartItems.push(newCartItem);
+				var localCart = window.localstorage.getItem('cart');
+				if(!localCart || localCart.length == 0) {
+					localCart = [];
+				}
+				localCart.push(newCartItem);
+				localstorage.setItem('cart', localCart);
+				console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
+				reloadCart(localCart, function () {
 					console.log("Cart reloaded in browser");
 				});
 			}
