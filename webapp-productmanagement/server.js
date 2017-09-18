@@ -997,6 +997,7 @@ app.post('/cart/:id/item', function (req, res) {
     }
 
     console.log("Requested new cart item: "+JSON.stringify(newCartItem));
+    
     // Create a cart update observer object
     var cartUpdateObserver = new events.EventEmitter();
 

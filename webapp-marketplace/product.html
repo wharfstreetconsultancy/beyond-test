@@ -111,16 +111,17 @@ var restDomain = {rest.domain};
 var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
-function reloadCart() {
+function reloadCart(callback) {
 	console.log("Current cart: "+JSON.stringify(cartItems));
 	if(!cartItems || cartItems.length == 0) { 
 		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
 	} else {
 		document.getElementById("cart-items").innerHtml = '';
 		for(var cartItem of cartItems) {
-			console.log("Current cart item: "+JSON.stringify(cartItem));
 			document.getElementById("cart-items").innerHtml += cartItem.quantity+' x <a class="dropdown-item" href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
+			console.log("Current cart item: "+JSON.stringify(cartItem));
 		}
+		callback();
 	}
 }
 
@@ -141,16 +142,19 @@ $(document).ready(function() {
 			error: function (xhr) {
 				$('#status').empty().text('Cart update error: '+xhr.status);
 				console.log("Cart update error: "+xhr.status);
+				return false;
 			},
 			success: function (newCartItem) {
 				$('#status').empty().text('Cart update success');
 				console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
 				cartItems.push(newCartItem);
 				console.log("Local cart update success - full cart: "+JSON.stringify(cartItems));
-				reloadCart();
+				reloadCart(function () {
+					console.log("Cart reloaded in browser");
+					return false;
+				});
 			}
 		});
-		return false;
 	});
 });
 
