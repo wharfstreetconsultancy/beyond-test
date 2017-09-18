@@ -142,11 +142,12 @@ $(document).ready(function() {
 				$('#status').empty().text('Cart update error: '+xhr.status);
 				console.log("Cart update error: "+xhr.status);
 			},
-			success: function (newCartItem) {
+			success: function (newCartItem, textStatus, request) {
 				$('#status').empty().text('Cart update success');
 				console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
 				cartItems.push(newCartItem);
 				console.log("Local cart update success - full cart: "+JSON.stringify(cartItems));
+				alert("Cart ID: "+request.getResponseHeader('CartId'));
 				reloadCart(function () {
 					console.log("Cart reloaded in browser");
 				});

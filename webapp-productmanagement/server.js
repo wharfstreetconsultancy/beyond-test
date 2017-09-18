@@ -1020,14 +1020,14 @@ app.post('/cart/:id/item', function (req, res) {
 				return;
     		} else {
 
-    			console.log("Creating cookie: "+cartCookieName+"="+cart.id);
+    			// console.log("Creating cookie: "+cartCookieName+"="+cart.id);
     			
     			// Set cart id into a cookie with the response
-    			res.cookie(cartCookieName, cart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
-    			console.log("Cookie created");
+    			// res.cookie(cartCookieName, cart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
+    			// console.log("Cookie created");
     			
     			// Return new cart item to caller
-    			res.writeHead(201, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+    			res.writeHead(201, {'Content-Type': 'application/json','CartId':cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
     			res.write(JSON.stringify(newCartItem));
     			res.end();
     			return
