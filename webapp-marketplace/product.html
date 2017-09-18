@@ -111,7 +111,7 @@ var restDomain = {rest.domain};
 var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
-function reloadCart(callback) {
+function reloadCart() {
 	console.log("Current cart: "+JSON.stringify(cartItems));
 	if(!cartItems || cartItems.length == 0) { 
 		document.getElementById("cart-items").innerHtml = '<p>Cart is empty</p>';
@@ -121,7 +121,6 @@ function reloadCart(callback) {
 			document.getElementById("cart-items").innerHtml += cartItem.quantity+' x <a class="dropdown-item" href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
 		}
-		callback();
 	}
 }
 
@@ -138,14 +137,10 @@ $(document).ready(function() {
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating - call "+this.action);
 		
-		var cartUpdateObserver = new events.EventEmitter();
-		cartUpdateObserver.on('display_cart', function(cart) {return false;});
-		
 		$(this).ajaxSubmit({
 			error: function (xhr) {
 				$('#status').empty().text('Cart update error: '+xhr.status);
 				console.log("Cart update error: "+xhr.status);
-				cartUpdateObserver.emit('display_cart');
 			},
 			success: function (newCartItem) {
 				$('#status').empty().text('Cart update success');
@@ -154,11 +149,10 @@ $(document).ready(function() {
 				console.log("Local cart update success - full cart: "+JSON.stringify(cartItems));
 				reloadCart(function () {
 					console.log("Cart reloaded in browser");
-					cartUpdateObserver.emit('display_cart');
 				});
 			}
 		});
-		
+		return false;		
 	});
 });
 
