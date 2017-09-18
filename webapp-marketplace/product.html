@@ -137,12 +137,15 @@ $(document).ready(function() {
 		this.action = 'https://'+restDomain+'/cart/'+cartId+'/item';
 		$('#status').empty().text('Cart is updating...');
 		console.log("Cart is updating - call "+this.action);
-
+		
+		var cartUpdateObserver = new events.EventEmitter();
+		cartUpdateObserver.on('display_cart', function(cart) {return false;});
+		
 		$(this).ajaxSubmit({
 			error: function (xhr) {
 				$('#status').empty().text('Cart update error: '+xhr.status);
 				console.log("Cart update error: "+xhr.status);
-				return false;
+				cartUpdateObserver.emit('display_cart');
 			},
 			success: function (newCartItem) {
 				$('#status').empty().text('Cart update success');
@@ -151,10 +154,11 @@ $(document).ready(function() {
 				console.log("Local cart update success - full cart: "+JSON.stringify(cartItems));
 				reloadCart(function () {
 					console.log("Cart reloaded in browser");
-					return false;
+					cartUpdateObserver.emit('display_cart');
 				});
 			}
 		});
+		
 	});
 });
 
