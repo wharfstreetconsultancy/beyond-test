@@ -145,15 +145,12 @@ $(document).ready(function() {
 		if(true) {
 			// No user found - update local cart only
 			var localCart = JSON.parse(localStorage.getItem('cart'));
-			alert('check');
 			var timestamp;
 			if(!localCart || !localCart.items || localCart.items.length == 0) {
 			    timestamp = new Date().getTime().toString();
 				localCart = {id: timestamp.split("").reverse().join(""), items: []};
 			}
-			alert('check');
 		    timestamp = new Date().getTime().toString();
-			alert('check');
 		    var newCartItem = {
 				id: timestamp.split("").reverse().join(""),
 				productId: document.getElementById('productId').value,
@@ -165,13 +162,9 @@ $(document).ready(function() {
 				created: timestamp,
 				lastUpdated: timestamp
 		    }
-			alert('check');
-			localCart.push(newCartItem);
-			alert("Check");
+			localCart.items.push(newCartItem);
 			localStorage.setItem('cart', JSON.stringify(localCart));
-			alert("Check");
 			console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
-			alert("Check");
 		} else {
 
 			var cartId = 0;
