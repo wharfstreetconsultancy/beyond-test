@@ -122,8 +122,8 @@ function reloadCart() {
 		document.getElementById("cart-items").innerHTML = '<p>Cart is empty</p>';
 	} else {
 		document.getElementById("cart-items").innerHTML = '';
-		document.getElementById("cart-items").innerHTML += '<button type="submit" id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</button>';
-		document.getElementById("cart-items").innerHTML += '<button type="reset" id="clear" name="clear" class="btn btn-primary pull-right">Clear</button>';
+		document.getElementById("cart-items").innerHTML += '<input type="submit" id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</input>';
+		document.getElementById("cart-items").innerHTML += '<input type="reset" id="clear" name="clear" class="btn btn-primary pull-right">Clear</input>';
 		document.getElementById("cart-items").innerHTML += '<hr>';
 		for(var cartItem of localCart) {
 			document.getElementById("cart-items").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
