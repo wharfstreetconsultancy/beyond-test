@@ -44,7 +44,7 @@
   				<li><a href="contact.html">Contact</a></li>
             	<li>
            			<a id="navbarDropdownMenuLink" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
-           			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><form id="cart-items" class="form-inline"></form></div>
+           			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><form id="cart-preview" class="form-inline"></form></div>
             	</li>
   			  </ul>
   			</div>
@@ -116,14 +116,14 @@ function reloadCart() {
 	var localCart = JSON.parse(localStorage.getItem('cart'));
 	console.log("Current cart: "+JSON.stringify(localCart));
 	if(!localCart || localCart.length == 0) { 
-		document.getElementById("cart-items").innerHTML = '<p>Cart is empty</p>';
+		document.getElementById("cart-preview").innerHTML = '<p>Cart is empty</p>';
 	} else {
-		document.getElementById("cart-items").innerHTML = '';
-		document.getElementById("cart-items").innerHTML += '<button type="submit"  id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</button>';
-		document.getElementById("cart-items").innerHTML += '<button type="reset"  id="clear" name="clear" class="btn btn-primary pull-right">Clear</button>';
-		document.getElementById("cart-items").innerHTML += '<hr>';
+		document.getElementById("cart-preview").innerHTML = '';
+		document.getElementById("cart-preview").innerHTML += '<button type="submit"  id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</button>';
+		document.getElementById("cart-preview").innerHTML += '<button type="reset"  id="clear" name="clear" class="btn btn-primary pull-right">Clear</button>';
+		document.getElementById("cart-preview").innerHTML += '<hr>';
 		for(var cartItem of localCart) {
-			document.getElementById("cart-items").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
+			document.getElementById("cart-preview").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
 		}
 	}
@@ -132,17 +132,23 @@ function reloadCart() {
 $(document).ready(function() {
 
 	$('#cart_control').submit(function () {
+		localStorage.removeItem('cart'));
+		reloadCart();
+		return false;		
+	});
+	
+	$('#cart_control').submit(function () {
 
 		if(true) {
 
 			// No user found - update local cart only
 			var localCart = JSON.parse(localStorage.getItem('cart'));
-			alert("Check");
-			if(!localCart || localCart.length == 0) {
-				localCart = [];
+			var timestamp;
+			if(!localCart || !localCart.items || localCart.items.length == 0) {
+			    timestamp = new Date().getTime().toString();
+				localCart = {id: timestamp.split("").reverse().join(""), items: []};
 			}
-			alert("Check");
-		    var timestamp = new Date().getTime().toString();
+		    timestamp = new Date().getTime().toString();
 		    var newCartItem = {
 				id: timestamp.split("").reverse().join(""),
 				productId: document.getElementById('productId').value,
