@@ -143,42 +143,28 @@ $(document).ready(function() {
 	$('#cart_control').submit(function () {
 
 		if(true) {
-			alert('check');
 			// No user found - update local cart only
 			var localCart = JSON.parse(localStorage.getItem('cart'));
-			alert('check');
 			var timestamp;
 			if(!localCart || !localCart.items || localCart.items.length == 0) {
 			    timestamp = new Date().getTime().toString();
 				localCart = {id: timestamp.split("").reverse().join(""), items: []};
 			}
-			alert('check');
 		    timestamp = new Date().getTime().toString();
-			alert('check');
 		    var newCartItem = {
-					alert('check');
 				id: timestamp.split("").reverse().join(""),
-				alert('check');
 				productId: document.getElementById('productId').value,
-				alert('check');
 				productName: document.getElementById('productName').value, 
-				alert('check');
 				quantity: document.getElementById('productQuantity').value,
-				alert('check');
-				color: (document.getElementById('productColor')) ? document.getElementById('color').value : undefined,
-						alert('check');
-				size: (document.getElementById('productSize')) ? document.getElementById('size').value : undefined,
+				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : undefined,
+				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : undefined,
 				cost: document.getElementById('productPrice').value,
 				created: timestamp,
 				lastUpdated: timestamp
 		    }
-			alert('check');
 			localCart.push(newCartItem);
-			alert("Check");
 			localStorage.setItem('cart', JSON.stringify(localCart));
-			alert("Check");
 			console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
-			alert("Check");
 		} else {
 
 			var cartId = 0;
