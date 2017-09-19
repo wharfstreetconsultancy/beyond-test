@@ -143,14 +143,16 @@ $(document).ready(function() {
 	$('#cart_control').submit(function () {
 
 		if(true) {
-
+			alert('check');
 			// No user found - update local cart only
 			var localCart = JSON.parse(localStorage.getItem('cart'));
+			alert('check');
 			var timestamp;
 			if(!localCart || !localCart.items || localCart.items.length == 0) {
 			    timestamp = new Date().getTime().toString();
 				localCart = {id: timestamp.split("").reverse().join(""), items: []};
 			}
+			alert('check');
 		    timestamp = new Date().getTime().toString();
 		    var newCartItem = {
 				id: timestamp.split("").reverse().join(""),
