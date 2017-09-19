@@ -154,17 +154,25 @@ $(document).ready(function() {
 			}
 			alert('check');
 		    timestamp = new Date().getTime().toString();
+			alert('check');
 		    var newCartItem = {
+					alert('check');
 				id: timestamp.split("").reverse().join(""),
+				alert('check');
 				productId: document.getElementById('productId').value,
+				alert('check');
 				productName: document.getElementById('productName').value, 
+				alert('check');
 				quantity: document.getElementById('productQuantity').value,
+				alert('check');
 				color: (document.getElementById('productColor')) ? document.getElementById('color').value : undefined,
+						alert('check');
 				size: (document.getElementById('productSize')) ? document.getElementById('size').value : undefined,
 				cost: document.getElementById('productPrice').value,
 				created: timestamp,
 				lastUpdated: timestamp
 		    }
+			alert('check');
 			localCart.push(newCartItem);
 			alert("Check");
 			localStorage.setItem('cart', JSON.stringify(localCart));
