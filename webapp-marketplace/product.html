@@ -136,11 +136,15 @@ $(document).ready(function() {
 
 			// No user found - update local cart only
 			var localCart = JSON.parse(localStorage.getItem('cart'));
+			alert("Check");
 			if(!localCart || localCart.length == 0) {
 				localCart = [];
 			}
+			alert("Check");
 			localCart.push(newCartItem);
+			alert("Check");
 			localStorage.setItem('cart', JSON.stringify(localCart));
+			alert("Check");
 			console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
 			alert("Check");
 		} else {
