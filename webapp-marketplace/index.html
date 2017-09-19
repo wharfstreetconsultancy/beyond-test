@@ -122,6 +122,9 @@ function reloadCart() {
 		document.getElementById("cart-items").innerHTML = '<p>Cart is empty</p>';
 	} else {
 		document.getElementById("cart-items").innerHTML = '';
+		document.getElementById("cart-items").innerHTML += '<button id="checkout" name="checkout" class="btn btn-primary pull-left" value="Checkout"/>';'
+		document.getElementById("cart-items").innerHTML += '<button id="clear" name="clear" class="btn btn-primary pull-right" value="Clear"/>';
+		document.getElementById("cart-items").innerHTML += '<hr>';
 		for(var cartItem of localCart) {
 			document.getElementById("cart-items").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
