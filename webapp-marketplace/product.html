@@ -132,6 +132,7 @@ function reloadCart() {
 $(document).ready(function() {
 
 	$('#cart_preview').submit(function () {
+		alert("Trying");
 		alert(localStorage.getItem('cart'));
 		localStorage.removeItem('cart');
 		alert(localStorage.getItem('cart'));
