@@ -134,7 +134,8 @@ $(document).ready(function() {
 	$('#cart_preview').submit(function () {
 		alert(localStorage.getItem('cart'));
 		localStorage.removeItem('cart');
-		reloadCart(localStorage.getItem('cart'));
+		alert(localStorage.getItem('cart'));
+		reloadCart();
 		return false;		
 	});
 	
