@@ -118,7 +118,7 @@ function reloadCart() {
 		document.getElementById("cart-items").innerHTML = '<p>Cart is empty</p>';
 	} else {
 		document.getElementById("cart-items").innerHTML = '';
-		document.getElementById("cart-items").innerHTML += '<button id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</button>';'
+		document.getElementById("cart-items").innerHTML += '<button id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</button>';
 		document.getElementById("cart-items").innerHTML += '<button id="clear" name="clear" class="btn btn-primary pull-right">Clear</button>';
 		document.getElementById("cart-items").innerHTML += '<hr>';
 		for(var cartItem of localCart) {
