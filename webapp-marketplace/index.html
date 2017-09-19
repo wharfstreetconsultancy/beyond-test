@@ -44,7 +44,7 @@
   				<li><a href="contact.html">Contact</a></li>
             	<li>
            			<a id="navbarDropdownMenuLink" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
-           			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><form id="cart-items" class="form-inline"></form></div>
+           			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><form id="cart-items" class="form-inline"><input type="submit" id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</input></form></div>
             	</li>
   			  </ul>
   			</div>
@@ -121,7 +121,7 @@ function reloadCart() {
 	if(!localCart || localCart.length == 0) { 
 		document.getElementById("cart-items").innerHTML = '<p>Cart is empty</p>';
 	} else {
-		document.getElementById("cart-items").innerHTML = '';
+		//document.getElementById("cart-items").innerHTML = '';
 		document.getElementById("cart-items").innerHTML += '<input type="submit" id="checkout" name="checkout" class="btn btn-primary pull-left">Checkout</input>';
 		document.getElementById("cart-items").innerHTML += '<input type="reset" id="clear" name="clear" class="btn btn-primary pull-right">Clear</input>';
 		document.getElementById("cart-items").innerHTML += '<hr>';
