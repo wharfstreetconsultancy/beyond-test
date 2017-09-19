@@ -131,7 +131,7 @@ function reloadCart() {
 
 $(document).ready(function() {
 
-	$('#cart_preview').submit(function () {
+	$('#cart_preview').reset(function () {
 		alert("Trying");
 		alert(localStorage.getItem('cart'));
 		localStorage.removeItem('cart');
