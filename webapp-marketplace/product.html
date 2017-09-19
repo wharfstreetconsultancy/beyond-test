@@ -127,6 +127,7 @@ function reloadCart() {
 			console.log("Current cart item: "+JSON.stringify(cartItem));
 		}
 	}
+	document.getElementById("cart_preview_nav").click();
 }
 
 $(document).ready(function() {
@@ -189,7 +190,6 @@ $(document).ready(function() {
 			});
 		}
 		reloadCart();
-		document.getElementById("cart_preview_nav").click();
 		return false;		
 	});
 });
