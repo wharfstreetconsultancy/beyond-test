@@ -10,6 +10,8 @@ var replaceStream = require('replacestream')
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+var passport = require('passport');
+var CognitoStrategy = require('passport-cognito');
 
 //
 // Manage HTTP server container
@@ -27,11 +29,22 @@ var options = {
 	key: key,
 	cert: cert
 };
+
+passport.use(new CognitoStrategy({
+	userPoolId: '',
+	clientId: '',
+	region: process.env.AWS_REGION
+}),
+function (accessToken, idToken, refreshToken, user, cb) {
+    process.nextTick(function() {
+    	cb(null, user);
+    });
+});
+
 var securePort = process.env.SECURE_PORT;
 var restPort = process.env.REST_PORT;
 var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
 var restDomain = restHost+':'+restPort;
-var cartCookieName = 'suroor-cart-id';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
@@ -122,15 +135,15 @@ app.get('/product', function (req, res) {
 			// Check that only one product found
 			if((product) && !Array.isArray(product)) {
 	
-				// Check if cart exists
-				var cartId = 0;
-				if(req.cookies) {
-					if(req.cookies.cartCookieName) {
-						
-						cartId = req.cookies.cartCookieName;				
-					}
-				}
-				console.log("Derived cart id: "+cartId);
+				// Get cart id
+//				var cartId = 0;
+//				req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
+//					var parts = cookie.split('=');
+//					if(parts[0] == 'connect.sid') {
+//						cartId = parts[1];
+//					}
+//				});
+//				console.log("Derived cart id: "+cartId);
 	
 		        // Format product into appropriate HTML
 		        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
@@ -171,6 +184,27 @@ app.get('/product', function (req, res) {
 });
 
 //
+// GET '/cart' - View cart page
+app.get('/cart', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: GET /cart" );
+
+	// Load cart from REST API
+	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
+
+		if(cartLoadErrorMessage) {
+			
+			// Log error and continue
+			console.log(cartLoadErrorMessage);
+		} else {
+			
+		}
+		
+	});
+
+});
+//
 // Load existing product from data source
 function loadExistingProducts(req, res, callback) {
 
@@ -206,13 +240,15 @@ function loadExistingProducts(req, res, callback) {
 // Load existing cart from data source
 function loadExistingCart(req, res, callback) {
 
+	// Get cart id
 	var cartId = 0;
 	req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
 		var parts = cookie.split('=');
-		if(parts[0] == cartCookieName) {
+		if(parts[0] == 'connect.sid') {
 			cartId = parts[1];
 		}
 	});
+	console.log("Derived cart id: "+cartId);
 
 	request.get({url:'https://'+restDomain+'/cart/'+cartId, agent: agent}, function (cartLoadError, cartLoadResponse, cartLoadBody) {
 		

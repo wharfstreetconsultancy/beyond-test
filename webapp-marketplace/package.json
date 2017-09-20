@@ -15,6 +15,8 @@
 		"replacestream": "~4.0.2",
 		"aws-sdk": "~2.100.0",
 		"dynamodb-data-types": "~3.0.0",
+		"passport": "*",
+		"passport-cognito": "*",
 		"request": "~2.81.0"
 	}
 }
