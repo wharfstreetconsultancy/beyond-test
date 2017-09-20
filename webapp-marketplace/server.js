@@ -124,12 +124,12 @@ app.get('/', function (req, res) {
 	});
 });
 
-//passport.authenticate('cognito', {
-//successRedirect: '/',
-//failureRedirect: '/login'
-//}), 
+//
 // GET '/login' - Authenticate user
-app.post('/login', function (req, res) {
+app.post('/login', passport.authenticate('cognito', {
+		successRedirect: '/success.html',
+		failureRedirect: '/failure.html'
+	}), function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 	res.end();
