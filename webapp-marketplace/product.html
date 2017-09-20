@@ -44,7 +44,7 @@
   				<li><a href="contact.html">Contact</a></li>
             	<li>
            			<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Sign-In</a>
-           			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="user" class="form-inline" action="/login" method="post"></form></div>
+           			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="login" class="form-inline" action="/login" method="post"></form></div>
             	</li>
             	<li>
            			<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
@@ -122,23 +122,23 @@ function reloadAllPanels() {
 }
 
 function reloadUser() {
-	var localUser = JSON.parse(localStorage.getItem('user'));
+	var localUser = JSON.parse(localStorage.getItem('login'));
 	console.log("Current user: "+JSON.stringify(localUser));
 	if(!localUser || !localUser.isAuthenticated()) {
-		document.getElementById("user").innerHTML += '<div class="row">';
-//		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">User:</div>&nbsp;<div class="col-sm-4"><input id="user_name" name="user_name" type="text"/></div>';
-		document.getElementById("user").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
-		document.getElementById("user").innerHTML += '</div>';
-		document.getElementById("user").innerHTML += '<div class="row">';
-//		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">Password:</div>&nbsp;<div class="col-sm-4"><input id="password" name="password" type="password"/></div>';
-		document.getElementById("user").innerHTML += '<div class="col-lg-10"><input id="password" name="password" type="password" placeholder="Password"/></div>';
-		document.getElementById("user").innerHTML += '</div>';
-		document.getElementById("user").innerHTML += '<div class="row">';
-		document.getElementById("user").innerHTML += '<div class="col-lg-10"><button id="login" type="submit" class="btn btn-primary btn-block">Sign In</button></div>';
-		document.getElementById("user").innerHTML += '</div>';
+		document.getElementById("login").innerHTML += '<div class="row">';
+//		document.getElementById("login").innerHTML += '<div class="col-sm-4 col-sm-offset-1">User:</div>&nbsp;<div class="col-sm-4"><input id="user_name" name="user_name" type="text"/></div>';
+		document.getElementById("login").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
+		document.getElementById("login").innerHTML += '</div>';
+		document.getElementById("login").innerHTML += '<div class="row">';
+//		document.getElementById("login").innerHTML += '<div class="col-sm-4 col-sm-offset-1">Password:</div>&nbsp;<div class="col-sm-4"><input id="password" name="password" type="password"/></div>';
+		document.getElementById("login").innerHTML += '<div class="col-lg-10"><input id="password" name="password" type="password" placeholder="Password"/></div>';
+		document.getElementById("login").innerHTML += '</div>';
+		document.getElementById("login").innerHTML += '<div class="row">';
+		document.getElementById("login").innerHTML += '<div class="col-lg-10"><button id="login" type="submit" class="btn btn-primary btn-block">Sign In</button></div>';
+		document.getElementById("login").innerHTML += '</div>';
 	} else {
-		document.getElementById("user").innerHTML += '<div class="row">User: Username</div>';
-		document.getElementById("user").innerHTML += '<div class="row"><a href="/signout">Signout</a></div>';
+		document.getElementById("login").innerHTML += '<div class="row">User: Username</div>';
+		document.getElementById("login").innerHTML += '<div class="row"><a href="/signout">Signout</a></div>';
 	}
 }
 
@@ -166,6 +166,12 @@ $(document).ready(function() {
 		reloadCart();
 		document.getElementById("cart_preview_nav").click();
 		return false;		
+	});
+	
+	$('#cart_control').submit(function () {
+		alert("Username: "+document.getElementById('username').value);
+		alert("Password: "+document.getElementById('password').value);
+		return false;
 	});
 	
 	$('#cart_control').submit(function () {
