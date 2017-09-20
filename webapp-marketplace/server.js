@@ -34,13 +34,13 @@ passport.use(new CognitoStrategy({
 		userPoolId: '',
 		clientId: '',
 		region: process.env.AWS_REGION
-	}),
+	},
 	function (accessToken, idToken, refreshToken, user, callback) {
 	    process.nextTick(function () {
 	    	callback(null, user);
 	    });
 	}
-);
+));
 
 var securePort = process.env.SECURE_PORT;
 var restPort = process.env.REST_PORT;
