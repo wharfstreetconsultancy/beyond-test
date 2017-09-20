@@ -171,6 +171,16 @@ $(document).ready(function() {
 	$('#login').submit(function () {
 		alert("Username: "+document.getElementById('username').value);
 		alert("Password: "+document.getElementById('password').value);
+		$(this).ajaxSubmit({
+			error: function (xhr) {
+				$('#status').empty().text('Login error: '+xhr.status);
+				console.log("Login error: "+xhr.status);
+			},
+			success: function (response) {
+				$('#status').empty().text('Login success');
+				console.log("Login success: "+JSON.stringify(response));
+			}
+		});
 		return false;
 	});
 	
