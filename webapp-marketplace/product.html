@@ -126,10 +126,10 @@ function reloadUser() {
 	console.log("Current user: "+JSON.stringify(localUser));
 	if(!localUser || !localUser.isAuthenticated()) {
 		document.getElementById("user").innerHTML += '<div class="row">';
-		document.getElementById("user").innerHTML += '<div class="col-lg-4 col-lg-offset-1">User:</div>&nbsp;<div class="col-lg-4"><input id="user_name" name="user_name" type="text"/></div>';
+		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">User:</div>&nbsp;<div class="col-sm-4"><input id="user_name" name="user_name" type="text"/></div>';
 		document.getElementById("user").innerHTML += '</div>';
 		document.getElementById("user").innerHTML += '<div class="row">';
-		document.getElementById("user").innerHTML += '<div class="col-lg-4 col-lg-offset-1">Password:</div>&nbsp;<div class="col-lg-4"><input id="password" name="password" type="password"/></div>';
+		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">Password:</div>&nbsp;<div class="col-sm-4"><input id="password" name="password" type="password"/></div>';
 		document.getElementById("user").innerHTML += '</div>';
 	} else {
 		document.getElementById("user").innerHTML += '<div class="row">User: Username</div>';
