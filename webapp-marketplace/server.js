@@ -12,7 +12,6 @@ var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var passport = require('passport');
 var CognitoStrategy = require('passport-cognito');
-var auth = require('./auth');
 
 //
 // Manage HTTP server container
