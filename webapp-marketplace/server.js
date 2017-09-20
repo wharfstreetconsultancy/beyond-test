@@ -31,12 +31,16 @@ var options = {
 };
 
 passport.use(new CognitoStrategy({
-		userPoolId: '',
-		clientId: '',
+		userPoolId: 'us-west-2_jnmkbOGZY',
+		clientId: '5n6r6t7n27lbac6bmtsdqoottl',
 		region: process.env.AWS_REGION
 	},
 	function (accessToken, idToken, refreshToken, user, callback) {
 	    process.nextTick(function () {
+	    	console.log("Access token: "+JSON.stringify(accessToken));
+	    	console.log("ID token: "+JSON.stringify(idToken));
+	    	console.log("Refresh token: "+JSON.stringify(refreshToken));
+	    	console.log("User: "+JSON.stringify(user));
 	    	callback(null, user);
 	    });
 	}
@@ -113,6 +117,13 @@ app.get('/', function (req, res) {
 		});
 	});
 });
+
+//
+// GET '/login' - Authenticate user
+app.post('/login', passport.authenticate('cognito', {
+	successRedirect: '/',
+	failureRedirect: '/login'
+}));
 
 //
 // GET '/product' - View product page
