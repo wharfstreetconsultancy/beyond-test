@@ -42,12 +42,16 @@ passport.use(new CognitoStrategy({
 		region: process.env.AWS_REGION
 	},
 	function (accessToken, idToken, refreshToken, user, callback) {
-	    process.nextTick(function () {
-	    	console.log("Access token: "+JSON.stringify(accessToken));
-	    	console.log("ID token: "+JSON.stringify(idToken));
-	    	console.log("Refresh token: "+JSON.stringify(refreshToken));
-	    	console.log("User: "+JSON.stringify(user));
-	    	callback(null, user);
+    	console.log("Access token: "+JSON.stringify(accessToken));
+    	console.log("ID token: "+JSON.stringify(idToken));
+    	console.log("Refresh token: "+JSON.stringify(refreshToken));
+    	console.log("User: "+JSON.stringify(user));
+	    process.nextTick(function (err) {
+	    	if(err) {
+	    		return done(null, false, { message: err });
+	    	} else {
+	    		return callback(null, user);
+	    	}
 	    });
 	}
 ));
