@@ -44,11 +44,11 @@
   				<li><a href="contact.html">Contact</a></li>
             	<li>
            			<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> User</a>
-           			<div class="dropdown-menu" aria-labelledby="user_nav"><form id="user" class="form-inline"></form></div>
+           			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="user" class="form-inline"></form></div>
             	</li>
             	<li>
-           			<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
-           			<div class="dropdown-menu" aria-labelledby="cart_preview_nav"><form id="cart_preview" class="form-inline"></form></div>
+           			<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart badge" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
+           			<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" class="form-inline"></form></div>
             	</li>
   			  </ul>
   			</div>
@@ -126,10 +126,15 @@ function reloadUser() {
 	console.log("Current user: "+JSON.stringify(localUser));
 	if(!localUser || !localUser.isAuthenticated()) {
 		document.getElementById("user").innerHTML += '<div class="row">';
-		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">User:</div>&nbsp;<div class="col-sm-4"><input id="user_name" name="user_name" type="text"/></div>';
+//		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">User:</div>&nbsp;<div class="col-sm-4"><input id="user_name" name="user_name" type="text"/></div>';
+		document.getElementById("user").innerHTML += '<div class="col-lg-10 col-sm-offset-1"><input id="user_name" name="user_name" type="text" placeholder="Username"/></div>';
 		document.getElementById("user").innerHTML += '</div>';
 		document.getElementById("user").innerHTML += '<div class="row">';
-		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">Password:</div>&nbsp;<div class="col-sm-4"><input id="password" name="password" type="password"/></div>';
+//		document.getElementById("user").innerHTML += '<div class="col-sm-4 col-sm-offset-1">Password:</div>&nbsp;<div class="col-sm-4"><input id="password" name="password" type="password"/></div>';
+		document.getElementById("user").innerHTML += '<div class="col-lg-10 col-sm-offset-1"><input id="password" name="password" type="password" placeholder="Password"/></div>';
+		document.getElementById("user").innerHTML += '</div>';
+		document.getElementById("user").innerHTML += '<div class="row">';
+		document.getElementById("user").innerHTML += '<div class="col-lg-10 col-sm-offset-1"><a id="login" href="/login" class="btn btn-primary">Login</a></div>';
 		document.getElementById("user").innerHTML += '</div>';
 	} else {
 		document.getElementById("user").innerHTML += '<div class="row">User: Username</div>';
