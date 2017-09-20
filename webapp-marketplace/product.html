@@ -125,17 +125,17 @@ function reloadUser() {
 	var localUser = JSON.parse(localStorage.getItem('user'));
 	console.log("Current user: "+JSON.stringify(localUser));
 	if(!localUser || !localUser.isAuthenticated()) {
-		document.getElementById("user").innerHTML = '<div class="container">';
-		document.getElementById("user").innerHTML = '<div class="row">';
-		document.getElementById("user").innerHTML = '<div class="col-lg-8 col-lg-offset-2">User: <input id="user_name" name="user_name" type="text"/></div>';
-		document.getElementById("user").innerHTML = '</div>';
-		document.getElementById("user").innerHTML = '<div class="row">';
-		document.getElementById("user").innerHTML = '<div class="col-lg-8 col-lg-offset-2">Password: <input id="password" name="password" type="password"/></div>';
-		document.getElementById("user").innerHTML = '</div>';
-		document.getElementById("user").innerHTML = '</div>';
+		document.getElementById("user").innerHTML += '<div class="container">';
+		document.getElementById("user").innerHTML += '<div class="row">';
+		document.getElementById("user").innerHTML += '<div class="col-lg-8 col-lg-offset-2">User:&nbsp;<input id="user_name" name="user_name" type="text"/></div>';
+		document.getElementById("user").innerHTML += '</div>';
+		document.getElementById("user").innerHTML += '<div class="row">';
+		document.getElementById("user").innerHTML += '<div class="col-lg-8 col-lg-offset-2">Password:&nbsp;<input id="password" name="password" type="password"/></div>';
+		document.getElementById("user").innerHTML += '</div>';
+		document.getElementById("user").innerHTML += '</div>';
 	} else {
-		document.getElementById("user").innerHTML = '<div class="row">User: Username</div>';
-		document.getElementById("user").innerHTML = '<div class="row"><a href="/signout">Signout</a></div>';
+		document.getElementById("user").innerHTML += '<div class="row">User: Username</div>';
+		document.getElementById("user").innerHTML += '<div class="row"><a href="/signout">Signout</a></div>';
 	}
 }
 
