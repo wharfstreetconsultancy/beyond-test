@@ -7,6 +7,7 @@ var https = require('https');
 var request = require('request');
 var fs = require('fs');
 var replaceStream = require('replacestream')
+var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -17,6 +18,8 @@ var CognitoStrategy = require('passport-cognito');
 // Manage HTTP server container
 var app = express();
 app.use(express.static('assets'));
+app.use(bodyParser.json({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: 'keyboard cat named leon',
 	resave: false,
