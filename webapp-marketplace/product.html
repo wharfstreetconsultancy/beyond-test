@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
   </head>
-  <body onload="reloadCart()">
+  <body onload="reloadAllPanels()">
     <!------------------------------ Header --------------------------->
     <!--This is the Header Content-->
   	<div class="container-fluid">
@@ -42,6 +42,10 @@
 				<li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
   				<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
   				<li><a href="contact.html">Contact</a></li>
+            	<li>
+           			<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> User</a>
+           			<div class="dropdown-menu" aria-labelledby="user_nav"><form id="user" class="form-inline"></form></div>
+            	</li>
             	<li>
            			<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
            			<div class="dropdown-menu" aria-labelledby="cart_preview_nav"><form id="cart_preview" class="form-inline"></form></div>
@@ -112,6 +116,23 @@ var restDomain = {rest.domain};
 // var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
+function reloadAll() {
+	reloadUser();
+	reloadCart();
+}
+
+function reloadUser() {
+	var localUser = JSON.parse(localStorage.getItem('user'));
+	console.log("Current user: "+JSON.stringify(localUser));
+	if(!localUser || !localUser.isAuthenticated()) {
+		document.getElementById("user").innerHTML = '<div class="row">User: <input id="user_name" name="user_name" type="text"/></div>';
+		document.getElementById("user").innerHTML = '<div class="row">Password: <input id="password" name="password" type="text"/></div>';
+	} else {
+		document.getElementById("user").innerHTML = '<div class="row">User: Username</div>';
+		document.getElementById("user").innerHTML = '<div class="row"><a href="/signout">Signout</a></div>';
+	}
+}
+
 function reloadCart() {
 	var localCart = JSON.parse(localStorage.getItem('cart'));
 	console.log("Current cart: "+JSON.stringify(localCart));
@@ -119,7 +140,6 @@ function reloadCart() {
 		document.getElementById("cart_preview").innerHTML = '<p>Cart is empty</p>';
 	} else {
 		document.getElementById("cart_preview").innerHTML = '';
-//		document.getElementById("cart_preview").innerHTML += '<button type="submit" id="checkout" name="checkout" form="cart_preview" class="btn btn-primary pull-left">Checkout</button>';
 		document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
 		document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
 		document.getElementById("cart_preview").innerHTML += '<hr>';
