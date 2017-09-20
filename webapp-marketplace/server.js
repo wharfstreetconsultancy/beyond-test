@@ -126,10 +126,12 @@ app.get('/', function (req, res) {
 
 //
 // GET '/login' - Authenticate user
-app.post('/login', passport.authenticate('cognito', {
-		successRedirect: '/success.html',
-		failureRedirect: '/failure.html'
-	}), function (req, res) {
+//app.post('/login', passport.authenticate('cognito', {
+//		successRedirect: '/success.html',
+//		failureRedirect: '/failure.html'
+//	}), function (req, res) {
+
+app.post('/login', passport.authenticate('cognito'), function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 	res.end();
