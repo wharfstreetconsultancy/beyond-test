@@ -123,7 +123,7 @@ app.get('/', function (req, res) {
 
 //
 // GET '/login' - Authenticate user
-app.post('/login', auth.authenticate('cognito', {
+app.post('/login', passport.authenticate('cognito', {
 	successRedirect: '/',
 	failureRedirect: '/login'
 }));
