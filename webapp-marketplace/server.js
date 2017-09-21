@@ -145,8 +145,8 @@ app.get('/', function (req, res) {
 app.post('/login', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
-	var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
-	var attributePhoneNumber = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
+	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
+	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
 	userPool.signUp(req.body.username, req.body.password, [attributeEmail, attributePhoneNumber], null, function(err, result){
         if (err) {
             alert(err);
