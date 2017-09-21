@@ -145,11 +145,11 @@ app.post('/login', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 	console.log("Phone number: "+req.body.phone_number);
-	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
-	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
-	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'});
-	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'});
-	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'});
+//	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
+//	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
+//	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'});
+//	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'});
+//	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'});
 
 
 
