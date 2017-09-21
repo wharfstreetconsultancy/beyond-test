@@ -159,9 +159,9 @@ function reloadUser() {
 
 function toggleSignupSigninForm() {
 
-	var toggle = document.getElementById("signup_signin_choice");
-	alert("Toggle value: "+toggle);
-	if(toggle && toggle.value == 'signin') {
+	var signin = document.getElementById("signin");
+	alert("Toggle value: "+signin);
+	if(signin && signin.checked == 'true') {
 		document.getElementById("phone_number_entry").display = 'none';
 		document.getElementById("given_name_entry").display = 'none';
 		document.getElementById("family_name_entry").display = 'none';
@@ -202,8 +202,9 @@ $(document).ready(function() {
 		document.getElementById("cart_preview_nav").click();
 		return false;		
 	});
-	$('#identity').on('click', '#signup_signin_choice', function () {
-		alert("Toggle choice: "+document.getElementById("signup_signin_choice").value);
+	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
+		alert("Toggle choice: "+document.getElementByName("signup_signin_choice"));
+		alert("Toggle choice: "+document.getElementByName("signup_signin_choice").value);
 		toggleSignupSigninForm();
 		return true;
 	});
