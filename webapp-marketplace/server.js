@@ -30,8 +30,8 @@ app.use(session({
 	saveUninitialized: true,
 	cookie: {secure: true}
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 var key = fs.readFileSync('certs/domain.key');
 var cert = fs.readFileSync('certs/domain.crt');
