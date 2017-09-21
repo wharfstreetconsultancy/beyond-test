@@ -13,11 +13,11 @@ var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 // var passport = require('passport');
 // var CognitoStrategy = require('passport-cognito');
+var AWSCognito = new AWSCognito.CognitoIdentity({apiVersion: '2014-06-30', region: 'us-west-2'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
-AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
-AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
-var cognito = new AWS.CognitoIdentity({apiVersion: '2014-06-30', region: 'us-west-2'});
-var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : '5n6r6t7n27lbac6bmtsdqoottl'});
+AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
+var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : '5n6r6t7n27lbac6bmtsdqoottl'});
 
 //
 // Manage HTTP server container
@@ -146,16 +146,16 @@ app.post('/login', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 	console.log("Phone number: "+req.body.phone_number);
-//	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
-//	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
-//	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'});
-//	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'});
-//	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'});
-	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'email': req.body.username});
-	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'phone_number': req.body.phone_number});
-	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'address': 'dummy address'});
-	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'given_name': 'dummy given name'});
-	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'family_name': 'dummy family name'});
+	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
+	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
+	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'});
+	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'});
+	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'});
+//	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'email': req.body.username});
+//	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'phone_number': req.body.phone_number});
+//	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'address': 'dummy address'});
+//	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'given_name': 'dummy given name'});
+//	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'family_name': 'dummy family name'});
 	userPool.signUp(req.body.username, req.body.password, [attributeEmail, attributePhoneNumber, attributeAddress, attributeGivenName, attributeFamilyName], null, function(err, result){
         if (err) {
             console.log("Error found: "+err);
