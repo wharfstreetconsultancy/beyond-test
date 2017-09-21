@@ -11,8 +11,10 @@ var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-var passport = require('passport');
-var CognitoStrategy = require('passport-cognito');
+// var passport = require('passport');
+// var CognitoStrategy = require('passport-cognito');
+var cognito = new AWS.CognitoIdentity({apiVersion: '2014-06-30', region: 'us-west-2'});
+var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : '5n6r6t7n27lbac6bmtsdqoottl'});
 
 //
 // Manage HTTP server container
@@ -36,6 +38,7 @@ var options = {
 	cert: cert
 };
 
+/*
 passport.use(new CognitoStrategy({
 		userPoolId: 'us-west-2_jnmkbOGZY',
 		clientId: '5n6r6t7n27lbac6bmtsdqoottl',
@@ -55,6 +58,7 @@ passport.use(new CognitoStrategy({
 	    });
 	}
 ));
+*/
 
 var securePort = process.env.SECURE_PORT;
 var restPort = process.env.REST_PORT;
@@ -135,9 +139,19 @@ app.get('/', function (req, res) {
 //		failureRedirect: '/failure.html'
 //	}), function (req, res) {
 
-app.post('/login', passport.authenticate('cognito'), function (req, res) {
+app.post('/login', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
+	var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
+	var attributePhoneNumber = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
+	userPool.signUp(req.body.username, req.body.password, [attributeEmail, attributePhoneNumber], null, function(err, result){
+        if (err) {
+            alert(err);
+            return;
+        }
+        cognitoUser = result.user;
+        console.log('user name is ' + cognitoUser.getUsername());
+    });
 	res.end();
 });
 
