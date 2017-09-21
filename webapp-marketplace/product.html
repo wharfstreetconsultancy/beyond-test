@@ -160,7 +160,7 @@ function reloadUser() {
 function toggleSignupSigninForm() {
 
 	var toggle = document.getElementById("signup_signin_choice");
-	alert("Toggle value: "+toggle.value);
+	alert("Toggle value: "+toggle);
 	if(toggle && toggle.value == 'signin') {
 		document.getElementById("phone_number_entry").display = 'none';
 		document.getElementById("given_name_entry").display = 'none';
@@ -203,8 +203,9 @@ $(document).ready(function() {
 		return false;		
 	});
 	$('#identity').on('click', '#signup_signin_choice', function () {
-		alert("Toggle choice: "+document.getElementById("signup_signin_choice"));
+		alert("Toggle choice: "+document.getElementById("signup_signin_choice").value);
 		toggleSignupSigninForm();
+		return true;
 	});
 /*	
 	$('#identity').submit(function () {
