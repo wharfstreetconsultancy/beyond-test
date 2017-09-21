@@ -157,7 +157,7 @@ app.post('/login', function (req, res) {
 				ClientId: 'm1f0r4q7uqgr9vd0qbqouspha',
 				Password: req.body.password,
 				Username: req.body.username,
-				SecretHash: 'STRING_VALUE',
+//				SecretHash: 'STRING_VALUE',
 				UserAttributes: [
 					{Name: 'phone_number', Value: req.body.phone_number},
 					{Name: 'address', Value: 'dummy address'},
