@@ -11,13 +11,11 @@ var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-// var passport = require('passport');
-// var CognitoStrategy = require('passport-cognito');
-var AWSCognito = new AWSCognito.CognitoIdentity({apiVersion: '2014-06-30', region: 'us-west-2'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
-AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+//AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
 AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
-var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : '5n6r6t7n27lbac6bmtsdqoottl'});
+var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'});
 
 //
 // Manage HTTP server container
