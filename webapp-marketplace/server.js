@@ -149,7 +149,7 @@ app.post('/login', function (req, res) {
 	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
 	userPool.signUp(req.body.username, req.body.password, [attributeEmail, attributePhoneNumber], null, function(err, result){
         if (err) {
-            alert(err);
+            console.log("Error found: "+err);
             return;
         }
         cognitoUser = result.user;
