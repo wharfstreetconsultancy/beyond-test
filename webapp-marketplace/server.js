@@ -14,8 +14,8 @@ var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 //AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
-AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
-var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'});
+AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
+var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'});
 
 //
 // Manage HTTP server container
