@@ -11,11 +11,12 @@ var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-var CognitoSDK = require('amazon-cognito-identity-js-node');
-AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
-//AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
-AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
-var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'});
+var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
+// var CognitoSDK = require('amazon-cognito-identity-js-node');
+// AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+// AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
+// AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
+// var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'});
 
 //
 // Manage HTTP server container
@@ -149,11 +150,27 @@ app.post('/login', function (req, res) {
 	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'});
 	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'});
 	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'});
-//	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'email': req.body.username});
-//	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'phone_number': req.body.phone_number});
-//	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'address': 'dummy address'});
-//	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'given_name': 'dummy given name'});
-//	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'family_name': 'dummy family name'});
+
+
+
+	var params = {
+				ClientId: 'm1f0r4q7uqgr9vd0qbqouspha',
+				Password: req.body.password,
+				Username: req.body.username,
+				SecretHash: 'STRING_VALUE',
+				UserAttributes: [
+					{Name: 'phone_number', Value: req.body.phone_number},
+					{Name: 'address', Value: 'dummy address'},
+					{Name: 'given_name', Value: 'dummy given name'},
+					{Name: 'family_name', Value: 'dummy family name'}
+				],
+				ValidationData: []
+			};
+	cognitoidentityserviceprovider.signUp(params, function(err, data) {
+		if (err) {console.log(err, err.stack);}
+		else {console.log(data);}
+	});
+/*
 	userPool.signUp(req.body.username, req.body.password, [attributeEmail, attributePhoneNumber, attributeAddress, attributeGivenName, attributeFamilyName], null, function(err, result){
         if (err) {
             console.log("Error found: "+err);
@@ -163,6 +180,7 @@ app.post('/login', function (req, res) {
         console.log('user name is ' + cognitoUser.getUsername());
     });
 	res.end();
+*/
 });
 
 //
