@@ -203,8 +203,10 @@ $(document).ready(function() {
 		return false;		
 	});
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
-		alert("Toggle choice: "+document.getElementByName("signup_signin_choice"));
-		alert("Toggle choice: "+document.getElementByName("signup_signin_choice").value);
+		var signin = document.getElementById("signin");
+		alert("Signin checked: "+signin.checked);
+		var signup = document.getElementById("signup");
+		alert("Signup checked: "+signup.checked);
 		toggleSignupSigninForm();
 		return true;
 	});
