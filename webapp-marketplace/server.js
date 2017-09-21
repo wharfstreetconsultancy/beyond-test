@@ -15,6 +15,7 @@ var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 // var CognitoStrategy = require('passport-cognito');
 var CognitoSDK = require('amazon-cognito-identity-js-node');
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 var cognito = new AWS.CognitoIdentity({apiVersion: '2014-06-30', region: 'us-west-2'});
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : '5n6r6t7n27lbac6bmtsdqoottl'});
 
