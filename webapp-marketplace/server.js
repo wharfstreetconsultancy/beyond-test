@@ -145,13 +145,6 @@ app.post('/login', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 	console.log("Phone number: "+req.body.phone_number);
-//	var attributeEmail = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'email', Value: req.body.username});
-//	var attributePhoneNumber = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number});
-//	var attributeAddress = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'});
-//	var attributeGivenName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'});
-//	var attributeFamilyName = new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'});
-
-
 
 	var params = {
 				ClientId: 'm1f0r4q7uqgr9vd0qbqouspha',
@@ -167,20 +160,12 @@ app.post('/login', function (req, res) {
 				ValidationData: []
 			};
 	cognitoidentityserviceprovider.signUp(params, function(err, data) {
-		if (err) {console.log(err, err.stack);}
-		else {console.log(data);}
+		if (err) {
+			console.log("!ERROR! "+err);
+		} else {
+			console.log(data);
+		}
 	});
-/*
-	userPool.signUp(req.body.username, req.body.password, [attributeEmail, attributePhoneNumber, attributeAddress, attributeGivenName, attributeFamilyName], null, function(err, result){
-        if (err) {
-            console.log("Error found: "+err);
-            return;
-        }
-        cognitoUser = result.user;
-        console.log('user name is ' + cognitoUser.getUsername());
-    });
-	res.end();
-*/
 });
 
 //

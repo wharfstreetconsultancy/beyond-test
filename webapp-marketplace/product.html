@@ -44,7 +44,7 @@
   				<li><a href="contact.html">Contact</a></li>
             	<li>
            			<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Sign-In</a>
-           			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="login" class="form-inline" action="/login" method="post"></form></div>
+           			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div>
             	</li>
             	<li>
            			<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
@@ -117,41 +117,61 @@ var restDomain = {rest.domain};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
 function reloadAllPanels() {
+
 	reloadUser();
 	reloadCart();
 }
 
 function reloadUser() {
-	var localUser = JSON.parse(localStorage.getItem('login'));
+
+	var localUser = JSON.parse(localStorage.getItem('identity'));
 	console.log("Current user: "+JSON.stringify(localUser));
 	if(!localUser || !localUser.isAuthenticated()) {
-		document.getElementById("login").innerHTML += '<div class="row">';
-		document.getElementById("login").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
-		document.getElementById("login").innerHTML += '</div>';
-		document.getElementById("login").innerHTML += '<div class="row">';
-		document.getElementById("login").innerHTML += '<div class="col-lg-10"><input id="password" name="password" type="password" placeholder="Password"/></div>';
-		document.getElementById("login").innerHTML += '</div>';
-		document.getElementById("login").innerHTML += '<div class="row">';
-		document.getElementById("login").innerHTML += '<div class="col-lg-10"><input id="phone_number" name="phone_number" type="text" placeholder="Phone number"/></div>';
-		document.getElementById("login").innerHTML += '</div>';
-		document.getElementById("login").innerHTML += '<div class="row">';
-		document.getElementById("login").innerHTML += '<div class="col-lg-10"><button id="signup" type="submit" class="btn btn-primary btn-block">Sign In</button></div>';
-		document.getElementById("login").innerHTML += '</div>';
 
-/*
-		document.getElementById("login").innerHTML += '<div class="row">';
-		document.getElementById("login").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
-		document.getElementById("login").innerHTML += '</div>';
-		document.getElementById("login").innerHTML += '<div class="row">';
-		document.getElementById("login").innerHTML += '<div class="col-lg-10"><input id="password" name="password" type="password" placeholder="Password"/></div>';
-		document.getElementById("login").innerHTML += '</div>';
-		document.getElementById("login").innerHTML += '<div class="row">';
-		document.getElementById("login").innerHTML += '<div class="col-lg-10"><button id="login" type="submit" class="btn btn-primary btn-block">Sign In</button></div>';
-		document.getElementById("login").innerHTML += '</div>';
-*/
+		document.getElementById("identity").innerHTML += '<div class="row">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-5"><input id="signup" name="signup_signin_choice" type="radio" value="signup" chosen>Sign Up |</input></div><div class="col-lg-5"><input id="signin" name="signin" type="radio" value="signin" chosen>Sign In</input></div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<div class="row">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<div class="row">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="password" name="password" type="password" placeholder="Password"/></div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<div class="row" id="phone_number_entry">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="phone_number" name="phone_number" type="text" placeholder="Phone number"/></div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<div class="row" id="given_name_entry">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="given_name" name="given_name" type="text" placeholder="First name"/></div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<div class="row" id="family_name_entry">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="family_name" name="family_name" type="text" placeholder="Family name"/></div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<div class="row">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><button id="signup_signin_btn" type="submit" class="btn btn-primary btn-block"></button></div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		toggleSignupSigninForm();
 	} else {
-		document.getElementById("login").innerHTML += '<div class="row">User: Username</div>';
-		document.getElementById("login").innerHTML += '<div class="row"><a href="/signout">Signout</a></div>';
+
+		document.getElementById("identity").innerHTML += '<div class="row">User: Username</div>';
+		document.getElementById("identity").innerHTML += '<div class="row"><a href="/signout">Signout</a></div>';
+	}
+}
+
+function toggleSignupSigninForm() {
+
+	var toggle = document.getElementById("signup_signin_choice");
+	if(toggle && toggle.value == 'signin') {
+		document.getElementById("phone_number_entry").display = 'none';
+		document.getElementById("given_name_entry").display = 'none';
+		document.getElementById("family_name_entry").display = 'none';
+		document.getElementById("signup_signin_choice").innerHTML = 'Sign in';
+		document.getElementById("identity").action = '/signin';
+	} else {
+		document.getElementById("phone_number_entry").display = 'block';
+		document.getElementById("given_name_entry").display = 'block';
+		document.getElementById("family_name_entry").display = 'block';
+		document.getElementById("signup_signin_choice").innerHTML = 'Sign up';
+		document.getElementById("identity").action = '/signup';
 	}
 }
 
@@ -172,6 +192,7 @@ function reloadCart() {
 	}
 }
 
+
 $(document).ready(function() {
 
 	$('#cart_preview').on('reset', function () {
@@ -180,8 +201,12 @@ $(document).ready(function() {
 		document.getElementById("cart_preview_nav").click();
 		return false;		
 	});
+	$('#signup_signin_choice').on('click', function () {
+		alert("Toggle choice: "+document.getElementById("signup_signin_choice"));
+		toggleSignupSigninForm();
+	});
 /*	
-	$('#login').submit(function () {
+	$('#identity').submit(function () {
 		alert("Username: "+document.getElementById('username').value);
 		alert("Password: "+document.getElementById('password').value);
 		$(this).ajaxSubmit({
