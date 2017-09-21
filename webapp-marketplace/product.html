@@ -162,13 +162,13 @@ function toggleSignupSigninForm() {
 	var signin = document.getElementById("signin");
 	alert("Toggle value: "+signin);
 	if(signin && signin.checked == 'true') {
-		document.getElementById("phone_number_entry").display = 'none';
+		document.getElementById("phone_number").display = 'none';
 		document.getElementById("given_name_entry").display = 'none';
 		document.getElementById("family_name_entry").display = 'none';
 		document.getElementById("signup_signin_btn").innerHTML = 'Sign-in';
 		document.getElementById("identity").action = '/signin';
 	} else {
-		document.getElementById("phone_number_entry").display = 'block';
+		document.getElementById("phone_number").display = 'block';
 		document.getElementById("given_name_entry").display = 'block';
 		document.getElementById("family_name_entry").display = 'block';
 		document.getElementById("signup_signin_btn").innerHTML = 'Sign-up';
