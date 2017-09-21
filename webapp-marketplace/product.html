@@ -129,7 +129,7 @@ function reloadUser() {
 	if(!localUser || !localUser.isAuthenticated()) {
 
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup" checked>Sign Up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin" chosen>Sign In</input></div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup" checked>Sign-up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin" chosen>Sign-in</input></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
@@ -202,7 +202,7 @@ $(document).ready(function() {
 		document.getElementById("cart_preview_nav").click();
 		return false;		
 	});
-	$('#signup_signin_choice').on('click', function () {
+	$('#identity').on('click', '#signup_signin_choice', function () {
 		alert("Toggle choice: "+document.getElementById("signup_signin_choice"));
 		toggleSignupSigninForm();
 	});
