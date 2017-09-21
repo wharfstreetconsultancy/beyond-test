@@ -129,7 +129,7 @@ function reloadUser() {
 	if(!localUser || !localUser.isAuthenticated()) {
 
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup" chosen>Sign Up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin" chosen>Sign In</input></div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup" checked>Sign Up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin" chosen>Sign In</input></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
@@ -160,6 +160,7 @@ function reloadUser() {
 function toggleSignupSigninForm() {
 
 	var toggle = document.getElementById("signup_signin_choice");
+	alert("Toggle value: "+toggle.value);
 	if(toggle && toggle.value == 'signin') {
 		document.getElementById("phone_number_entry").display = 'none';
 		document.getElementById("given_name_entry").display = 'none';
