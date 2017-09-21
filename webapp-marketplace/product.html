@@ -165,13 +165,13 @@ function toggleSignupSigninForm() {
 		document.getElementById("phone_number_entry").display = 'none';
 		document.getElementById("given_name_entry").display = 'none';
 		document.getElementById("family_name_entry").display = 'none';
-		document.getElementById("signup_signin_choice").innerHTML = 'Sign in';
+		document.getElementById("signup_signin_btn").innerHTML = 'Sign-in';
 		document.getElementById("identity").action = '/signin';
 	} else {
 		document.getElementById("phone_number_entry").display = 'block';
 		document.getElementById("given_name_entry").display = 'block';
 		document.getElementById("family_name_entry").display = 'block';
-		document.getElementById("signup_signin_choice").innerHTML = 'Sign up';
+		document.getElementById("signup_signin_btn").innerHTML = 'Sign-up';
 		document.getElementById("identity").action = '/signup';
 	}
 }
