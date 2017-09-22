@@ -129,7 +129,7 @@ function reloadUser() {
 	if(!localUser || !localUser.isAuthenticated()) {
 
 		var signin = (signInElement && signInElement.checked == true);
-		document.getElementById("identity").innerHTML = '';'
+		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup" checked>Sign-up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin" chosen>Sign-in</input></div>';
 		document.getElementById("identity").innerHTML += '</div>';
