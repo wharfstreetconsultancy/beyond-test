@@ -133,7 +133,7 @@ function reloadUser() {
 		alert(((signin) ? 'Sign-in' : 'Sign-up')+' activated.')
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup" checked>Sign-up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin" chosen>Sign-in</input></div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup"'+((signin) ? '' : ' checked')+'>Sign-up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin"'+((signin) ? ' checked' : '')+'>Sign-in</input></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
@@ -211,7 +211,6 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
 		reloadUser();
-		this.checked = true;
 		return true;
 	});
 /*	
