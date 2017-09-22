@@ -190,7 +190,9 @@ app.post('/signin', function (req, res) {
 	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onSuccess: function (result) {
-			console.log('access token + ' + result.getAccessToken().getJwtToken());
+			console.log('ID Token: ' + result.getIdToken().getJwtToken());
+			console.log('Access Token: ' + result.getAccessToken().getJwtToken());
+			console.log('Refresh Token: ' + result.getRefreshToken().getJwtToken());
 		},
 		onFailure: function (err) {
 			console.log("!ERROR! - "+err);
