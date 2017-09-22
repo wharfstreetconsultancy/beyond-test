@@ -182,7 +182,7 @@ app.post('/signin', function (req, res) {
 	    UserPoolId : 'us-west-2_jnmkbOGZY',
 	    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
 	});
-	var authenticationDetails = new cognitoIdentityServiceProvider.AuthenticationDetails({
+	var authenticationDetails = new AWS.CognitoIdentityServiceProvider.AuthenticationDetails({
 		Username: req.body.username,
 		Password: req.body.password
 	});
