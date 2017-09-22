@@ -128,7 +128,8 @@ function reloadUser() {
 	console.log("Current user: "+JSON.stringify(localUser));
 	if(!localUser || !localUser.isAuthenticated()) {
 
-		var signin = (signInElement && signInElement.checked == true);
+		var signinElement = document.getElementById("signin");;
+		var signin = (signinElement && signinElement.checked == true);
 		alert(((signIn) ? 'Sign-in' : 'Sign-up')+' activated.')
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
