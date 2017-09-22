@@ -178,7 +178,7 @@ app.post('/signin', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 
-	var userPool = new cognitoIdentityServiceProvider.CognitoUserPool({
+	var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	    UserPoolId : 'us-west-2_jnmkbOGZY',
 	    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
 	});
