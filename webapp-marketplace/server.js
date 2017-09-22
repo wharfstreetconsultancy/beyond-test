@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
+var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
 // var CognitoSDK = require('amazon-cognito-identity-js-node');
 // AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 // AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
@@ -135,13 +135,15 @@ app.get('/', function (req, res) {
 });
 
 //
-// GET '/login' - Authenticate user
+// POST '/login' - Authenticate user
 //app.post('/login', passport.authenticate('cognito', {
 //		successRedirect: '/success.html',
 //		failureRedirect: '/failure.html'
 //	}), function (req, res) {
 
-app.post('/login', function (req, res) {
+//
+// POST '/signup' - Sign-up new user
+app.post('/signup', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 	console.log("Phone number: "+req.body.phone_number);
@@ -159,11 +161,37 @@ app.post('/login', function (req, res) {
 				],
 				ValidationData: []
 			};
-	cognitoidentityserviceprovider.signUp(params, function(err, data) {
+	cognitoIdentityServiceProvider.signUp(params, function(err, data) {
 		if (err) {
 			console.log("!ERROR! "+err);
 		} else {
 			console.log(data);
+		}
+	});
+});
+
+
+//
+// POST '/signin' - Sign-in existing user
+app.post('/signin', function (req, res) {
+	console.log("Username: "+req.body.username);
+	console.log("Password: "+req.body.password);
+
+	var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({
+	    UserPoolId : 'us-west-2_jnmkbOGZY',
+	    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
+	});
+	var authenticationDetails = new cognitoIdentityServiceProvider.AuthenticationDetails({
+		Username: req.body.username,
+		Password: req.body.password
+	});
+	var cognitoUser = new cognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
+	cognitoUser.authenticateUser(authenticationDetails, {
+		onSuccess: function (result) {
+			console.log('access token + ' + result.getAccessToken().getJwtToken());
+		},
+		onFailure: function (err) {
+			console.log("!ERROR! - "+err);
 		}
 	});
 });
