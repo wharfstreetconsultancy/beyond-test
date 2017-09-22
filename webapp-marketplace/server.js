@@ -15,6 +15,7 @@ var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({api
 //var cognitoUserPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({apiVersion: '2016-04-18'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
 // AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 // var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'});
@@ -186,7 +187,7 @@ app.post('/signin', function (req, res) {
 		Username: req.body.username,
 		Password: req.body.password
 	});
-	var cognitoUser = cognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
+	var cognitoUser = AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onSuccess: function (result) {
 			console.log('access token + ' + result.getAccessToken().getJwtToken());
