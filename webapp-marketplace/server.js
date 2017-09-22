@@ -186,7 +186,7 @@ app.post('/signin', function (req, res) {
 		Username: req.body.username,
 		Password: req.body.password
 	});
-	var cognitoUser = new cognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
+	var cognitoUser = cognitoIdentityServiceProvider.CognitoUser;
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onSuccess: function (result) {
 			console.log('access token + ' + result.getAccessToken().getJwtToken());
