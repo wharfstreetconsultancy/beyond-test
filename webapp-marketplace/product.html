@@ -134,25 +134,26 @@ function reloadUser(callback) {
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup"'+((signin) ? '' : ' checked')+'>Sign-up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin"'+((signin) ? ' checked' : '')+'>Sign-in</input></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Username"/></div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="username" name="username" type="text" placeholder="Email..."/></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="password" name="password" type="password" placeholder="Password"/></div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="password" name="password" type="password" placeholder="Password..."/></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		if(!signin) {
 			document.getElementById("identity").innerHTML += '<div class="row" id="phone_number_entry">';
-			document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="phone_number" name="phone_number" type="text" placeholder="Phone number"/></div>';
+			document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="phone_number" name="phone_number" type="text" placeholder="Phone number..."/></div>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '<div class="row" id="given_name_entry">';
-			document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="given_name" name="given_name" type="text" placeholder="First name"/></div>';
+			document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="given_name" name="given_name" type="text" placeholder="First name..."/></div>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '<div class="row" id="family_name_entry">';
-			document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="family_name" name="family_name" type="text" placeholder="Family name"/></div>';
+			document.getElementById("identity").innerHTML += '<div class="col-lg-10"><input id="family_name" name="family_name" type="text" placeholder="Family name..."/></div>';
 			document.getElementById("identity").innerHTML += '</div>';
 		}
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><button id="signup_signin_btn" type="submit" value="'+((signin) ? 'signin' : 'signup')+'" class="btn btn-primary btn-block">'+((signin) ? 'Sign-in' : 'Sign-up')+'</button></div>';
 		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").action = ((signin) ? '/signin' : '/signup');
 	} else {
 
 		document.getElementById("identity").innerHTML += '<div class="row">User: Username</div>';
