@@ -118,11 +118,10 @@ var restDomain = {rest.domain};
 
 function reloadAllPanels() {
 
-	reloadUser();
-	reloadCart();
+	reloadUser(function () {console.log("User loading done.");reloadCart();});
 }
 
-function reloadUser() {
+function reloadUser(callback) {
 
 	var localUser = JSON.parse(localStorage.getItem('identity'));
 	console.log("Current user: "+JSON.stringify(localUser));
@@ -130,7 +129,6 @@ function reloadUser() {
 
 		var signinElement = document.getElementById("signin");;
 		var signin = (signinElement && signinElement.checked == true);
-		alert(((signin) ? 'Sign-in' : 'Sign-up')+' activated.')
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup"'+((signin) ? '' : ' checked')+'>Sign-up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin"'+((signin) ? ' checked' : '')+'>Sign-in</input></div>';
@@ -160,6 +158,7 @@ function reloadUser() {
 		document.getElementById("identity").innerHTML += '<div class="row">User: Username</div>';
 		document.getElementById("identity").innerHTML += '<div class="row"><a href="/signout">Signout</a></div>';
 	}
+	callback();
 }
 
 function toggleSignupSigninForm() {
@@ -210,8 +209,10 @@ $(document).ready(function() {
 		return false;		
 	});
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
-		reloadUser();
-		document.getElementById("user_nav").click();
+		reloadUser(function () {
+			console.log("User loading done.");
+			document.getElementById("user_nav").click();
+		});
 		return true;
 	});
 /*	
