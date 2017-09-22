@@ -12,6 +12,7 @@ var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
+var cognitoUserPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({apiVersion: '2016-04-18'});
 // var CognitoSDK = require('amazon-cognito-identity-js-node');
 // AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 // AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
@@ -177,7 +178,7 @@ app.post('/signin', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 
-	var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUser({
+	var userPool = new cognitoUserPool({
 	    UserPoolId : 'us-west-2_jnmkbOGZY',
 	    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
 	});
