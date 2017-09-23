@@ -140,19 +140,19 @@ app.post('/signup', function (req, res) {
 				ValidationData: []
 			};
 
-//	userPool.signUp(
-//		req.body.username,
-//		req.body.password,
-//		[
-//			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number}),
-//			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'}),
-//			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'}),
-//			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'})
-//		],
-//		null,
-//		function (err, data) {
+	userPool.signUp(
+		req.body.username,
+		req.body.password,
+		[
+			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number}),
+			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'}),
+			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'}),
+			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'})
+		],
+		null,
+		function (err, data) {
 
-	cognitoIdentityServiceProvider.signUp(params, function(err, data) {
+//	cognitoIdentityServiceProvider.signUp(params, function(err, data) {
 			if (err) {
 				console.log("!ERROR! - Failed to sign-up user: "+err);
 			} else {
