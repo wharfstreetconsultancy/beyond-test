@@ -121,48 +121,12 @@ app.post('/signup', function (req, res) {
 	console.log("Password: "+req.body.password);
 	console.log("Phone number: "+req.body.phone_number);
 
-	var params = {
-				ClientId: 'm1f0r4q7uqgr9vd0qbqouspha',
-				Password: req.body.password,
-				Username: req.body.username,
-//				SecretHash: 'STRING_VALUE',
-				UserAttributes: [
-					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number}),
-					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'}),
-					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'}),
-					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'})
-//					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'phone_number': req.body.phone_number}),
-//					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'address': 'dummy address'}),
-//					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'given_name': 'dummy given name'}),
-//					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'family_name': 'dummy family name'})
-				],
-//				null
-				ValidationData: []
-			};
-
-	var dataEmail = {
-	        Name : 'email',
-	        Value : req.body.email
-	};
-    var dataPhoneNumber = {
-        Name : 'phone_number',
-        Value : req.body.phone_number
-    };
-    var dataAddress = {
-            Name : 'address',
-            Value : 'dummy address'
-    };
-    var dataGivenName = {
-            Name : 'given_name',
-            Value : 'dummy given name'
-    };
-    var dataFamilyName = {
-            Name : 'family_name',
-            Value : 'dummy family name'
-    };
+	var dataPhoneNumber = {Name : 'phone_number', Value : req.body.phone_number};
+	var dataAddress = {Name : 'address', Value : 'dummy address'};
+	var dataGivenName = {Name : 'given_name', Value : 'dummy given name'};
+	var dataFamilyName = {Name : 'family_name', Value : 'dummy family name'};
 	    
     var attributeList = [];
-    attributeList.push(dataEmail);
     attributeList.push(dataPhoneNumber);
     attributeList.push(dataAddress);
     attributeList.push(dataGivenName);
@@ -177,7 +141,6 @@ app.post('/signup', function (req, res) {
 		null,
 		function (err, data) {
 
-//	cognitoIdentityServiceProvider.signUp(params, function(err, data) {
 			if (err) {
 				console.log("!ERROR! - Failed to sign-up user: "+err);
 			} else {
