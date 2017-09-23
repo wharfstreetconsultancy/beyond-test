@@ -126,12 +126,12 @@ app.post('/signup', function (req, res) {
 //    attributeList.push({'address': 'dummy address'});
 //    attributeList.push({'given_name': 'dummy given name'});
 //    attributeList.push({'family_name': 'dummy family name'});
-    attributeList.push({'Name': 'phone_number', 'Value': req.body.phone_number});
+    attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute({'Name': 'phone_number', 'Value': req.body.phone_number}));
     attributeList.push({'Name': 'address', 'Value': 'dummy address'});
     attributeList.push({'Name': 'given_name', 'Value': 'dummy given name'});
     attributeList.push({'Name': 'family_name', 'Value': 'dummy family name'});
     
-    console.log("Attribbute list: "+JSON.stringify(attributeList));
+    console.log("Attribute list: "+JSON.stringify(attributeList));
     
 	userPool.signUp(
 		req.body.username,
@@ -163,7 +163,7 @@ app.post('/signin', function (req, res) {
 		Password: req.body.password
 	});
 	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
-	console.log("User before auth: "+JSON.stringify(cognitoUser));
+//	console.log("User before auth: "+JSON.stringify(cognitoUser));
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onFailure: function (err) {
 			
