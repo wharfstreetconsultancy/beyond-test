@@ -168,7 +168,13 @@ app.post('/signin', function (req, res) {
 			console.log("Result after auth: "+JSON.stringify(result));
 			console.log('Login success for '+cognitoUser.username);
 
-			session.setItem('identity', cognitoUser.username);
+			cognitoUser.getSession(function(err, session) {
+	            if (err) {
+	            	console.log("!ERROR! - Unable to get session for "+cognitoUser.username);
+	            }
+	            console.log("Session validity: "+session.isValid());
+	            console.log("Session: "+JSON.stringify(session));
+	        });
 			
 			// Return response to caller
             res.writeHead(201, {'Content-Type': 'application/json'});
