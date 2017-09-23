@@ -179,7 +179,11 @@ app.post('/signin', function (req, res) {
 
 				        for(var attribute of result) {
 				            
-				        	console.log('Key: '+attribute.getName()+ '='+attribute.getValue());
+				        	console.log("Attribute: "+JSON.stringify(attribute.getName()));
+				        	var parts = JSON.stringify(attribute.getName()).split(':');
+				        	var key = parts[0];
+				        	var value = parts[1];
+				        	console.log("Becomes: "+key+"="+value);
 				        }
 
 		        	var userProfile = {
