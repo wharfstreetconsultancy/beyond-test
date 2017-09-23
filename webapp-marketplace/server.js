@@ -122,14 +122,10 @@ app.post('/signup', function (req, res) {
 	console.log("Phone number: "+req.body.phone_number);
 	    
     var attributeList = [];
-//    attributeList.push({'phone_number': req.body.phone_number});
-//    attributeList.push({'address': 'dummy address'});
-//    attributeList.push({'given_name': 'dummy given name'});
-//    attributeList.push({'family_name': 'dummy family name'});
-    attributeList.push(new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute('phone_number', req.body.phone_number));
-    attributeList.push({'Name': 'address', 'Value': 'dummy address'});
-    attributeList.push({'Name': 'given_name', 'Value': 'dummy given name'});
-    attributeList.push({'Name': 'family_name', 'Value': 'dummy family name'});
+    attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
+    attributeList.push({Name: 'address', Value: 'dummy address'});
+    attributeList.push({Name: 'given_name', Value: 'dummy given name'});
+    attributeList.push({Name: 'family_name', Value: 'dummy family name'});
     
     console.log("Attribute list: "+JSON.stringify(attributeList));
     
@@ -180,14 +176,14 @@ app.post('/signin', function (req, res) {
 		        } else {
 
 		        	console.log("Got attributes: "+JSON.stringify(result));
+
+				        for(var attribute of result) {
+				            
+				        	console.log('Key: '+attribute.getName()+ '='+attribute.getValue());
+				        }
+
 		        	var userProfile = {
 		        	}
-		        /*
-		        for(var attributes of result.length) {
-		            
-		        	console.log('attribute ' + result[i].getName() + ' has value ' + result[i].getValue());
-		        }
-		        */
 		        }
 		    });			
 			// Return response to caller
