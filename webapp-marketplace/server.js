@@ -121,16 +121,16 @@ app.post('/signup', function (req, res) {
 	console.log("Password: "+req.body.password);
 	console.log("Phone number: "+req.body.phone_number);
 
-	var dataPhoneNumber = {Name : 'phone_number', Value : req.body.phone_number};
-	var dataAddress = {Name : 'address', Value : 'dummy address'};
-	var dataGivenName = {Name : 'given_name', Value : 'dummy given name'};
-	var dataFamilyName = {Name : 'family_name', Value : 'dummy family name'};
+//	var dataPhoneNumber = {Name : 'phone_number', Value : req.body.phone_number};
+//	var dataAddress = {Name : 'address', Value : 'dummy address'};
+//	var dataGivenName = {Name : 'given_name', Value : 'dummy given name'};
+//	var dataFamilyName = {Name : 'family_name', Value : 'dummy family name'};
 	    
     var attributeList = [];
-    attributeList.push(dataPhoneNumber);
-    attributeList.push(dataAddress);
-    attributeList.push(dataGivenName);
-    attributeList.push(dataFamilyName);
+    attributeList.push({Name : 'phone_number', Value : req.body.phone_number});
+    attributeList.push({Name : 'address', Value : 'dummy address'});
+    attributeList.push({Name : 'given_name', Value : 'dummy given name'});
+    attributeList.push({Name : 'family_name', Value : 'dummy family name'});
     
     console.log("Attribbute list: "+JSON.stringify(attributeList));
     
