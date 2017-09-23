@@ -180,9 +180,9 @@ app.post('/signin', function (req, res) {
 				        for(var attribute of result) {
 				            
 				        	console.log("Attribute: "+JSON.stringify(attribute.getName()));
-				        	var parts = JSON.stringify(attribute.getName()).split(':');
-				        	var key = parts[0];
-				        	var value = parts[1];
+//				        	var parts = JSON.stringify(attribute.getName()).split(':');
+				        	var key = attribute.getName().Name;
+				        	var value = attribute.getName().Value;
 				        	console.log("Becomes: "+key+"="+value);
 				        }
 
