@@ -200,6 +200,7 @@ $(document).ready(function() {
 			success: function (response) {
 				$('#status').empty().text('Login success');
 				console.log("Login success: "+JSON.stringify(response));
+				sessionStorage.setItem(response);
 			},
 			error: function (xhr) {
 				$('#status').empty().text('Login error: '+xhr.status);
