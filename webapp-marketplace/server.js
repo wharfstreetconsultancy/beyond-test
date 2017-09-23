@@ -144,7 +144,7 @@ app.post('/signup', function (req, res) {
 		req.body.username,
 		req.body.password,
 		[
-			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number}),
+			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'Name': 'phone_number', 'Value': req.body.phone_number}),
 			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'}),
 			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'}),
 			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'})
