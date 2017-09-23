@@ -198,10 +198,10 @@ $(document).ready(function() {
 		$(this).ajaxSubmit({
 			success: function (userProfile) {
 				$('#status').empty().text('Login success');
-				console.log("Login success: "+JSON.parse(userProfile).sub);
-				sessionStorage.setItem('userProfile', JSON.parse(userProfile));
+				console.log("Login success: "+userProfile.sub);
+				sessionStorage.setItem('userProfile', userProfile);
 				reloadUserProfile(function () {
-					console.log("User profile loaded: "+JSON.parse(userProfile).sub);
+					console.log("User profile loaded: "+userProfile.sub);
 					document.getElementById("user_nav").click();
 				});
 			},
