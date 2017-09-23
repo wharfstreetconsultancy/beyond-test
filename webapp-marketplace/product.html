@@ -201,7 +201,6 @@ $(document).ready(function() {
 				$('#status').empty().text('Login success');
 				console.log("Login success: "+JSON.stringify(response));
 				sessionStorage.setItem('identity', response.identity);
-				alert('Pause');
 			},
 			error: function (xhr) {
 				$('#status').empty().text('Login error: '+xhr.status);

@@ -125,11 +125,17 @@ app.post('/signup', function (req, res) {
 				Password: req.body.password,
 				Username: req.body.username,
 //				SecretHash: 'STRING_VALUE',
+//				UserAttributes: [
+//					{Name: 'phone_number', Value: req.body.phone_number},
+//					{Name: 'address', Value: 'dummy address'},
+//					{Name: 'given_name', Value: 'dummy given name'},
+//					{Name: 'family_name', Value: 'dummy family name'}
+//				],
 				UserAttributes: [
-					{Name: 'phone_number', Value: req.body.phone_number},
-					{Name: 'address', Value: 'dummy address'},
-					{Name: 'given_name', Value: 'dummy given name'},
-					{Name: 'family_name', Value: 'dummy family name'}
+					'phone_number': req.body.phone_number,
+					'address': 'dummy address',
+					'given_name': 'dummy given name',
+					'family_name': 'dummy family name'
 				],
 				ValidationData: []
 			};
@@ -174,6 +180,9 @@ app.post('/signin', function (req, res) {
 		        } else {
 
 		        	console.log("Got attributes: "+JSON.stringify(result));
+		        	var userProfile = {
+		        			email: 
+		        	}
 		        /*
 		        for(var attributes of result.length) {
 		            
