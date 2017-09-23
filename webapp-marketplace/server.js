@@ -183,7 +183,7 @@ app.post('/signin', function (req, res) {
 			        	console.log("Attribute: "+key+":"+value);
 			        	userProfileBuffer += key+':'+value+',';
 			        }
-			        userProfileBuffer = userProfileBuffer.substring(userProfileBuffer.length-1);
+			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
 			        userProfileBuffer += '}';
 		        	console.log("User Profile: "+userProfileBuffer);
 			        
