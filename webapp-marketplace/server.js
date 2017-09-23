@@ -140,15 +140,40 @@ app.post('/signup', function (req, res) {
 				ValidationData: []
 			};
 
+	var dataEmail = {
+	        Name : 'email',
+	        Value : req.body.phone_number
+	};
+    var dataPhoneNumber = {
+        Name : 'phone_number',
+        Value : req.body.phone_number
+    };
+    var dataAddress = {
+            Name : 'address',
+            Value : 'dummy address'
+    };
+    var dataGivenName = {
+            Name : 'given_name',
+            Value : 'dummy given name'
+    };
+    var dataFamilyName = {
+            Name : 'family_name',
+            Value : 'dummy family name'
+    };
+	    
+    var attributeList = [];
+    attributeList.push(dataEmail);
+    attributeList.push(dataPhoneNumber);
+    attributeList.push(dataAddress);
+    attributeList.push(dataGivenName);
+    attributeList.push(dataFamilyName);
+    
+    console.log("Attribbute list: "+JSON.stringify(attributeList));
+    
 	userPool.signUp(
 		req.body.username,
 		req.body.password,
-		[
-			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'Name': 'phone_number', 'Value': req.body.phone_number}),
-			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'}),
-			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'}),
-			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'})
-		],
+		attributeList,
 		null,
 		function (err, data) {
 
