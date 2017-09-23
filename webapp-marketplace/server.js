@@ -126,7 +126,7 @@ app.post('/signup', function (req, res) {
 //    attributeList.push({'address': 'dummy address'});
 //    attributeList.push({'given_name': 'dummy given name'});
 //    attributeList.push({'family_name': 'dummy family name'});
-    attributeList.push(new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({'Name': 'phone_number', 'Value': req.body.phone_number}));
+    attributeList.push(new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute('phone_number', req.body.phone_number));
     attributeList.push({'Name': 'address', 'Value': 'dummy address'});
     attributeList.push({'Name': 'given_name', 'Value': 'dummy given name'});
     attributeList.push({'Name': 'family_name', 'Value': 'dummy family name'});
