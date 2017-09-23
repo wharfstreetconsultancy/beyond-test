@@ -199,11 +199,14 @@ $(document).ready(function() {
 			success: function (response) {
 				$('#status').empty().text('Login success');
 				console.log("Login success: "+JSON.stringify(response));
-			},
+			}
+		/*
+		,
 			error: function (xhr) {
 				$('#status').empty().text('Login error: '+xhr.status);
 				console.log("Login error: "+xhr.status);
 			}
+		*/
 		});
 		reloadUser(function () {
 			console.log("User auth done.");
