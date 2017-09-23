@@ -172,7 +172,7 @@ app.post('/signin', function (req, res) {
 //			console.log('Refresh Token: ' + result.refreshToken.token);
 			console.log('Login success.');
 			// Return response to caller
-            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.writeHead(201, {'Content-Type': 'application/json'});
             res.end();
 		}
 	});
