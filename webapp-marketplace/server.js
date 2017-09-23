@@ -142,7 +142,7 @@ app.post('/signup', function (req, res) {
 
 	var dataEmail = {
 	        Name : 'email',
-	        Value : req.body.phone_number
+	        Value : req.body.email
 	};
     var dataPhoneNumber = {
         Name : 'phone_number',
