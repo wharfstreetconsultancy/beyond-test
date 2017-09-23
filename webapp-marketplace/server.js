@@ -165,15 +165,14 @@ app.post('/signin', function (req, res) {
 		},
 		onSuccess: function (result) {
 			
-			console.log("User after auth: "+JSON.stringify(cognitoUser));
 			console.log("Result after auth: "+JSON.stringify(result));
-//			console.log('ID Token: ' + result.idToken.jwtToken);
-//			console.log('Access Token: ' + result.accessToken.jwtToken);
-//			console.log('Refresh Token: ' + result.refreshToken.token);
-			console.log('Login success.');
+			console.log('Login success for '+cognitoUser.username);
+
+			session.setItem('identity', cognitoUser.username);
+			
 			// Return response to caller
             res.writeHead(201, {'Content-Type': 'application/json'});
-            res.write(JSON.stringify({authenticatedIdentity: 'paul'}));
+            res.write(JSON.stringify({authenticatedidentity: cognitoUser.username}));
             res.end();
 		}
 	});
