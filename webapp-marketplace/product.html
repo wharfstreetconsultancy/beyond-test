@@ -156,7 +156,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").action = ((signin) ? '/signin' : '/signup');
 	} else {
 
-		document.getElementById("identity").innerHTML += '<div class="row">User: '+JSON.parse(userProfile.sub).substring(0,10)+'</div>';
+		document.getElementById("identity").innerHTML += '<div class="row">User: '+userProfile.sub.substring(0,10)+'</div>';
 		document.getElementById("identity").innerHTML += '<div class="row"><a href="/signout">Sign-out</a></div>';
 	}
 	callback();
