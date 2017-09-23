@@ -132,10 +132,10 @@ app.post('/signup', function (req, res) {
 //					{Name: 'family_name', Value: 'dummy family name'}
 //				],
 				UserAttributes: [
-					'phone_number': req.body.phone_number,
-					'address': 'dummy address',
-					'given_name': 'dummy given name',
-					'family_name': 'dummy family name'
+					{'phone_number': req.body.phone_number},
+					{'address': 'dummy address'},
+					{'given_name': 'dummy given name'},
+					{'family_name': 'dummy family name'}
 				],
 				ValidationData: []
 			};
