@@ -12,13 +12,14 @@ var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
-//var cognitoUserPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({apiVersion: '2016-04-18'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
-// AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
-// var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_jnmkbOGZY', ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'});
+var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
+    UserPoolId : 'us-west-2_jnmkbOGZY',
+    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
+});
 
 //
 // Manage HTTP server container
@@ -32,8 +33,6 @@ app.use(session({
 	saveUninitialized: true,
 	cookie: {secure: true}
 }));
-//app.use(passport.initialize());
-//app.use(passport.session());
 
 var key = fs.readFileSync('certs/domain.key');
 var cert = fs.readFileSync('certs/domain.crt');
@@ -41,28 +40,6 @@ var options = {
 	key: key,
 	cert: cert
 };
-
-/*
-passport.use(new CognitoStrategy({
-		userPoolId: 'us-west-2_jnmkbOGZY',
-		clientId: '5n6r6t7n27lbac6bmtsdqoottl',
-		region: process.env.AWS_REGION
-	},
-	function (accessToken, idToken, refreshToken, user, callback) {
-    	console.log("Access token: "+JSON.stringify(accessToken));
-    	console.log("ID token: "+JSON.stringify(idToken));
-    	console.log("Refresh token: "+JSON.stringify(refreshToken));
-    	console.log("User: "+JSON.stringify(user));
-	    process.nextTick(function (err) {
-	    	if(err) {
-	    		return done(null, false, { message: err });
-	    	} else {
-	    		return callback(null, user);
-	    	}
-	    });
-	}
-));
-*/
 
 var securePort = process.env.SECURE_PORT;
 var restPort = process.env.REST_PORT;
@@ -137,13 +114,6 @@ app.get('/', function (req, res) {
 });
 
 //
-// POST '/login' - Authenticate user
-//app.post('/login', passport.authenticate('cognito', {
-//		successRedirect: '/success.html',
-//		failureRedirect: '/failure.html'
-//	}), function (req, res) {
-
-//
 // POST '/signup' - Sign-up new user
 app.post('/signup', function (req, res) {
 	console.log("Username: "+req.body.username);
@@ -168,6 +138,10 @@ app.post('/signup', function (req, res) {
 			console.log("!ERROR! "+err);
 		} else {
 			console.log(data);
+
+            // Return response to caller
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end();
 		}
 	});
 });
@@ -179,10 +153,6 @@ app.post('/signin', function (req, res) {
 	console.log("Username: "+req.body.username);
 	console.log("Password: "+req.body.password);
 
-	var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
-	    UserPoolId : 'us-west-2_jnmkbOGZY',
-	    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
-	});
 	var authenticationDetails = new AWS.CognitoIdentityServiceProvider.AuthenticationDetails({
 		Username: req.body.username,
 		Password: req.body.password
@@ -190,14 +160,20 @@ app.post('/signin', function (req, res) {
 	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
 	console.log("User before auth: "+JSON.stringify(cognitoUser));
 	cognitoUser.authenticateUser(authenticationDetails, {
+		onFailure: function (err) {
+			
+			console.log("!ERROR! - "+err);
+		},
 		onSuccess: function (result) {
+			
 			console.log("User after auth: "+JSON.stringify(cognitoUser));
 			console.log('ID Token: ' + result.idToken.jwtToken);
 			console.log('Access Token: ' + result.accessToken.jwtToken);
-			console.log('Refresh Token: ' + result.refreshToken.jwtToken);
-		},
-		onFailure: function (err) {
-			console.log("!ERROR! - "+err);
+			console.log('Refresh Token: ' + result.refreshToken.token);
+
+			// Return response to caller
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end();
 		}
 	});
 });
@@ -279,6 +255,11 @@ app.get('/cart', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /cart" );
 
+	var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
+	    UserPoolId : 'us-west-2_jnmkbOGZY',
+	    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
+	});
+	
 	// Load cart from REST API
 	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
 
