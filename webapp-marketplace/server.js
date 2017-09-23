@@ -166,13 +166,14 @@ app.post('/signin', function (req, res) {
 		},
 		onSuccess: function (result) {
 			
-//			console.log("User after auth: "+JSON.stringify(cognitoUser));
+			console.log("User after auth: "+JSON.stringify(cognitoUser));
 //			console.log('ID Token: ' + result.idToken.jwtToken);
 //			console.log('Access Token: ' + result.accessToken.jwtToken);
 //			console.log('Refresh Token: ' + result.refreshToken.token);
 			console.log('Login success.');
 			// Return response to caller
             res.writeHead(201, {'Content-Type': 'application/json'});
+            res.write('Hello');
             res.end();
 		}
 	});
