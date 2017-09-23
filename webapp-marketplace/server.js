@@ -117,20 +117,23 @@ app.get('/', function (req, res) {
 //
 // POST '/signup' - Sign-up new user
 app.post('/signup', function (req, res) {
-	console.log("Username: "+req.body.username);
+	console.log("Email: "+req.body.email);
 	console.log("Password: "+req.body.password);
+	console.log("Confirm Password: "+req.body.password_confirm);
+	console.log("Name: "+req.body.given_name+" "+req.body.family_name);
 	console.log("Phone number: "+req.body.phone_number);
+	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+" "+req.body.address.zip);
 	    
     var attributeList = [];
     attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
-    attributeList.push({Name: 'address', Value: 'dummy address'});
-    attributeList.push({Name: 'given_name', Value: 'dummy given name'});
-    attributeList.push({Name: 'family_name', Value: 'dummy family name'});
+    attributeList.push({Name: 'address', Value: req.body.address});
+    attributeList.push({Name: 'given_name', Value: req.body.given_name});
+    attributeList.push({Name: 'family_name', Value: req.body.family_name});
     
     console.log("Attribute list: "+JSON.stringify(attributeList));
     
 	userPool.signUp(
-		req.body.username,
+		req.body.email,
 		req.body.password,
 		attributeList,
 		null,
@@ -151,14 +154,12 @@ app.post('/signup', function (req, res) {
 //
 // POST '/signin' - Sign-in existing user
 app.post('/signin', function (req, res) {
-	console.log("Username: "+req.body.username);
-	console.log("Password: "+req.body.password);
 
 	var authenticationDetails = new AWS.CognitoIdentityServiceProvider.AuthenticationDetails({
-		Username: req.body.username,
+		Username: req.body.email,
 		Password: req.body.password
 	});
-	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
+	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.email, Pool: userPool});
 //	console.log("User before auth: "+JSON.stringify(cognitoUser));
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onFailure: function (err) {
