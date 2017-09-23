@@ -123,9 +123,10 @@ function reloadAllPanels() {
 
 function reloadUser(callback) {
 
-	var localUser = JSON.parse(localStorage.getItem('identity'));
+	var localUser = JSON.parse(sessionStorage.getItem('identity'));
 	console.log("Current user: "+JSON.stringify(localUser));
-	if(!localUser || !localUser.isAuthenticated()) {
+//	if(!localUser || !localUser.isAuthenticated()) {
+	if(!localUser) {
 
 		var signinElement = document.getElementById("signin");;
 		var signin = (signinElement && signinElement.checked == true);
@@ -196,7 +197,6 @@ $(document).ready(function() {
 	});
 	$('#identity').submit(function () {
 		$(this).ajaxSubmit({
-			// dataType: 'json',
 			success: function (response) {
 				$('#status').empty().text('Login success');
 				console.log("Login success: "+JSON.stringify(response));

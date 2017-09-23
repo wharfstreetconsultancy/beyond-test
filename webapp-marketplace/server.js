@@ -146,7 +146,6 @@ app.post('/signup', function (req, res) {
 	});
 });
 
-
 //
 // POST '/signin' - Sign-in existing user
 app.post('/signin', function (req, res) {
@@ -158,7 +157,7 @@ app.post('/signin', function (req, res) {
 		Password: req.body.password
 	});
 	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.username, Pool: userPool});
-//	console.log("User before auth: "+JSON.stringify(cognitoUser));
+	console.log("User before auth: "+JSON.stringify(cognitoUser));
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onFailure: function (err) {
 			
@@ -166,14 +165,15 @@ app.post('/signin', function (req, res) {
 		},
 		onSuccess: function (result) {
 			
-//			console.log("User after auth: "+JSON.stringify(cognitoUser));
+			console.log("User after auth: "+JSON.stringify(cognitoUser));
+			console.log("Result after auth: "+JSON.stringify(result));
 //			console.log('ID Token: ' + result.idToken.jwtToken);
 //			console.log('Access Token: ' + result.accessToken.jwtToken);
 //			console.log('Refresh Token: ' + result.refreshToken.token);
 			console.log('Login success.');
 			// Return response to caller
             res.writeHead(201, {'Content-Type': 'application/json'});
-            res.write(JSON.stringify({name: 'paul'}));
+            res.write(JSON.stringify({authenticatedIdentity: 'paul'}));
             res.end();
 		}
 	});
