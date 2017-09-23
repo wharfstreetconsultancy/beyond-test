@@ -173,7 +173,7 @@ app.post('/signin', function (req, res) {
 			console.log('Login success.');
 			// Return response to caller
             res.writeHead(201, {'Content-Type': 'application/json'});
-            res.write({name: 'paul'});
+            res.write(JSON.stringify({name: 'paul'}));
             res.end();
 		}
 	});
