@@ -145,7 +145,7 @@ app.post('/signup', function (req, res) {
 			new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'})
 		],
 		null,
-		function () {
+		function (err, data) {
 
 //	cognitoIdentityServiceProvider.signUp(params, function(err, data) {
 			if (err) {
