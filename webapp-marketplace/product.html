@@ -194,10 +194,7 @@ $(document).ready(function() {
 		});
 		return true;
 	});
-
 	$('#identity').submit(function () {
-		alert("Username: "+document.getElementById('username').value);
-		alert("Password: "+document.getElementById('password').value);
 		$(this).ajaxSubmit({
 			error: function (xhr) {
 				$('#status').empty().text('Login error: '+xhr.status);
