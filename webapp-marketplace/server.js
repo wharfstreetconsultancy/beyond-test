@@ -15,6 +15,7 @@ var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({api
 var CognitoSDK = require('amazon-cognito-identity-js-node');
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
+AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
     UserPoolId : 'us-west-2_jnmkbOGZY',
@@ -125,17 +126,11 @@ app.post('/signup', function (req, res) {
 				Password: req.body.password,
 				Username: req.body.username,
 //				SecretHash: 'STRING_VALUE',
-//				UserAttributes: [
-//					{Name: 'phone_number', Value: req.body.phone_number},
-//					{Name: 'address', Value: 'dummy address'},
-//					{Name: 'given_name', Value: 'dummy given name'},
-//					{Name: 'family_name', Value: 'dummy family name'}
-//				],
 				UserAttributes: [
-					{'phone_number': req.body.phone_number},
-					{'address': 'dummy address'},
-					{'given_name': 'dummy given name'},
-					{'family_name': 'dummy family name'}
+					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'phone_number', Value: req.body.phone_number}),
+					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'address', Value: 'dummy address'}),
+					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'given_name', Value: 'dummy given name'}),
+					new AWS.CognitoIdentityServiceProvider.CognitoUserAttribute({Name: 'family_name', Value: 'dummy family name'})
 				],
 				ValidationData: []
 			};
