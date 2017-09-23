@@ -167,9 +167,21 @@ app.post('/signin', function (req, res) {
 			
 			console.log("Result after auth: "+JSON.stringify(result));
 			console.log('Login success for '+cognitoUser.username);
+			cognitoUser.getUserAttributes(function(err, result) {
+		        if (err) {
 
-			req.session.userid = cognitoUser.username;
-			
+		        	console.log("!ERROR! - "+err);
+		        } else {
+
+		        	console.log("Got attributes: "+JSON.stringify(result));
+		        /*
+		        for(var attributes of result.length) {
+		            
+		        	console.log('attribute ' + result[i].getName() + ' has value ' + result[i].getValue());
+		        }
+		        */
+		        }
+		    });			
 			// Return response to caller
             res.writeHead(201, {'Content-Type': 'application/json'});
             res.write(JSON.stringify({identity: cognitoUser.username}));
