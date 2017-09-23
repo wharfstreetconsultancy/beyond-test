@@ -125,12 +125,11 @@ function reloadUserProfile(callback) {
 
 	var userProfile = sessionStorage.getItem('userProfile');
 	console.log("Current user: "+userProfile);
-	document.getElementById("identity").innerHTML = '';
 	if(!userProfile) {
 
 		var signinElement = document.getElementById("signin");;
 		var signin = (signinElement && signinElement.checked == true);
-//		document.getElementById("identity").innerHTML = '';
+		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><input id="signup" name="signup_signin_choice" type="radio" value="signup"'+((signin) ? '' : ' checked')+'>Sign-up</input></div><div class="col-lg-4"><input id="signin" name="signup_signin_choice" type="radio" value="signin"'+((signin) ? ' checked' : '')+'>Sign-in</input></div>';
 		document.getElementById("identity").innerHTML += '</div>';
@@ -157,6 +156,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").action = ((signin) ? '/signin' : '/signup');
 	} else {
 
+		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">User: '+JSON.parse(userProfile).sub.substring(0,10)+'</div>';
 		document.getElementById("identity").innerHTML += '<div class="row"><a href="/signout">Sign-out</a></div>';
 	}
