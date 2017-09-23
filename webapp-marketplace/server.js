@@ -166,7 +166,7 @@ app.post('/signin', function (req, res) {
 		},
 		onSuccess: function (result) {
 			
-			console.log("User after auth: "+JSON.stringify(cognitoUser));
+//			console.log("User after auth: "+JSON.stringify(cognitoUser));
 //			console.log('ID Token: ' + result.idToken.jwtToken);
 //			console.log('Access Token: ' + result.accessToken.jwtToken);
 //			console.log('Refresh Token: ' + result.refreshToken.token);

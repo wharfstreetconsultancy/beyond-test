@@ -196,7 +196,7 @@ $(document).ready(function() {
 	});
 	$('#identity').submit(function () {
 		$(this).ajaxSubmit({
-			dataType: json,
+			dataType: 'json',
 			success: function (response) {
 				$('#status').empty().text('Login success');
 				console.log("Login success: "+JSON.stringify(response));
