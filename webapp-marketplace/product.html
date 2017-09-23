@@ -124,7 +124,7 @@ function reloadAllPanels() {
 function reloadUserProfile(callback) {
 
 	var userProfile = sessionStorage.getItem('userProfile');
-	console.log("Current user: "+JSON.stringify(userProfile));
+	console.log("Current user: "+userProfile);
 	if(!userProfile) {
 
 		var signinElement = document.getElementById("signin");;
@@ -156,7 +156,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").action = ((signin) ? '/signin' : '/signup');
 	} else {
 
-		document.getElementById("identity").innerHTML += '<div class="row">User: '+userProfile.sub.substring(0,10)+'</div>';
+		document.getElementById("identity").innerHTML += '<div class="row">User: '+JSON.parse(userProfile.sub).substring(0,10)+'</div>';
 		document.getElementById("identity").innerHTML += '<div class="row"><a href="/signout">Sign-out</a></div>';
 	}
 	callback();
@@ -198,10 +198,10 @@ $(document).ready(function() {
 		$(this).ajaxSubmit({
 			success: function (userProfile) {
 				$('#status').empty().text('Login success');
-				console.log("Login success: "+userProfile.sub);
+				console.log("Login success: "+JSON.parse(userProfile).sub);
 				sessionStorage.setItem('userProfile', userProfile);
 				reloadUserProfile(function () {
-					console.log("User profile loaded: "+userProfile.sub);
+					console.log("User profile loaded: "+JSON.stringify(userProfile).sub);
 					document.getElementById("user_nav").click();
 				});
 			},
