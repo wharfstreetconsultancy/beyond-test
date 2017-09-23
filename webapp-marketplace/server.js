@@ -178,23 +178,18 @@ app.post('/signin', function (req, res) {
 		        	var userProfileBuffer = '{';
 			        for(var attribute of result) {
 			            
-			        	var key = attribute.getName().Name;
-			        	var value = attribute.getName().Value;
-			        	console.log("Attribute: "+key+":"+value);
-			        	userProfileBuffer += key+':'+value+',';
+			        	userProfileBuffer += attribute.getName().Name+':'+attribute.getName().Value+',';
 			        }
 			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
 			        userProfileBuffer += '}';
 		        	console.log("User Profile: "+userProfileBuffer);
 			        
-		        	var userProfile = {
-		        	}
+					// Return response to caller
+		            res.writeHead(200, {'Content-Type': 'application/json'});
+		            res.write(JSON.stringify(userProfileBuffer));
+		            res.end();
 		        }
-		    });			
-			// Return response to caller
-            res.writeHead(201, {'Content-Type': 'application/json'});
-            res.write(JSON.stringify({identity: cognitoUser.username}));
-            res.end();
+		    });
 		}
 	});
 });

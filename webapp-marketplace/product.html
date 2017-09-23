@@ -118,15 +118,14 @@ var restDomain = {rest.domain};
 
 function reloadAllPanels() {
 
-	reloadUser(function () {console.log("User loading done.");reloadCart();});
+	reloadUserProfile(function () {console.log("User loading done.");reloadCart();});
 }
 
-function reloadUser(callback) {
+function reloadUserProfile(callback) {
 
-	var localUser = sessionStorage.getItem('identity');
-	console.log("Current user: "+JSON.stringify(localUser));
-//	if(!localUser || !localUser.isAuthenticated()) {
-	if(!localUser) {
+	var userProfile = sessionStorage.getItem('userProfile');
+	console.log("Current user: "+JSON.stringify(userProfile));
+	if(!userProfile) {
 
 		var signinElement = document.getElementById("signin");;
 		var signin = (signinElement && signinElement.checked == true);
@@ -157,7 +156,7 @@ function reloadUser(callback) {
 		document.getElementById("identity").action = ((signin) ? '/signin' : '/signup');
 	} else {
 
-		document.getElementById("identity").innerHTML += '<div class="row">User: '+JSON.stringify(localUser)+'</div>';
+		document.getElementById("identity").innerHTML += '<div class="row">User: '+JSON.stringify(userProfile.sub.substring(0,10))+'</div>';
 		document.getElementById("identity").innerHTML += '<div class="row"><a href="/signout">Sign-out</a></div>';
 	}
 	callback();
@@ -189,7 +188,7 @@ $(document).ready(function() {
 		return false;		
 	});
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
-		reloadUser(function () {
+		reloadUserProfile(function () {
 			console.log("User loading done.");
 			document.getElementById("user_nav").click();
 		});
@@ -197,19 +196,19 @@ $(document).ready(function() {
 	});
 	$('#identity').submit(function () {
 		$(this).ajaxSubmit({
-			success: function (response) {
+			success: function (userProfile) {
 				$('#status').empty().text('Login success');
-				console.log("Login success: "+JSON.stringify(response));
-				sessionStorage.setItem('identity', response.identity);
+				console.log("Login success: "+userProfile.sub);
+				sessionStorage.setItem('userProfile', userProfile);
+				reloadUserProfile(function () {
+					console.log("User profile loaded: "+userProfile.sub);
+					document.getElementById("user_nav").click();
+				});
 			},
 			error: function (xhr) {
 				$('#status').empty().text('Login error: '+xhr.status);
 				console.log("Login error: "+xhr.status);
 			}
-		});
-		reloadUser(function () {
-			console.log("User auth done.");
-			document.getElementById("user_nav").click();
 		});
 		return false;
 	});
