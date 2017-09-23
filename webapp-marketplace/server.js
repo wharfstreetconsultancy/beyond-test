@@ -168,7 +168,7 @@ app.post('/signin', function (req, res) {
 			console.log("Result after auth: "+JSON.stringify(result));
 			console.log('Login success for '+cognitoUser.username);
 
-			res.session.userid = cognitoUser.username;
+			req.session.userid = cognitoUser.username;
 			
 			// Return response to caller
             res.writeHead(201, {'Content-Type': 'application/json'});
