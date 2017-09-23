@@ -15,7 +15,7 @@ var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({api
 var CognitoSDK = require('amazon-cognito-identity-js-node');
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
-AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
+//AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
     UserPoolId : 'us-west-2_jnmkbOGZY',
