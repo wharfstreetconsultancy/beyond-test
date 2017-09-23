@@ -124,7 +124,7 @@ function reloadAllPanels() {
 function reloadUserProfile(callback) {
 
 	var userProfile = sessionStorage.getItem('userProfile');
-	console.log("Current user: "+userProfile);
+	console.log("Current user: "+JSON.stringify(userProfile));
 	if(!userProfile) {
 
 		var signinElement = document.getElementById("signin");;
@@ -199,9 +199,9 @@ $(document).ready(function() {
 			success: function (userProfile) {
 				$('#status').empty().text('Login success');
 				console.log("Login success: "+JSON.parse(userProfile).sub);
-				sessionStorage.setItem('userProfile', userProfile);
+				sessionStorage.setItem('userProfile', JSON.parse(userProfile));
 				reloadUserProfile(function () {
-					console.log("User profile loaded: "+JSON.stringify(userProfile).sub);
+					console.log("User profile loaded: "+JSON.parse(userProfile).sub);
 					document.getElementById("user_nav").click();
 				});
 			},
