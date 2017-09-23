@@ -181,7 +181,6 @@ app.post('/signin', function (req, res) {
 
 		        	console.log("Got attributes: "+JSON.stringify(result));
 		        	var userProfile = {
-		        			email: 
 		        	}
 		        /*
 		        for(var attributes of result.length) {
