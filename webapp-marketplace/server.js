@@ -175,17 +175,18 @@ app.post('/signin', function (req, res) {
 		        	console.log("!ERROR! - "+err);
 		        } else {
 
-		        	console.log("Got attributes: "+JSON.stringify(result));
-
-				        for(var attribute of result) {
-				            
-				        	console.log("Attribute: "+JSON.stringify(attribute.getName()));
-//				        	var parts = JSON.stringify(attribute.getName()).split(':');
-				        	var key = attribute.getName().Name;
-				        	var value = attribute.getName().Value;
-				        	console.log("Becomes: "+key+"="+value);
-				        }
-
+		        	var userProfileBuffer = '{';
+			        for(var attribute of result) {
+			            
+			        	var key = attribute.getName().Name;
+			        	var value = attribute.getName().Value;
+			        	console.log("Attribute: "+key+":"+value);
+			        	userProfileBuffer += key+':'+value+',';
+			        }
+			        userProfileBuffer = userProfileBuffer.substring(userProfileBuffer.length-1);
+			        userProfileBuffer += '}';
+		        	console.log("User Profile: "+userProfileBuffer);
+			        
 		        	var userProfile = {
 		        	}
 		        }
