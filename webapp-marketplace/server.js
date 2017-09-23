@@ -178,7 +178,7 @@ app.post('/signin', function (req, res) {
 		        	var userProfileBuffer = '{';
 			        for(var attribute of result) {
 			            
-			        	userProfileBuffer += attribute.getName().Name+':"'+attribute.getName().Value+'",';
+			        	userProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
 			        }
 			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
 			        userProfileBuffer += '}';
