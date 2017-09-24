@@ -148,7 +148,7 @@ app.post('/signup', function (req, res) {
 	            res.end();
 			} else {
 				
-				console.log("Sign-up success: "+data);
+				console.log("Sign-up success: "+JSON.stringify(data));
 
 	            // Return response to caller
 	            res.writeHead(200, {'Content-Type': 'application/json'});
