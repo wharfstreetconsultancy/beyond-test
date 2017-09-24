@@ -119,17 +119,17 @@ app.get('/', function (req, res) {
 app.post('/signup', function (req, res) {
 	console.log("Email: "+req.body.email);
 	console.log("Password: "+req.body.password);
-	console.log("Confirm Password: "+req.body.passwordConfirm);
-	console.log("Name: "+req.body.given_name+" "+req.body.familyName);
-	console.log("Phone number: "+req.body.phoneNumber);
+	console.log("Confirm Password: "+req.body.password_confirm);
+	console.log("Name: "+req.body.givenName+" "+req.body.family_name);
+	console.log("Phone number: "+req.body.phone_number);
 	console.log("Address: "+JSON.stringify(req.body.address));
 	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
 
 	var attributeList = [];
-	attributeList.push({Name: 'phoneNumber', Value: req.body.phoneNumber});
+	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
 	attributeList.push({Name: 'address', Value: JSON.stringify(req.body.address)});
-	attributeList.push({Name: 'givenName', Value: req.body.givenName});
-	attributeList.push({Name: 'familyName', Value: req.body.familyName});
+	attributeList.push({Name: 'given_name', Value: req.body.given_name});
+	attributeList.push({Name: 'family_name', Value: req.body.family_name});
 
 	userPool.signUp(
 		req.body.email,
