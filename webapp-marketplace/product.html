@@ -179,7 +179,7 @@ function reloadUserProfile(callback) {
 
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+JSON.parse(userProfile).givenName.substring(0,10)+'</div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+JSON.parse(userProfile).given_name.substring(0,10)+'</div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><a href="/signout">Sign-out</a></div>';
