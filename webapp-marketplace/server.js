@@ -148,10 +148,11 @@ app.post('/signup', function (req, res) {
 	            res.end();
 			} else {
 				
-				console.log("Sign-up success: "+JSON.stringify(data));
+				console.log("Sign-up success: "+data.user.username);
 
 	            // Return response to caller
-	            res.writeHead(200, {'Content-Type': 'application/json'});
+	            res.writeHead(201, {'Content-Type': 'application/json'});
+	            res.write(JSON.stringify({username: data.user.username}));
 	            res.end();
 			}
 	});
