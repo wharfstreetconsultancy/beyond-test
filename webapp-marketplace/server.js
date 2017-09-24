@@ -122,7 +122,7 @@ app.post('/signup', function (req, res) {
 	console.log("Confirm Password: "+req.body.passwordConfirm);
 	console.log("Name: "+req.body.given_name+" "+req.body.familyName);
 	console.log("Phone number: "+req.body.phoneNumber);
-	console.log("Address: "+req.body.address);
+	console.log("Address: "+JSON.stringify(req.body.address));
 	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
 
 	var attributeList = [];
