@@ -140,7 +140,7 @@ app.post('/signup', function (req, res) {
 
 			if (error) {
 				
-				console.log("!ERROR! - Failed to sign-up user: "+err);
+				console.log("!ERROR! - Failed to sign-up user: "+error);
 
 				// Return response to caller
 	            res.writeHead(400, {'Content-Type': 'application/json'});
