@@ -123,15 +123,13 @@ app.post('/signup', function (req, res) {
 	console.log("Name: "+req.body.given_name+" "+req.body.family_name);
 	console.log("Phone number: "+req.body.phone_number);
 	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+" "+req.body.address.zip);
-	    
-    var attributeList = [];
-    attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
-    attributeList.push({Name: 'address', Value: req.body.address});
-    attributeList.push({Name: 'given_name', Value: req.body.given_name});
-    attributeList.push({Name: 'family_name', Value: req.body.family_name});
-    
-    console.log("Attribute list: "+JSON.stringify(attributeList));
-    
+
+	var attributeList = [];
+	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
+	attributeList.push({Name: 'address', Value: req.body.address});
+	attributeList.push({Name: 'given_name', Value: req.body.given_name});
+	attributeList.push({Name: 'family_name', Value: req.body.family_name});
+
 	userPool.signUp(
 		req.body.email,
 		req.body.password,
@@ -142,8 +140,8 @@ app.post('/signup', function (req, res) {
 			if (err) {
 				console.log("!ERROR! - Failed to sign-up user: "+err);
 			} else {
-				console.log(data);
-	
+				console.log("Sign-up success: "+data);
+
 	            // Return response to caller
 	            res.writeHead(200, {'Content-Type': 'application/json'});
 	            res.end();
@@ -160,16 +158,15 @@ app.post('/signin', function (req, res) {
 		Password: req.body.password
 	});
 	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.email, Pool: userPool});
-//	console.log("User before auth: "+JSON.stringify(cognitoUser));
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onFailure: function (err) {
 			
 			console.log("!ERROR! - "+err);
 		},
 		onSuccess: function (result) {
-			
-			console.log("Result after auth: "+JSON.stringify(result));
-			console.log('Login success for '+cognitoUser.username);
+
+			console.log('Sign-in success - user: '+cognitoUser.username);
+			console.log("Getting user attributes.");
 			cognitoUser.getUserAttributes(function(err, result) {
 		        if (err) {
 
