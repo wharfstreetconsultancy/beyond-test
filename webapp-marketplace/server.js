@@ -119,16 +119,17 @@ app.get('/', function (req, res) {
 app.post('/signup', function (req, res) {
 	console.log("Email: "+req.body.email);
 	console.log("Password: "+req.body.password);
-	console.log("Confirm Password: "+req.body.password_confirm);
-	console.log("Name: "+req.body.given_name+" "+req.body.family_name);
-	console.log("Phone number: "+req.body.phone_number);
-	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+" "+req.body.address.zip);
+	console.log("Confirm Password: "+req.body.passwordConfirm);
+	console.log("Name: "+req.body.given_name+" "+req.body.familyName);
+	console.log("Phone number: "+req.body.phoneNumber);
+	console.log("Address: "+req.body.address);
+	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
 
 	var attributeList = [];
-	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
+	attributeList.push({Name: 'phoneNumber', Value: req.body.phoneNumber});
 	attributeList.push({Name: 'address', Value: req.body.address});
-	attributeList.push({Name: 'given_name', Value: req.body.given_name});
-	attributeList.push({Name: 'family_name', Value: req.body.family_name});
+	attributeList.push({Name: 'givenName', Value: req.body.givenName});
+	attributeList.push({Name: 'familyName', Value: req.body.familyName});
 
 	userPool.signUp(
 		req.body.email,
@@ -138,8 +139,10 @@ app.post('/signup', function (req, res) {
 		function (err, data) {
 
 			if (err) {
+				
 				console.log("!ERROR! - Failed to sign-up user: "+err);
 			} else {
+				
 				console.log("Sign-up success: "+data);
 
 	            // Return response to caller
