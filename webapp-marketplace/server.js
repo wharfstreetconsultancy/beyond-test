@@ -127,7 +127,7 @@ app.post('/signup', function (req, res) {
 
 	var attributeList = [];
 	attributeList.push({Name: 'phoneNumber', Value: req.body.phoneNumber});
-	attributeList.push({Name: 'address', Value: req.body.address});
+	attributeList.push({Name: 'address', Value: JSON.stringify(req.body.address)});
 	attributeList.push({Name: 'givenName', Value: req.body.givenName});
 	attributeList.push({Name: 'familyName', Value: req.body.familyName});
 
