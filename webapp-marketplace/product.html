@@ -177,7 +177,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<hr>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10"><p>';
-		<button id="signup_signin_btn" type="submit" value="'+((signin) ? 'signin' : 'signup')+'" class="btn btn-primary btn-block">'+((signin) ? 'Sign-in' : 'Sign-up')+'</button>';
+		document.getElementById("identity").innerHTML += '<button id="signup_signin_btn" type="submit" value="'+((signin) ? 'signin' : 'signup')+'" class="btn btn-primary btn-block">'+((signin) ? 'Sign-in' : 'Sign-up')+'</button>';
 		document.getElementById("identity").innerHTML += '</p></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").action = ((signin) ? '/signin' : '/signup');
