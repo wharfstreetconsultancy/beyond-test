@@ -228,14 +228,14 @@ $(document).ready(function() {
 					console.log("Sign-in success: "+response.sub);
 					sessionStorage.setItem('userProfile', JSON.stringify(response));
 					reloadUserProfile(function () {
-						console.log("User profile loaded: "+userProfile.sub);
+						console.log("User profile loaded: "+response.sub);
 						document.getElementById("user_nav").click();
 					});
 				} else {
 					$('#status').empty().text('Sign-up success');
 					console.log("Sign-up success: "+response.username);
 					reloadUserProfile(function () {
-						console.log("User profile loaded: "+userProfile.sub);
+						console.log("User profile loaded: "+response.sub);
 						document.getElementById("signin").click();
 					});
 				}
