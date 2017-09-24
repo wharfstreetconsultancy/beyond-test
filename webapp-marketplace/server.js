@@ -120,7 +120,7 @@ app.post('/signup', function (req, res) {
 	console.log("Email: "+req.body.email);
 	console.log("Password: "+req.body.password);
 	console.log("Confirm Password: "+req.body.password_confirm);
-	console.log("Name: "+req.body.givenName+" "+req.body.family_name);
+	console.log("Name: "+req.body.given_name+" "+req.body.family_name);
 	console.log("Phone number: "+req.body.phone_number);
 	console.log("Address: "+JSON.stringify(req.body.address));
 	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
@@ -136,11 +136,16 @@ app.post('/signup', function (req, res) {
 		req.body.password,
 		attributeList,
 		null,
-		function (err, data) {
+		function (error, data) {
 
-			if (err) {
+			if (error) {
 				
 				console.log("!ERROR! - Failed to sign-up user: "+err);
+
+				// Return response to caller
+	            res.writeHead(400, {'Content-Type': 'application/json'});
+	            res.write(JSON.stringify({error: error}));
+	            res.end();
 			} else {
 				
 				console.log("Sign-up success: "+data);
