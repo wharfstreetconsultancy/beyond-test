@@ -222,18 +222,27 @@ $(document).ready(function() {
 	});
 	$('#identity').submit(function () {
 		$(this).ajaxSubmit({
-			success: function (userProfile) {
-				$('#status').empty().text('Login success');
-				console.log("Login success: "+userProfile.sub);
-				sessionStorage.setItem('userProfile', JSON.stringify(userProfile));
-				reloadUserProfile(function () {
-					console.log("User profile loaded: "+userProfile.sub);
-					document.getElementById("user_nav").click();
-				});
+			success: function (response) {
+				if(this.action == '/signin') {
+					$('#status').empty().text('Sign-in success');
+					console.log("Sign-in success: "+response.sub);
+					sessionStorage.setItem('userProfile', JSON.stringify(response));
+					reloadUserProfile(function () {
+						console.log("User profile loaded: "+userProfile.sub);
+						document.getElementById("user_nav").click();
+					});
+				} else {
+					$('#status').empty().text('Sign-up success');
+					console.log("Sign-up success: "+response.username);
+					reloadUserProfile(function () {
+						console.log("User profile loaded: "+userProfile.sub);
+						document.getElementById("signin").click();
+					});
+				}
 			},
 			error: function (xhr) {
 				$('#status').empty().text('Login error: '+xhr.status);
-				console.log("Login error: "+xhr.status);
+				console.log("Login error: "+JSON.stringify(xhr));
 			}
 		});
 		return false;
