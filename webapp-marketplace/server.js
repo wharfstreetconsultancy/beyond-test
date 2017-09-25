@@ -7,6 +7,7 @@ var https = require('https');
 var request = require('request');
 var fs = require('fs');
 var replaceStream = require('replacestream')
+var replaceall = require("replaceall");
 var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
@@ -127,7 +128,7 @@ app.post('/signup', function (req, res) {
 
 	var attributeList = [];
 	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
-	attributeList.push({Name: 'address', Value: JSON.stringify(req.body.address)});
+	attributeList.push({Name: 'address', Value: replaceall('"','', JSON.stringify(req.body.address))});
 	attributeList.push({Name: 'given_name', Value: req.body.given_name});
 	attributeList.push({Name: 'family_name', Value: req.body.family_name});
 
@@ -187,6 +188,9 @@ app.post('/signin', function (req, res) {
 			            
 			        	var attributeBuffer = '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
 			        	console.log(attributeBuffer);
+			        	if(attributeBuffer.startswith('{') && attributeBuffer.endswith('}')) {
+			        		attributeBuffer = attributeBuffer
+			        	}
 			        	userProfileBuffer += attributeBuffer;
 			        }
 			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
