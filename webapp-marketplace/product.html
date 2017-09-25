@@ -127,13 +127,13 @@ function reloadUserProfile(callback) {
 	console.log("Current user: "+userProfile);
 	if(!userProfile) {
 
-		var signinElement = document.getElementById("signin");
-		var signin = (signinElement && signinElement.checked == true);
+		var signupElement = document.getElementById("signup");
+		var signup = (signupElement && signupElement.checked == true);
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-		document.getElementById("identity").innerHTML += '<input id="signup" name="signup_signin_choice" type="radio" class="pull-left" value="signup"'+((signin) ? '' : ' checked')+'>Sign-up</input>';
-		document.getElementById("identity").innerHTML += '<input id="signin" name="signup_signin_choice" type="radio" class="pull-left" value="signin"'+((signin) ? ' checked' : '')+'>Sign-in</input>';
+		document.getElementById("identity").innerHTML += '<input id="signup" name="signup_signin_choice" type="radio" value="signup"'+((signup) ? ' checked' : '')+'>Sign-up</input>';
+		document.getElementById("identity").innerHTML += '<input id="signin" name="signup_signin_choice" type="radio" value="signin"'+((signup) ? '' : ' checked')+'>Sign-in</input>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<hr>';
@@ -141,7 +141,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
 		document.getElementById("identity").innerHTML += '<input id="email" name="email" type="text" placeholder="Email..."/><br>';
 		document.getElementById("identity").innerHTML += '<input id="password" name="password" type="password" placeholder="Password..."/><br>';
-		if(!signin) {
+		if(!signup) {
 			document.getElementById("identity").innerHTML += '<input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm password..."/>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '</div>';
@@ -171,10 +171,10 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<hr>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-		document.getElementById("identity").innerHTML += '<button id="signup_signin_btn" type="submit" value="'+((signin) ? 'signin' : 'signup')+'" class="btn btn-primary btn-block">'+((signin) ? 'Sign-in' : 'Sign-up')+'</button>';
+		document.getElementById("identity").innerHTML += '<button id="signup_signin_btn" type="submit" value="'+((signup) ? 'signup' : 'signin')+'" class="btn btn-primary btn-block">'+((signup) ? 'Sign-up' : 'Sign-in')+'</button>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
-		document.getElementById("identity").action = ((signin) ? '/signin' : '/signup');
+		document.getElementById("identity").action = ((signup) ? '/signup' : '/signin');
 	} else {
 
 		document.getElementById("identity").innerHTML = '';
