@@ -188,7 +188,7 @@ app.post('/signin', function (req, res) {
 			            
 			        	var attributeBuffer = '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
 			        	console.log(attributeBuffer);
-			        	if(attributeBuffer.startswith('{') && attributeBuffer.endswith('}')) {
+			        	if(attributeBuffer.startsWith('{') && attributeBuffer.endsWith('}')) {
 			        		attributeBuffer = attributeBuffer
 			        	}
 			        	userProfileBuffer += attributeBuffer;
