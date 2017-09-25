@@ -193,7 +193,7 @@ app.post('/signin', function (req, res) {
 			        
 					// Return response to caller
 		            res.writeHead(200, {'Content-Type': 'application/json'});
-		            res.write(userProfileBuffer);
+		            res.write(JSON.parse(userProfileBuffer));
 		            res.end();
 		        }
 		    });

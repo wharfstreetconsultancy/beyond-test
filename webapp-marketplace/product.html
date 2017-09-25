@@ -243,7 +243,7 @@ $(document).ready(function() {
 			},
 			error: function (xhr) {
 				$('#status').empty().text('Failed to sign-up/sign-in: '+xhr.status);
-				console.log("Failed to sign-up/sign-in: "+xhr);
+				console.log("Failed to sign-up/sign-in: "+JSON.stringify(xhr));
 			}
 		});
 		return false;
