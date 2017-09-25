@@ -141,7 +141,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
 		document.getElementById("identity").innerHTML += '<input id="email" name="email" type="text" placeholder="Email..."/><br>';
 		document.getElementById("identity").innerHTML += '<input id="password" name="password" type="password" placeholder="Password..."/><br>';
-		if(!signup) {
+		if(signup) {
 			document.getElementById("identity").innerHTML += '<input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm password..."/>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '</div>';
