@@ -139,11 +139,11 @@ app.post('/signup', function (req, res) {
 		null,
 		function (error, data) {
 
-			if (error) {
+			if(error) {
 				
 				console.log("!ERROR! - Failed to sign-up user: "+error);
 
-				// Return response to caller
+				// Return error to caller
 	            res.writeHead(400, {'Content-Type': 'application/json'});
 	            res.write(JSON.stringify({error: error}));
 	            res.end();
@@ -169,30 +169,35 @@ app.post('/signin', function (req, res) {
 	});
 	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.email, Pool: userPool});
 	cognitoUser.authenticateUser(authenticationDetails, {
-		onFailure: function (err) {
+		onFailure: function (error) {
 			
-			console.log("!ERROR! - "+err);
+			console.log("!ERROR! - Failed to sign-in user: "+error);
+
+			// Return error to caller
+            res.writeHead(400, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify({error: error}));
+            res.end();
 		},
 		onSuccess: function (result) {
 
 			console.log('Sign-in success - user: '+cognitoUser.username);
 			console.log("Getting user attributes.");
 			cognitoUser.getUserAttributes(function(err, result) {
-		        if (err) {
+		        if(error) {
+					
+					console.log("!ERROR! - Failed to sign-in user: "+error);
 
-		        	console.log("!ERROR! - "+err);
+					// Return error to caller
+		            res.writeHead(400, {'Content-Type': 'application/json'});
+		            res.write(JSON.stringify({error: error}));
+		            res.end();
 		        } else {
 
 		        	var userProfile = {};
 		        	var userProfileBuffer = '{';
 			        for(var attribute of result) {
-			            
-			        	var attributeBuffer = '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
-//			        	console.log(attributeBuffer);
-//			        	if(attributeBuffer.startsWith('{') && attributeBuffer.endsWith('}')) {
-//			        		attributeBuffer = attributeBuffer
-//			        	}
-			        	userProfileBuffer += attributeBuffer;
+
+			        	userProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
 			        }
 			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
 			        userProfileBuffer += '}';
@@ -200,7 +205,7 @@ app.post('/signin', function (req, res) {
 		        	console.log("User Profile: "+JSON.stringify(userProfile));
 			        
 					// Return response to caller
-		            res.writeHead(200, {'Content-Type': 'application/json'});
+		            res.writeHead(201, {'Content-Type': 'application/json'});
 		            res.write(JSON.stringify(userProfile));
 		            res.end();
 		        }
@@ -208,6 +213,11 @@ app.post('/signin', function (req, res) {
 		}
 	});
 });
+
+//
+// POST '/signout' - Sign-out currently authenticated user
+app.post('/signout', function (req, res) {
+}
 
 //
 // GET '/product' - View product page
