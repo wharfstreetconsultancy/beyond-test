@@ -187,10 +187,10 @@ app.post('/signin', function (req, res) {
 			        for(var attribute of result) {
 			            
 			        	var attributeBuffer = '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
-			        	console.log(attributeBuffer);
-			        	if(attributeBuffer.startsWith('{') && attributeBuffer.endsWith('}')) {
-			        		attributeBuffer = attributeBuffer
-			        	}
+//			        	console.log(attributeBuffer);
+//			        	if(attributeBuffer.startsWith('{') && attributeBuffer.endsWith('}')) {
+//			        		attributeBuffer = attributeBuffer
+//			        	}
 			        	userProfileBuffer += attributeBuffer;
 			        }
 			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
@@ -199,7 +199,7 @@ app.post('/signin', function (req, res) {
 			        
 					// Return response to caller
 		            res.writeHead(200, {'Content-Type': 'application/json'});
-		            res.write(JSON.parse(userProfileBuffer));
+		            res.write(JSON.stringify(JSON.parse(userProfileBuffer)));
 		            res.end();
 		        }
 		    });
