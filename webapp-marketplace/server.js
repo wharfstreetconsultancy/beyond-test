@@ -183,6 +183,7 @@ app.post('/signin', function (req, res) {
 		        	console.log("!ERROR! - "+err);
 		        } else {
 
+		        	var userProfile = {};
 		        	var userProfileBuffer = '{';
 			        for(var attribute of result) {
 			            
@@ -195,11 +196,12 @@ app.post('/signin', function (req, res) {
 			        }
 			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
 			        userProfileBuffer += '}';
-		        	console.log("User Profile: "+userProfileBuffer);
+			        userProfile = JSON.parse(userProfileBuffer);
+		        	console.log("User Profile: "+JSON.stringify(userProfile));
 			        
 					// Return response to caller
 		            res.writeHead(200, {'Content-Type': 'application/json'});
-		            res.write(JSON.stringify(JSON.parse(userProfileBuffer)));
+		            res.write(JSON.stringify(userProfile));
 		            res.end();
 		        }
 		    });

@@ -223,18 +223,22 @@ $(document).ready(function() {
 	$('#identity').submit(function () {
 		$(this).ajaxSubmit({
 			success: function (response) {
-				if(this.action == '/signin') {
-					$('#status').empty().text('Sign-in success');
-					console.log("Sign-in success: "+response.sub);
-					sessionStorage.setItem('userProfile', JSON.stringify(response));
+				var signupElement = document.getElementById("signup");
+				var signup = (signupElement && signupElement.checked == true);
+				if(signup) {
+
+					$('#status').empty().text('Sign-up success');
+					console.log("Sign-up success: "+response.username);
+					document.getElementById("signin").checked = true;
 					reloadUserProfile(function () {
 						console.log("User profile loaded: "+response.sub);
 						document.getElementById("user_nav").click();
 					});
 				} else {
-					$('#status').empty().text('Sign-up success');
-					console.log("Sign-up success: "+response.username);
-					document.getElementById("signin").checked = true;
+
+					$('#status').empty().text('Sign-in success');
+					console.log("Sign-in success: "+response.sub);
+					sessionStorage.setItem('userProfile', JSON.stringify(response));
 					reloadUserProfile(function () {
 						console.log("User profile loaded: "+response.sub);
 						document.getElementById("user_nav").click();
