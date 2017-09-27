@@ -12,16 +12,6 @@ var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
-var CognitoSDK = require('amazon-cognito-identity-js-node');
-AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
-AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
-AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
-AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
-var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
-    UserPoolId : 'us-west-2_jnmkbOGZY',
-    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
-});
 
 //
 // Manage HTTP server container
@@ -114,110 +104,6 @@ app.get('/', function (req, res) {
 		});
 	});
 });
-
-//
-// POST '/signup' - Sign-up new user
-app.post('/signup', function (req, res) {
-	console.log("Email: "+req.body.email);
-	console.log("Password: "+req.body.password);
-	console.log("Confirm Password: "+req.body.password_confirm);
-	console.log("Name: "+req.body.given_name+" "+req.body.family_name);
-	console.log("Phone number: "+req.body.phone_number);
-	console.log("Address: "+JSON.stringify(req.body.address));
-	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
-
-	var attributeList = [];
-	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
-	attributeList.push({Name: 'address', Value: replaceall('"','', JSON.stringify(req.body.address))});
-	attributeList.push({Name: 'given_name', Value: req.body.given_name});
-	attributeList.push({Name: 'family_name', Value: req.body.family_name});
-
-	userPool.signUp(
-		req.body.email,
-		req.body.password,
-		attributeList,
-		null,
-		function (error, data) {
-
-			if(error) {
-				
-				console.log("!ERROR! - Failed to sign-up user: "+error);
-
-				// Return error to caller
-	            res.writeHead(400, {'Content-Type': 'application/json'});
-	            res.write(JSON.stringify({error: error}));
-	            res.end();
-			} else {
-				
-				console.log("Sign-up success: "+data.user.username);
-
-	            // Return response to caller
-	            res.writeHead(201, {'Content-Type': 'application/json'});
-	            res.write(JSON.stringify({username: data.user.username}));
-	            res.end();
-			}
-	});
-});
-
-//
-// POST '/signin' - Sign-in existing user
-app.post('/signin', function (req, res) {
-
-	var authenticationDetails = new AWS.CognitoIdentityServiceProvider.AuthenticationDetails({
-		Username: req.body.email,
-		Password: req.body.password
-	});
-	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.email, Pool: userPool});
-	cognitoUser.authenticateUser(authenticationDetails, {
-		onFailure: function (error) {
-			
-			console.log("!ERROR! - Failed to sign-in user: "+error);
-
-			// Return error to caller
-            res.writeHead(400, {'Content-Type': 'application/json'});
-            res.write(JSON.stringify({error: error}));
-            res.end();
-		},
-		onSuccess: function (result) {
-
-			console.log('Sign-in success - user: '+cognitoUser.username);
-			console.log("Getting user attributes.");
-			cognitoUser.getUserAttributes(function(err, result) {
-		        if(error) {
-					
-					console.log("!ERROR! - Failed to sign-in user: "+error);
-
-					// Return error to caller
-		            res.writeHead(400, {'Content-Type': 'application/json'});
-		            res.write(JSON.stringify({error: error}));
-		            res.end();
-		        } else {
-
-		        	var userProfile = {};
-		        	var userProfileBuffer = '{';
-			        for(var attribute of result) {
-
-			        	userProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
-			        }
-			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
-			        userProfileBuffer += '}';
-			        userProfile = JSON.parse(userProfileBuffer);
-		        	console.log("User Profile: "+JSON.stringify(userProfile));
-			        
-					// Return response to caller
-		            res.writeHead(201, {'Content-Type': 'application/json'});
-		            res.write(JSON.stringify(userProfile));
-		            res.end();
-		        }
-		    });
-		}
-	});
-});
-
-//
-// POST '/signout' - Sign-out currently authenticated user
-app.post('/signout', function (req, res) {
-}
 
 //
 // GET '/product' - View product page
@@ -345,7 +231,6 @@ function loadExistingProducts(req, res, callback) {
 		}
 	});
 }
-
 
 //
 // Load existing cart from data source

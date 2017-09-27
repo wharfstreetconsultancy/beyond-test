@@ -18,16 +18,17 @@ var replaceall = require("replaceall");
 var util = require('util');
 var events = require('events');
 var AWS = require('aws-sdk');
-// var CognitoSDK = require('amazon-cognito-identity-js-node');
-// AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
-// AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
-// AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
+var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
+var CognitoSDK = require('amazon-cognito-identity-js-node');
+AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
+AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
+AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
+AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
+var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
+    UserPoolId : 'us-west-2_jnmkbOGZY',
+    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
+});
 var sha256 = require('sha256');
-
-// var cognito = new AWS.CognitoIdentity({apiVersion: '2014-06-30', region: 'us-west-2'});
-// var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-east-1_TcoKGbf7n',ClientId : '4pe2usejqcdmhi0a25jp4b5sh3'});
-// var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({ UserPoolId : 'us-west-2_lbDUUFePe', ClientId : '6v6h3ob7p9qip7jdm596shvoea'});
-// console.log("!!!!!! USER POOL: "+JSON.stringify(userPool));
 
 //
 // Manage HTTP server container
@@ -1155,4 +1156,160 @@ function storeCart(cart, callback) {
 			callback(null);
 		}
 	});
+}
+
+//
+// POST '/signup' - Sign-up new user
+app.post('/signup', function (req, res) {
+	console.log("Email: "+req.body.email);
+	console.log("Password: "+req.body.password);
+	console.log("Confirm Password: "+req.body.password_confirm);
+	console.log("Name: "+req.body.given_name+" "+req.body.family_name);
+	console.log("Phone number: "+req.body.phone_number);
+	console.log("Address: "+JSON.stringify(req.body.address));
+	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
+
+	var attributeList = [];
+	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
+	attributeList.push({Name: 'address', Value: replaceall('"','', JSON.stringify(req.body.address))});
+	attributeList.push({Name: 'given_name', Value: req.body.given_name});
+	attributeList.push({Name: 'family_name', Value: req.body.family_name});
+
+	userPool.signUp(
+		req.body.email,
+		req.body.password,
+		attributeList,
+		null,
+		function (error, data) {
+
+			if(error) {
+				
+				console.log("!ERROR! - Failed to sign-up user: "+error);
+
+				// Return error to caller
+	            res.writeHead(400, {'Content-Type': 'application/json'});
+	            res.write(JSON.stringify({error: error}));
+	            res.end();
+			} else {
+				
+				console.log("Sign-up success: "+data.user.username);
+
+	            // Return response to caller
+	            res.writeHead(201, {'Content-Type': 'application/json'});
+	            res.write(JSON.stringify({username: data.user.username}));
+	            res.end();
+			}
+	});
+});
+
+//
+// POST '/signin' - Sign-in existing user
+app.post('/signin', function (req, res) {
+
+	var authenticationDetails = new AWS.CognitoIdentityServiceProvider.AuthenticationDetails({
+		Username: req.body.email,
+		Password: req.body.password
+	});
+	var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser({Username: req.body.email, Pool: userPool});
+	cognitoUser.authenticateUser(authenticationDetails, {
+		onFailure: function (error) {
+			
+			console.log("!ERROR! - Failed to sign-in user: "+error);
+
+			// Return error to caller
+            res.writeHead(400, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+            res.write(JSON.stringify({error: error}));
+            res.end();
+		},
+		onSuccess: function (result) {
+
+			console.log('Sign-in success - user: '+JSON.stringify(cognitoUser));
+			console.log('Sign-in success - username: '+cognitoUser.username);
+			var session = {
+				id: req.session.id,
+				customerId: cognitoUser.username,
+				keys: cognitoUser
+			}
+			storeSession(session, function (storeCartError) {
+	    		if(storeCartError) {
+
+	    			console.log("!ERROR! - Failed to store session: "+storeCartError);
+	    			
+		    		// Return error to caller
+		            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+		            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
+					res.end();
+					return;
+	    		} else {
+
+					console.log("Getting user attributes.");
+					cognitoUser.getUserAttributes(function(err, result) {
+				        if(error) {
+							
+							console.log("!ERROR! - Failed to sign-in user: "+error);
+		
+							// Return error to caller
+				            res.writeHead(400, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+				            res.write(JSON.stringify({error: error}));
+				            res.end();
+				        } else {
+		
+				        	var userProfile = {};
+				        	var userProfileBuffer = '{';
+					        for(var attribute of result) {
+		
+					        	userProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
+					        }
+					        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
+					        userProfileBuffer += '}';
+					        userProfile = JSON.parse(userProfileBuffer);
+				        	console.log("User Profile: "+JSON.stringify(userProfile));
+					        
+							// Return response to caller
+				            res.writeHead(201, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+				            res.write(JSON.stringify(userProfile));
+				            res.end();
+				        }
+				    });
+	    		}
+			});
+		}
+	});
+});
+
+//
+// POST '/signout' - Sign-out currently authenticated user
+app.post('/signout', function (req, res) {
+	
+});
+
+//
+// Store cart into the data source
+function storeSession(session, callback) {
+
+	// Create params for session 'store' operation
+	var storeSessionParams = {
+		TableName: 'SuroorFashionsSessions',
+		Item: session
+	};
+
+	// Log contents of dynamo db store operation
+	console.log("Uploading session with: "+ JSON.stringify(storeSessionParams));
+
+	// Perform product store operation
+	dddc.put(storeSessionParams, function (err, data) {
+		if (err) {
+
+			console.log("Failed to store session id '"+session.id+"'. "+err);
+			callback('Failed to store session id "'+session.id+'. '+err);
+			return;
+		} else {
+
+			// Log output from data store
+			console.log("Data returned from data store: "+JSON.stringify(data));
+
+			callback(null);
+		}
+	});
+	
 }
