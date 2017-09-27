@@ -36,6 +36,12 @@ var app = express();
 app.use(express.static('assets'));
 app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(session({
+	secret: 'keyboard cat named leon',
+	resave: false,
+	saveUninitialized: true,
+	cookie: {secure: true}
+}));
 var upload = multer({ dest: '/tmp/'});
 var key = fs.readFileSync('certs/domain.key');
 var cert = fs.readFileSync('certs/domain.crt');
