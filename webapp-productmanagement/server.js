@@ -9,6 +9,7 @@
 var express = require('express');
 var http = require('http');
 var https = require('https');
+var session = require('express-session');
 var request = require('request');
 var fs = require('fs');
 var multer = require('multer');
