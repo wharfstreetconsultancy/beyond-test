@@ -174,7 +174,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<button id="'+((signup) ? 'signup' : 'signin')+'_btn" type="submit" value="'+((signup) ? 'signup' : 'signin')+'" class="btn btn-primary btn-block">'+((signup) ? 'Sign-up' : 'Sign-in')+'</button>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
-		document.getElementById("identity").action = 'https://'+restDomain+((signup) ? '/signup' : '/signin');
+//		document.getElementById("identity").action = 'https://'+restDomain+((signup) ? '/signup' : '/signin');
 	} else {
 
 		document.getElementById("identity").innerHTML = '';
@@ -220,7 +220,7 @@ $(document).ready(function() {
 		});
 		return true;
 	});
-	$('#identity').on('click', 'input[name=signup_btn]', function () {
+	$('#identity').on('click', '#signup_btn', function () {
 
 		alert('Hit signup button! '+$(this).name);
 		$(this).ajaxSubmit({
@@ -244,7 +244,7 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-	$('#identity').on('click', 'input[name=signin_btn]', function () {
+	$('#identity').on('click', '#signin_btn', function () {
 
 		alert('Hit signin button! '+$(this).name);
 		$(this).ajaxSubmit({
@@ -268,7 +268,7 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-	$('#identity').on('click', 'input[name=signout_btn]', function () {
+	$('#identity').on('click', '#signout_btn', function () {
 
 		alert('Hit signout button! '+$(this).name);
 		var sessionId = 0;
