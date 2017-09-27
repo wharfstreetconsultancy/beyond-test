@@ -174,7 +174,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<button id="signup_signin_btn" type="submit" value="'+((signup) ? 'signup' : 'signin')+'" class="btn btn-primary btn-block">'+((signup) ? 'Sign-up' : 'Sign-in')+'</button>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
-		document.getElementById("identity").action = ((signup) ? '/signup' : '/signin');
+		document.getElementById("identity").action = 'https://'+restDomain+((signup) ? '/signup' : '/signin');
 	} else {
 
 		document.getElementById("identity").innerHTML = '';
@@ -182,7 +182,7 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+JSON.parse(userProfile).given_name.substring(0,10)+'</div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><a href="/signout">Sign-out</a></div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><a href="https://'+restDomain+'/signout">Sign-out</a></div>';
 		document.getElementById("identity").innerHTML += '</div>';
 	}
 	callback();
