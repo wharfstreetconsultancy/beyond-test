@@ -1239,17 +1239,17 @@ app.post('/signin', function (req, res) {
 			storeSession(session, function (storeSessionError) {
 	    		if(storeSessionError) {
 
-	    			console.log("!ERROR! - Failed to store session: "+storeSessionError);
+	    			console.log("!ERROR! - Failed to store session id "+sessionID+": "+storeSessionError);
 	    			
 		    		// Return error to caller
 		            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-		            res.write('Failed to store session id "'+session.id+'": '+storeSessionError);
+		            res.write('Failed to store session id '+sessionID+': '+storeSessionError);
 					res.end();
 					return;
 	    		} else {
 
 					console.log("Getting user attributes.");
-					cognitoUser.getUserAttributes(function(err, result) {
+					cognitoUser.getUserAttributes(function(error, result) {
 				        if(error) {
 							
 							console.log("!ERROR! - Failed to sign-in user: "+error);
