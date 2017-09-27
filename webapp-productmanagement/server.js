@@ -1226,7 +1226,7 @@ app.post('/signin', function (req, res) {
 			console.log('Sign-in success - user: '+JSON.stringify(cognitoUser));
 			console.log('Sign-in success - username: '+cognitoUser.username);
 			var session = {
-				id: req.session.id,
+				id: req.sessionID,
 				customerId: cognitoUser.username,
 				keys: cognitoUser
 			}
