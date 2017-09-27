@@ -988,9 +988,6 @@ app.post('/cart/:id/item', function (req, res) {
     // Log request received
     console.log( "Received request: POST /cart/"+req.params.id+"/item" );
 
-    // Create new cart item
-    console.log("Request params in body: "+JSON.stringify(req.body));
-
     var timestamp = new Date().getTime().toString();
     var newCartItem = {
 		id: timestamp.split("").reverse().join(""),
@@ -1083,7 +1080,7 @@ app.post('/cart/:id/item', function (req, res) {
 });
 
 //
-// Load specified cart from the product catalog
+// Load specified cart from the data source
 function loadCart(cartId, callback) {
 
 	var params;
@@ -1166,15 +1163,17 @@ function storeCart(cart, callback) {
 }
 
 //
-// POST '/signup' - Sign-up new user
-app.post('/signup', function (req, res) {
+// POST '/customer' - Sign-up new user
+app.post('/customer', function (req, res) {
+
+    // Log request received
+    console.log( "Received request: POST /customer" );
+
 	console.log("Email: "+req.body.email);
-	console.log("Password: "+req.body.password);
-	console.log("Confirm Password: "+req.body.password_confirm);
 	console.log("Name: "+req.body.given_name+" "+req.body.family_name);
 	console.log("Phone number: "+req.body.phone_number);
 	console.log("Address: "+JSON.stringify(req.body.address));
-	console.log("Address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
+	console.log("Parsed address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
 
 	var attributeList = [];
 	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
@@ -1210,8 +1209,11 @@ app.post('/signup', function (req, res) {
 });
 
 //
-// POST '/signin' - Sign-in existing user
-app.post('/signin', function (req, res) {
+// POST '/customer/session' - Sign-in existing user
+app.post('/customer/session', function (req, res) {
+
+    // Log request received
+    console.log( "Received request: POST /customer/session" );
 
 	var authenticationDetails = new AWS.CognitoIdentityServiceProvider.AuthenticationDetails({
 		Username: req.body.email,
@@ -1284,13 +1286,126 @@ app.post('/signin', function (req, res) {
 });
 
 //
-// POST '/signout' - Sign-out currently authenticated user
-app.post('/signout', function (req, res) {
+// DELETE '/customer/session/:id' - Sign-out currently authenticated user
+app.delete('/customer/session/:id', function (req, res) {
+
+    // Log request received
+    console.log( "Received request: DELETE /customer/session/"+req.params.id );
+
+	loadSession(req.params.id, function (loadSessionError, session) {
+
+		if(loadSessionError) {
+
+			console.log("!ERROR! - Failed to load session (id="+req.params.id+"): "+loadSessionError);
+			
+    		// Return error to caller
+            res.writeHead(404, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+            res.write('Failed to delete session (id='+req.params.id+'): '+loadSessionError);
+			res.end();
+			return;
+		} else {
+
+			console.log("Got session (id="+session.id+"): "+session);
+			
+			validateSession(req, res, session, function (validateSessionError) {
 	
+				if(validateSessionError) {
+					
+		    		// Return error to caller
+		            res.writeHead(400, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+		            res.write('Invalid session (id='+req.params.id+'): specified. '+validateSessionError);
+					res.end();
+					return;
+				} else {
+
+					deleteSession(session.id, function (deleteSessionError, session) {
+
+						if(deleteSessionError) {
+
+							console.log("!ERROR! - Failed to delete session (id="+req.params.id+"): "+deleteSessionError);
+							
+				    		// Return error to caller
+				            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+				            res.write('Failed to delete session (id='+req.params.id+'): '+deleteSessionError);
+							res.end();
+							return;
+						} else {
+
+				    		// Return success to caller
+				            res.writeHead(204, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+				            res.write(JSON.stringnify(session));
+							res.end();
+							return;
+						}						
+					});
+				}
+			});
+		}
+	});
 });
 
+function validateSession(req, res, session, callback) {
+
+	// Check for validity with other input data
+	if(session.id != req.params.id) {callback('Loaded session ID does not match input param of request: '+req.params.id);}
+	if(session.id != req.sessionID) {callback('Loaded session ID does not match session ID of request: '+req.params.id);}
+	if(session.customerId != req.session.userProfile.sub) {callback('Customer ID of loaded session does not match customer ID of request: '+req.params.id);}
+	callback(null);
+}
+
 //
-// Store cart into the data source
+//Load specified session from the data source
+function loadSession(sessionId, callback) {
+
+	// Create load params
+	if(!sessionId || sessionId == 0) {
+
+		callback('No session specified', null);
+		return;
+	} else {
+
+		// Session id specified, create params
+		var params = {
+			TableName: 'SuroorFashionsSessions',
+			ExpressionAttributeValues: {':s': sessionId},
+			FilterExpression: 'id = :s'
+		};
+
+		console.log("Searching for existing session with: "+JSON.stringify(params));
+		// Perform product load action
+		dddc.scan(params, function (err, sessionData) {
+	
+			if(err) {
+	
+				// Return error to caller
+				callback(err, null);
+			} else {
+	
+				// Log loaded  cart
+				console.log("Loaded session data: "+JSON.stringify(sessionData));
+	
+				// Check only one session loaded.
+				if(sessionData.Items.length == 0) {
+					
+					callback('No sessions found for: '+sessionId);
+					return;
+				} else if(sessiontData.Items.length > 1) {
+
+					callback('More than one session found for: '+sessionId);
+					return;
+				} else {
+
+					// Return  cart to caller
+					callback(null, sessionData.Items[0]);
+					return;
+				}
+			}
+		});
+	}
+}
+
+//
+// Store session into the data source
 function storeSession(session, callback) {
 
 	// Create params for session 'store' operation
@@ -1317,5 +1432,55 @@ function storeSession(session, callback) {
 			callback(null);
 		}
 	});
+}
+
+//
+// Delete specified session from the data source
+function deleteSession(sessionId, callback) {
+
+	// Create load params
+	if(!sessionId || sessionId == 0) {
+
+		callback('No session specified', null);
+		return;
+	} else {
+
+		// Session id specified, create params
+		var params = {
+			TableName: 'SuroorFashionsSessions',
+			ExpressionAttributeValues: {':s': sessionId},
+			FilterExpression: 'id = :s'
+		};
+
+		console.log("Deleting existing session with: "+JSON.stringify(params));
+		// Perform session delete action
+		dddc.deleteItem(params, function (err, sessionData) {
 	
+			if(err) {
+	
+				// Return error to caller
+				callback(err, null);
+			} else {
+	
+				// Log loaded  cart
+				console.log("Deleted session data: "+JSON.stringify(sessionData));
+	
+				// Check only one session loaded.
+				if(sessionData.Items.length == 0) {
+					
+					callback('No sessions found for: '+sessionId);
+					return;
+				} else if(sessiontData.Items.length > 1) {
+
+					callback('More than one session found for: '+sessionId);
+					return;
+				} else {
+
+					// Return  cart to caller
+					callback(null, sessionData.Items[0]);
+					return;
+				}
+			}
+		});
+	}
 }

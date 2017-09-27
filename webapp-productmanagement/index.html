@@ -389,17 +389,17 @@ $(document).ready(function() {
 		return false;
         });
         $('#add_size').click(function () {
-                var selectedSize = document.getElementById('size').value;
-                if(selectedSize) {
-                        selectedSize = selectedSize.toUpperCase();
-			var sizes = document.getElementById('sizes').value;
-			var existingSizes = (sizes) ? JSON.parse(sizes) : [];
-			existingSizes.push(selectedSize);
-			document.getElementById('sizes').value = JSON.stringify(existingSizes);
-			document.getElementById('size_config').innerHTML += '<input id=\''+selectedSize+'\' type=\'radio\' name=\'selected_size\' value=\''+selectedSize+'\'> '+selectedSize+'</input><br>';
-			document.getElementById(selectedSize).checked = true;
-                }
-                return false;
+			var selectedSize = document.getElementById('size').value;
+			if(selectedSize) {
+				selectedSize = selectedSize.toUpperCase();
+				var sizes = document.getElementById('sizes').value;
+				var existingSizes = (sizes) ? JSON.parse(sizes) : [];
+				existingSizes.push(selectedSize);
+				document.getElementById('sizes').value = JSON.stringify(existingSizes);
+				document.getElementById('size_config').innerHTML += '<input id=\''+selectedSize+'\' type=\'radio\' name=\'selected_size\' value=\''+selectedSize+'\'> '+selectedSize+'</input><br>';
+				document.getElementById(selectedSize).checked = true;
+			}
+			return false;
         });
 	$('#default_image_selector').on('click', '#default_image', function () {
 		if(this.checked == false) {
