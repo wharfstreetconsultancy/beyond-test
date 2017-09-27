@@ -246,8 +246,8 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signin_btn', function () {
 
-		alert('Hit signin button! '+$(this));
-		$('#identity').action = '/customer/session';
+		alert('Hit signin button! '+JSON.stringify($(this));
+		document.getElementById('identity').action = '/customer/session';
 		$(this).ajaxSubmit({
 			
 			success: function (response) {
