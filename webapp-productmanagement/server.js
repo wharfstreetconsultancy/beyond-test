@@ -1230,14 +1230,14 @@ app.post('/signin', function (req, res) {
 				customerId: cognitoUser.username,
 				keys: cognitoUser
 			}
-			storeSession(session, function (storeCartError) {
-	    		if(storeCartError) {
+			storeSession(session, function (storeSessionError) {
+	    		if(storeSessionError) {
 
-	    			console.log("!ERROR! - Failed to store session: "+storeCartError);
+	    			console.log("!ERROR! - Failed to store session: "+storeSessionError);
 	    			
 		    		// Return error to caller
 		            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-		            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
+		            res.write('Failed to store session id "'+session.id+'": '+storeSessionError);
 					res.end();
 					return;
 	    		} else {
