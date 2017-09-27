@@ -222,7 +222,7 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signup_btn', function () {
 
-		alert('Hit signup button! '+$(this).name);
+		alert('Hit signup button! '+$(this).id);
 		$(this).ajaxSubmit({
 			
 			success: function (response) {
@@ -246,7 +246,8 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signin_btn', function () {
 
-		alert('Hit signin button! '+$(this).name);
+		alert('Hit signin button! '+$(this).id);
+		$('#identity').action = '/customer/session';
 		$(this).ajaxSubmit({
 			
 			success: function (response) {
@@ -270,7 +271,7 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signout_btn', function () {
 
-		alert('Hit signout button! '+$(this).name);
+		alert('Hit signout button! '+$(this).id);
 		var sessionId = 0;
 		req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
 			var parts = cookie.split('=');
