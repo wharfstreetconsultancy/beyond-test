@@ -247,8 +247,8 @@ $(document).ready(function() {
 	$('#identity').on('click', '#signin_btn', function () {
 
 		alert('Hit signin button! '+JSON.stringify($(this)));
-		$(#identity).action = '/customer/session';
-		$(#identity).ajaxSubmit({
+		$('#identity').action = '/customer/session';
+		$('#identity').ajaxSubmit({
 			
 			success: function (response) {
 		
