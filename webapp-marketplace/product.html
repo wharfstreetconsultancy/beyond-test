@@ -261,7 +261,7 @@ $(document).ready(function() {
 				});
 			},
 			error: function (xhr) {
-			
+
 				$('#status').empty().text('Failed to sign-in: '+xhr.status);
 				console.log("Failed to sign-in: "+JSON.stringify(xhr));
 			}
@@ -278,7 +278,26 @@ $(document).ready(function() {
 				sessionId = parts[1];
 			}
 		});
+		$.delete({
+			url: 'https://'+restDomain+'/customer/session',
+			success: function (response) {
 
+				$('#status').empty().text('Sign-out success');
+				console.log("Sign-out success: "+sessionId);
+				document.getElementById("signin").checked = true;
+				reloadUserProfile(function () {
+					
+					console.log("User profile unloaded: "+response.sub);
+					document.getElementById("user_nav").click();
+				});
+			},
+			error: function (xhr) {
+
+				$('#status').empty().text('Failed to sign-out: '+xhr.status);
+				console.log("Failed to sign-out: "+JSON.stringify(xhr));
+			}
+		});
+/*
 		$.delete('/customer/session/'+sessionId, function(session, status){
 			
 			$('#status').empty().text('Sign-out success');
@@ -290,6 +309,7 @@ $(document).ready(function() {
 				document.getElementById("user_nav").click();
 			});
 		});
+*/
 		return false;
 	});
 /*
