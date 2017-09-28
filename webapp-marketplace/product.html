@@ -280,6 +280,9 @@ $(document).ready(function() {
 		$.ajax({
 			url: 'https://'+restDomain+'/customer/session/'+sessionId,
 			type: 'delete',
+			beforeSubmit: function(arr, $form, options) {
+				console.log("URL: "+this.url);
+			}
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success');
@@ -297,7 +300,6 @@ $(document).ready(function() {
 				console.log("Failed to sign-out: "+JSON.stringify(xhr));
 			}
 		});
-		alert('Pause');
 /*
 		$.delete('/customer/session/'+sessionId, function(session, status){
 			
