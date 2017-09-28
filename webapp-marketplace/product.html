@@ -271,6 +271,7 @@ $(document).ready(function() {
 	$('#identity').on('click', '#signout_btn', function () {
 
 		var sessionId = 0;
+		alert(document.cookie);
 		document.cookie && document.cookie.split(';').forEach(function (cookie) {
 			var parts = cookie.split('=');
 			if(parts[0] == 'connect.sid') {
@@ -281,7 +282,7 @@ $(document).ready(function() {
 			url: 'https://'+restDomain+'/customer/session/'+sessionId,
 			type: 'delete',
 			beforeSubmit: function(arr, $form, options) {
-				console.log("URL: "+this.url);
+				console.log("URL: "+options.url);
 			},
 			success: function (response) {
 
