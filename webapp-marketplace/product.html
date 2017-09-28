@@ -282,7 +282,7 @@ $(document).ready(function() {
 			type: 'delete',
 			beforeSubmit: function(arr, $form, options) {
 				console.log("URL: "+this.url);
-			}
+			},
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success');
