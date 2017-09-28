@@ -459,7 +459,7 @@ app.delete('/customer/session', function (req, res) {
 			console.log("!ERROR! - Failed to load session (id="+sessionId+"): "+loadSessionError);
 			
     		// Return error to caller
-            res.writeHead(404, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+            res.writeHead(404, {'Content-Type': 'application/json'});
             res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
 			res.end();
 			return;
@@ -472,7 +472,7 @@ app.delete('/customer/session', function (req, res) {
 				if(validateSessionError) {
 					
 		    		// Return error to caller
-		            res.writeHead(400, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+		            res.writeHead(400, {'Content-Type': 'application/json'});
 		            res.write('Invalid session (id='+session.id+'): specified. '+validateSessionError);
 					res.end();
 					return;
@@ -485,14 +485,14 @@ app.delete('/customer/session', function (req, res) {
 							console.log("!ERROR! - Failed to delete session (id="+session.id+"): "+deleteSessionError);
 							
 				    		// Return error to caller
-				            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+				            res.writeHead(500, {'Content-Type': 'application/json'});
 				            res.write('Failed to delete session (id='+session.id+'): '+deleteSessionError);
 							res.end();
 							return;
 						} else {
 
 				    		// Return success to caller
-				            res.writeHead(204, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+				            res.writeHead(204, {'Content-Type': 'application/json'});
 				            res.write(JSON.stringnify(session));
 							res.end();
 							return;
