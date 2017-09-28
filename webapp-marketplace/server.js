@@ -443,13 +443,13 @@ app.delete('/customer/session', function (req, res) {
     console.log( "Received request: DELETE /customer/session" );
 
 	// Get session id
-	var sessionId = 0;
-	req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
-		var parts = cookie.split('=');
-		if(parts[0] == 'connect.sid') {
-			sessionId = parts[1];
-		}
-	});
+	var sessionId = req.sessionID;
+//	req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
+//		var parts = cookie.split('=');
+//		if(parts[0] == 'connect.sid') {
+//			sessionId = parts[1];
+//		}
+//	});
 	console.log("Derived cart id: "+sessionId);
 
 	loadSession(sessionId, function (loadSessionError, session) {
