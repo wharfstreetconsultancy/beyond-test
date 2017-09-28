@@ -271,15 +271,13 @@ $(document).ready(function() {
 	$('#identity').on('click', '#signout_btn', function () {
 
 		var sessionId = 0;
-		alert(window.document.cookie);
 		document.cookie && document.cookie.split(';').forEach(function (cookie) {
 			var parts = cookie.split('=');
 			if(parts[0] == 'connect.sid') {
 				sessionId = parts[1];
 			}
 		});
-		alert('https://'+restDomain+'/customer/session/'+sessionId);
-		$('#identity').ajax({
+		$.ajax({
 			url: 'https://'+restDomain+'/customer/session/d8d8d8d8d8d',
 			type: 'delete',
 			dataType: 'json',
