@@ -697,7 +697,7 @@ function loadSession(sessionId, callback) {
 					
 					callback('No sessions found for: '+sessionId);
 					return;
-				} else if(sessiontData.Items.length > 1) {
+				} else if(sessionData.Items.length > 1) {
 
 					callback('More than one session found for: '+sessionId);
 					return;
