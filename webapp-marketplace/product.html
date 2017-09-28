@@ -277,8 +277,9 @@ $(document).ready(function() {
 				sessionId = parts[1];
 			}
 		});
-		$.delete({
+		$.ajax({
 			url: 'https://'+restDomain+'/customer/session/'+sessionId,
+			type: delete,
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success');
