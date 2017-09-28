@@ -270,7 +270,6 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signout_btn', function () {
 
-		alert('Hit signout button! '+$(this).id);
 		var sessionId = 0;
 		req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
 			var parts = cookie.split('=');
@@ -279,7 +278,7 @@ $(document).ready(function() {
 			}
 		});
 		$.delete({
-			url: 'https://'+restDomain+'/customer/session',
+			url: 'https://'+restDomain+'/customer/session/'+sessionId,
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success');
