@@ -270,6 +270,7 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signout_btn', function () {
 
+/*
 		var sessionId = 0;
 		document.cookie && document.cookie.split(';').forEach(function (cookie) {
 			var parts = cookie.split('=');
@@ -277,8 +278,9 @@ $(document).ready(function() {
 				sessionId = parts[1];
 			}
 		});
+*/
 		$.ajax({
-			url: '/customer/session/d8d8d8d8d8d',
+			url: '/customer/session',
 			type: 'delete',
 			dataType: 'json',
 			crossDomain: true,

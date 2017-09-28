@@ -436,21 +436,31 @@ function formatProductViewHtml(product,callback) {
 
 
 //
-// DELETE '/customer/session/:id' - Sign-out currently authenticated user
-app.delete('/customer/session/:id', function (req, res) {
+// DELETE '/customer/session' - Sign-out currently authenticated user
+app.delete('/customer/session', function (req, res) {
 
     // Log request received
-    console.log( "Received request: DELETE /customer/session/"+req.params.id );
+    console.log( "Received request: DELETE /customer/session" );
 
-	loadSession(req.params.id, function (loadSessionError, session) {
+	// Get session id
+	var sessionId = 0;
+	req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
+		var parts = cookie.split('=');
+		if(parts[0] == 'connect.sid') {
+			sessionId = parts[1];
+		}
+	});
+	console.log("Derived cart id: "+sessionId);
+
+	loadSession(sessionId, function (loadSessionError, session) {
 
 		if(loadSessionError) {
 
-			console.log("!ERROR! - Failed to load session (id="+req.params.id+"): "+loadSessionError);
+			console.log("!ERROR! - Failed to load session (id="+sessionId+"): "+loadSessionError);
 			
     		// Return error to caller
             res.writeHead(404, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-            res.write('Failed to delete session (id='+req.params.id+'): '+loadSessionError);
+            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
 			res.end();
 			return;
 		} else {
@@ -463,7 +473,7 @@ app.delete('/customer/session/:id', function (req, res) {
 					
 		    		// Return error to caller
 		            res.writeHead(400, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-		            res.write('Invalid session (id='+req.params.id+'): specified. '+validateSessionError);
+		            res.write('Invalid session (id='+session.id+'): specified. '+validateSessionError);
 					res.end();
 					return;
 				} else {
@@ -472,11 +482,11 @@ app.delete('/customer/session/:id', function (req, res) {
 
 						if(deleteSessionError) {
 
-							console.log("!ERROR! - Failed to delete session (id="+req.params.id+"): "+deleteSessionError);
+							console.log("!ERROR! - Failed to delete session (id="+session.id+"): "+deleteSessionError);
 							
 				    		// Return error to caller
 				            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-				            res.write('Failed to delete session (id='+req.params.id+'): '+deleteSessionError);
+				            res.write('Failed to delete session (id='+session.id+'): '+deleteSessionError);
 							res.end();
 							return;
 						} else {
@@ -497,9 +507,8 @@ app.delete('/customer/session/:id', function (req, res) {
 function validateSession(req, res, session, callback) {
 
 	// Check for validity with other input data
-	if(session.id != req.params.id) {callback('Loaded session ID does not match input param of request: '+req.params.id);}
-	if(session.id != req.sessionID) {callback('Loaded session ID does not match session ID of request: '+req.params.id);}
-	if(session.customerId != req.session.userProfile.sub) {callback('Customer ID of loaded session does not match customer ID of request: '+req.params.id);}
+	if(session.id != req.sessionID) {callback('Loaded session ID does not match session ID of request: '+session.id);}
+	if(session.customerId != req.session.userProfile.sub) {callback('Customer ID of loaded session does not match customer ID of request: '+session.id);}
 	callback(null);
 }
 
