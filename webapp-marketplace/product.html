@@ -271,7 +271,7 @@ $(document).ready(function() {
 	$('#identity').on('click', '#signout_btn', function () {
 
 		var sessionId = 0;
-		req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
+		document.cookie && document.cookie.split(';').forEach(function (cookie) {
 			var parts = cookie.split('=');
 			if(parts[0] == 'connect.sid') {
 				sessionId = parts[1];
