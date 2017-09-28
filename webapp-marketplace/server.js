@@ -456,13 +456,13 @@ app.delete('/customer/session', function (req, res) {
 
 		if(loadSessionError) {
 
-			console.log("!WARNING! - When trying to delete session (id="+sessionId+"): "+loadSessionError);
+			console.log("!ERROR! - When trying to delete session (id="+sessionId+"): "+loadSessionError);
 			
     		// Return error to caller
-//            res.writeHead(404, {'Content-Type': 'application/json'});
-//            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
-//			res.end();
-//			return;
+            res.writeHead(404, {'Content-Type': 'application/json'});
+            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
+			res.end();
+			return;
 		} else {
 
 			console.log("Got session (id="+session.id+"): "+session);
@@ -484,7 +484,7 @@ app.delete('/customer/session', function (req, res) {
 
 						if(deleteSessionDbError) {
 
-							console.log("!ERROR! - Failed to delete session (id="+session.id+"): "+deleteSessionDbError);
+							console.log("!ERROR! - Failed to delete session (id="+session.id+") in DB: "+deleteSessionDbError);
 							
 				    		// Return error to caller
 				            res.writeHead(500, {'Content-Type': 'application/json'});
@@ -493,7 +493,7 @@ app.delete('/customer/session', function (req, res) {
 							return;
 						} else {
 
-							console.log("Destroyed session in data source.");
+							console.log("Deleted session (id="+session.id+") in DB.");
 
 							// Destroy session in memory
 							req.session.destroy(function (deleteSessionMemError) {
@@ -502,9 +502,15 @@ app.delete('/customer/session', function (req, res) {
 								if(deleteSessionMemError) {
 
 									console.log("!ERROR! - Failed to delete session (id="+session.id+") in memory: "+deleteSessionDbError);
+									
+						    		// Return error to caller
+						            res.writeHead(500, {'Content-Type': 'application/json'});
+						            res.write('Failed to delete session (id='+session.id+') in memory: '+deleteSessionDbError);
+									res.end();
+									return;
 								} else {
 
-									console.log("Destroyed session in memory.");
+									console.log("Deleted session (id="+session.id+") in memory.");
 	
 									// Return success to caller
 						            res.writeHead(204, {'Content-Type': 'application/json'});
