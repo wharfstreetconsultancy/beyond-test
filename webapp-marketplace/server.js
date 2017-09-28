@@ -456,13 +456,13 @@ app.delete('/customer/session', function (req, res) {
 
 		if(loadSessionError) {
 
-			console.log("!ERROR! - Failed to load session (id="+sessionId+"): "+loadSessionError);
+			console.log("!WARNING! - When trying to delete session (id="+sessionId+"): "+loadSessionError);
 			
     		// Return error to caller
-            res.writeHead(404, {'Content-Type': 'application/json'});
-            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
-			res.end();
-			return;
+//            res.writeHead(404, {'Content-Type': 'application/json'});
+//            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
+//			res.end();
+//			return;
 		} else {
 
 			console.log("Got session (id="+session.id+"): "+session);
@@ -471,32 +471,49 @@ app.delete('/customer/session', function (req, res) {
 	
 				if(validateSessionError) {
 					
-		    		// Return error to caller
+					console.log("!ERROR! - When trying to delete session (id="+session.id+"): "+validateSessionError);
+
+					// Return error to caller
 		            res.writeHead(400, {'Content-Type': 'application/json'});
 		            res.write('Invalid session (id='+session.id+'): specified. '+validateSessionError);
 					res.end();
 					return;
 				} else {
 
-					deleteSession(session.id, function (deleteSessionError, session) {
+					deleteSession(session.id, function (deleteSessionDbError, session) {
 
-						if(deleteSessionError) {
+						if(deleteSessionDbError) {
 
-							console.log("!ERROR! - Failed to delete session (id="+session.id+"): "+deleteSessionError);
+							console.log("!ERROR! - Failed to delete session (id="+session.id+"): "+deleteSessionDbError);
 							
 				    		// Return error to caller
 				            res.writeHead(500, {'Content-Type': 'application/json'});
-				            res.write('Failed to delete session (id='+session.id+'): '+deleteSessionError);
+				            res.write('Failed to delete session (id='+session.id+') in DB: '+deleteSessionDbError);
 							res.end();
 							return;
 						} else {
 
-				    		// Return success to caller
-				            res.writeHead(204, {'Content-Type': 'application/json'});
-				            res.write(JSON.stringnify(session));
-							res.end();
-							return;
-						}						
+							console.log("Destroyed session in data source.");
+
+							// Destroy session in memory
+							req.session.destroy(function (deleteSessionMemError) {
+
+
+								if(deleteSessionMemError) {
+
+									console.log("!ERROR! - Failed to delete session (id="+session.id+") in memory: "+deleteSessionDbError);
+								} else {
+
+									console.log("Destroyed session in memory.");
+	
+									// Return success to caller
+						            res.writeHead(204, {'Content-Type': 'application/json'});
+						            res.write(JSON.stringnify(session));
+									res.end();
+									return;
+								}
+							});
+						}
 					});
 				}
 			});
@@ -507,8 +524,8 @@ app.delete('/customer/session', function (req, res) {
 function validateSession(req, res, session, callback) {
 
 	// Check for validity with other input data
-	if(session.id != req.sessionID) {callback('Loaded session ID does not match session ID of request: '+session.id);}
-	if(session.customerId != req.session.userProfile.sub) {callback('Customer ID of loaded session does not match customer ID of request: '+session.id);}
+	if(session.id != req.sessionID) {callback('Session ID loaded from data source ('+session.id+') does not match session ID from request: '+req.sessionID);}
+	if(session.customerId != req.session.userProfile.sub) {callback('Session customer ID loaded from data source ('+session.customerId+') does not match session customer ID from request: '+req.session.userProfile.sub);}
 	callback(null);
 }
 
