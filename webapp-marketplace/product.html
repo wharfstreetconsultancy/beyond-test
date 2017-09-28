@@ -281,7 +281,7 @@ $(document).ready(function() {
 		alert('https://'+restDomain+'/customer/session/'+sessionId);
 		$.ajax({
 			url: 'https://'+restDomain+'/customer/session/d8d8d8d8d8d',
-			type: 'delete',
+			type: 'DELETE',
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success');
