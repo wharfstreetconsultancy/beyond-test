@@ -246,11 +246,9 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signin_btn', function () {
 
-		alert('Hit signin button! '+document.getElementById("user_nav").action);
-		document.getElementById("user_nav").action = 'https://'+restDomain+'/customer/session';
-		alert('Hit signin button! '+document.getElementById("user_nav").action);
 		$('#identity').ajaxSubmit({
 			
+			url: 'https://'+restDomain+'/customer/session',
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-in success');
