@@ -248,7 +248,7 @@ $(document).ready(function() {
 
 		$('#identity').ajaxSubmit({
 			
-			url: 'https://'+restDomain+'/customer/session',
+			url: '/customer/session',
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-in success');
