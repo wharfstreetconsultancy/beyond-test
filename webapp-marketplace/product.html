@@ -279,7 +279,7 @@ $(document).ready(function() {
 		});
 		$.ajax({
 			url: 'https://'+restDomain+'/customer/session/'+sessionId,
-			type: delete,
+			type: 'delete',
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success');
