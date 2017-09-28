@@ -1291,9 +1291,7 @@ app.delete('/customer/session/:id', function (req, res) {
 
     // Log request received
     console.log( "Received request: DELETE /customer/session/"+req.params.id );
-    
-});
-/*
+
 	loadSession(req.params.id, function (loadSessionError, session) {
 
 		if(loadSessionError) {
@@ -1345,7 +1343,6 @@ app.delete('/customer/session/:id', function (req, res) {
 		}
 	});
 });
-*/
 
 function validateSession(req, res, session, callback) {
 
