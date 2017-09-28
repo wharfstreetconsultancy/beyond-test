@@ -19,16 +19,6 @@ var replaceall = require("replaceall");
 var util = require('util');
 var events = require('events');
 var AWS = require('aws-sdk');
-var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
-var CognitoSDK = require('amazon-cognito-identity-js-node');
-AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
-AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
-AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
-AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
-var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
-    UserPoolId : 'us-west-2_jnmkbOGZY',
-    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
-});
 var sha256 = require('sha256');
 
 //
