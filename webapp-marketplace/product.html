@@ -286,11 +286,11 @@ $(document).ready(function() {
 			crossDomain: true,
 			success: function (response) {
 
-				$('#status').empty().text('Sign-out success');
-				console.log("Sign-out success");
+				$('#status').empty().text('Sign-out success.');
+				console.log("Sign-out success: "+response);
 				reloadUserProfile(function () {
 					
-					console.log("User profile unloaded: "+response.sub);
+					console.log("User profile unloaded.");
 					document.getElementById("signin").checked = true;
 					document.getElementById("user_nav").click();
 				});

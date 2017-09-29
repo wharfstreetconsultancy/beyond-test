@@ -557,6 +557,7 @@ app.post('/customer/session', function (req, res) {
 					        userProfileBuffer += '}';
 					        userProfile = JSON.parse(userProfileBuffer);
 				        	console.log("User Profile: "+JSON.stringify(userProfile));
+				        	req.session.userProf = JSON.stringify(userProfile);
 					        
 							// Return response to caller
 				            res.writeHead(201, {'Content-Type': 'application/json'});
