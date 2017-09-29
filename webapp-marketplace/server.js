@@ -639,7 +639,7 @@ app.delete('/customer/session', function (req, res) {
 									return;
 								} else {
 
-									console.log("Deleted session (id="+req.sessionID+") in memory.");
+									console.log("Destroyed session (id="+req.sessionID+").");
 	
 									// Return success to caller
 						            res.writeHead(204, {'Content-Type': 'application/json'});
