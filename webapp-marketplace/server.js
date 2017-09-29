@@ -15,6 +15,7 @@ var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
+AWS.config.update({region: process.env.AWS_REGION});
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
 AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
