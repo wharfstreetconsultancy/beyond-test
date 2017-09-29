@@ -594,17 +594,17 @@ app.delete('/customer/session', function (req, res) {
 //			return;
 //		} else {
 
-			console.log("Got session (id="+sessionID+"): "+session);
+			console.log("Got session (id="+req.sessionID+"): "+session);
 			
 			validateSession(req, res, session, function (validateSessionError) {
 	
 				if(validateSessionError) {
 					
-					console.log("!ERROR! - When trying to delete session (id="+sessionID+"): "+validateSessionError);
+					console.log("!ERROR! - When trying to delete session (id="+req.sessionID+"): "+validateSessionError);
 
 					// Return error to caller
 		            res.writeHead(400, {'Content-Type': 'application/json'});
-		            res.write('Invalid session (id='+sessionID+'): specified. '+validateSessionError);
+		            res.write('Invalid session (id='+req.sessionID+'): specified. '+validateSessionError);
 					res.end();
 					return;
 				} else {
@@ -622,7 +622,7 @@ app.delete('/customer/session', function (req, res) {
 //							return;
 //						} else {
 
-//							console.log("Deleted session (id="+sessionID+") in DB.");
+//							console.log("Deleted session (id="+req.sessionID+") in DB.");
 
 							// Destroy session in memory
 							req.session.destroy(function (deleteSessionMemError) {
@@ -634,12 +634,12 @@ app.delete('/customer/session', function (req, res) {
 									
 						    		// Return error to caller
 						            res.writeHead(500, {'Content-Type': 'application/json'});
-						            res.write('Failed to delete session (id='+sessionID+') in memory: '+deleteSessionDbError);
+						            res.write('Failed to delete session (id='+req.sessionID+') in memory: '+deleteSessionDbError);
 									res.end();
 									return;
 								} else {
 
-									console.log("Deleted session (id="+sessionID+") in memory.");
+									console.log("Deleted session (id="+req.sessionID+") in memory.");
 	
 									// Return success to caller
 						            res.writeHead(204, {'Content-Type': 'application/json'});
