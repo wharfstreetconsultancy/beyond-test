@@ -594,20 +594,20 @@ app.delete('/customer/session', function (req, res) {
 //			return;
 //		} else {
 
-			console.log("Got session (id="+req.sessionID+"): "+session);
+			console.log("Found session (id="+req.sessionID+").");
 			
-			validateSession(req, res, session, function (validateSessionError) {
-	
-				if(validateSessionError) {
-					
-					console.log("!ERROR! - When trying to delete session (id="+req.sessionID+"): "+validateSessionError);
-
-					// Return error to caller
-		            res.writeHead(400, {'Content-Type': 'application/json'});
-		            res.write('Invalid session (id='+req.sessionID+'): specified. '+validateSessionError);
-					res.end();
-					return;
-				} else {
+//			validateSession(req, res, session, function (validateSessionError) {
+//	
+//				if(validateSessionError) {
+//					
+//					console.log("!ERROR! - When trying to delete session (id="+req.sessionID+"): "+validateSessionError);
+//
+//					// Return error to caller
+//		            res.writeHead(400, {'Content-Type': 'application/json'});
+//		            res.write('Invalid session (id='+req.sessionID+'): specified. '+validateSessionError);
+//					res.end();
+//					return;
+//				} else {
 
 //					deleteSession(session.id, function (deleteSessionDbError, session) {
 //
@@ -650,12 +650,12 @@ app.delete('/customer/session', function (req, res) {
 							});
 //						}
 //					});
-				}
-			});
+//				}
+//			});
 //		}
 //	});
 });
-
+/*
 function validateSession(req, res, session, callback) {
 
 	// Check for validity with other input data
@@ -663,7 +663,7 @@ function validateSession(req, res, session, callback) {
 	if(session.customerId != req.session.userProfile.sub) {callback('Session customer ID loaded from data source ('+session.customerId+') does not match session customer ID from request: '+req.session.userProfile.sub);}
 	callback(null);
 }
-/*
+
 //
 //Load specified session from the data source
 function loadSession(sessionId, callback) {
