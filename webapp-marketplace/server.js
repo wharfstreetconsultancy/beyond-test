@@ -2,6 +2,7 @@
 // Import required libraries
 var express = require('express');
 var session = require('express-session');
+var DynamoDBStore = require('connect-dynamodb')({session: session});
 var http = require('http');
 var https = require('https');
 var request = require('request');
@@ -31,6 +32,7 @@ app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: 'keyboard cat named leon',
+	store: new DynamoDBStore({table: 'SuroorFashionsSessions'}),
 	resave: false,
 	saveUninitialized: true,
 	cookie: {secure: true}
@@ -520,17 +522,17 @@ app.post('/customer/session', function (req, res) {
 				customerId: cognitoUser.username,
 				keys: result
 			}
-			storeSession(session, function (storeSessionError) {
-	    		if(storeSessionError) {
-
-	    			console.log("!ERROR! - Failed to store session id "+sessionID+": "+storeSessionError);
-	    			
-		    		// Return error to caller
-		            res.writeHead(500, {'Content-Type': 'application/json'});
-		            res.write('Failed to store session id '+sessionID+': '+storeSessionError);
-					res.end();
-					return;
-	    		} else {
+//			storeSession(session, function (storeSessionError) {
+//	    		if(storeSessionError) {
+//
+//	    			console.log("!ERROR! - Failed to store session id "+sessionID+": "+storeSessionError);
+//	    			
+//		    		// Return error to caller
+//		            res.writeHead(500, {'Content-Type': 'application/json'});
+//		            res.write('Failed to store session id '+sessionID+': '+storeSessionError);
+//					res.end();
+//					return;
+//	    		} else {
 
 					console.log("Getting user attributes.");
 					cognitoUser.getUserAttributes(function(error, result) {
@@ -561,8 +563,8 @@ app.post('/customer/session', function (req, res) {
 				            res.end();
 				        }
 				    });
-	    		}
-			});
+//	    		}
+//			});
 		}
 	});
 });
@@ -576,50 +578,50 @@ app.delete('/customer/session', function (req, res) {
 
 	// Get session id
 	var sessionId = req.sessionID;
-	console.log("Derived cart id: "+sessionId);
+	var session = req.session;
 
-	loadSession(sessionId, function (loadSessionError, session) {
+//	loadSession(sessionId, function (loadSessionError, session) {
+//
+//		if(loadSessionError) {
+//
+//			console.log("!ERROR! - When trying to delete session (id="+sessionId+"): "+loadSessionError);
+//			
+//    		// Return error to caller
+//            res.writeHead(404, {'Content-Type': 'application/json'});
+//            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
+//			res.end();
+//			return;
+//		} else {
 
-		if(loadSessionError) {
-
-			console.log("!ERROR! - When trying to delete session (id="+sessionId+"): "+loadSessionError);
-			
-    		// Return error to caller
-            res.writeHead(404, {'Content-Type': 'application/json'});
-            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
-			res.end();
-			return;
-		} else {
-
-			console.log("Got session (id="+session.id+"): "+session);
+			console.log("Got session (id="+sessionID+"): "+session);
 			
 			validateSession(req, res, session, function (validateSessionError) {
 	
 				if(validateSessionError) {
 					
-					console.log("!ERROR! - When trying to delete session (id="+session.id+"): "+validateSessionError);
+					console.log("!ERROR! - When trying to delete session (id="+sessionID+"): "+validateSessionError);
 
 					// Return error to caller
 		            res.writeHead(400, {'Content-Type': 'application/json'});
-		            res.write('Invalid session (id='+session.id+'): specified. '+validateSessionError);
+		            res.write('Invalid session (id='+sessionID+'): specified. '+validateSessionError);
 					res.end();
 					return;
 				} else {
 
-					deleteSession(session.id, function (deleteSessionDbError, session) {
+//					deleteSession(session.id, function (deleteSessionDbError, session) {
+//
+//						if(deleteSessionDbError) {
+//
+//							console.log("!ERROR! - Failed to delete session (id="+session.id+") in DB: "+deleteSessionDbError);
+//							
+//				    		// Return error to caller
+//				            res.writeHead(500, {'Content-Type': 'application/json'});
+//				            res.write('Failed to delete session (id='+session.id+') in DB: '+deleteSessionDbError);
+//							res.end();
+//							return;
+//						} else {
 
-						if(deleteSessionDbError) {
-
-							console.log("!ERROR! - Failed to delete session (id="+session.id+") in DB: "+deleteSessionDbError);
-							
-				    		// Return error to caller
-				            res.writeHead(500, {'Content-Type': 'application/json'});
-				            res.write('Failed to delete session (id='+session.id+') in DB: '+deleteSessionDbError);
-							res.end();
-							return;
-						} else {
-
-							console.log("Deleted session (id="+session.id+") in DB.");
+//							console.log("Deleted session (id="+sessionID+") in DB.");
 
 							// Destroy session in memory
 							req.session.destroy(function (deleteSessionMemError) {
@@ -631,26 +633,26 @@ app.delete('/customer/session', function (req, res) {
 									
 						    		// Return error to caller
 						            res.writeHead(500, {'Content-Type': 'application/json'});
-						            res.write('Failed to delete session (id='+session.id+') in memory: '+deleteSessionDbError);
+						            res.write('Failed to delete session (id='+sessionID+') in memory: '+deleteSessionDbError);
 									res.end();
 									return;
 								} else {
 
-									console.log("Deleted session (id="+session.id+") in memory.");
+									console.log("Deleted session (id="+sessionID+") in memory.");
 	
 									// Return success to caller
 						            res.writeHead(204, {'Content-Type': 'application/json'});
-						            res.write(JSON.stringnify(session));
+						            res.write(JSON.stringify({session: undefined}));
 									res.end();
 									return;
 								}
 							});
-						}
-					});
+//						}
+//					});
 				}
 			});
-		}
-	});
+//		}
+//	});
 });
 
 function validateSession(req, res, session, callback) {
@@ -660,7 +662,7 @@ function validateSession(req, res, session, callback) {
 	if(session.customerId != req.session.userProfile.sub) {callback('Session customer ID loaded from data source ('+session.customerId+') does not match session customer ID from request: '+req.session.userProfile.sub);}
 	callback(null);
 }
-
+/*
 //
 //Load specified session from the data source
 function loadSession(sessionId, callback) {
@@ -793,3 +795,4 @@ function storeSession(session, callback) {
 		}
 	});
 }
+*/
