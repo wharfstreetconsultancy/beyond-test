@@ -288,10 +288,10 @@ $(document).ready(function() {
 
 				$('#status').empty().text('Sign-out success');
 				console.log("Sign-out success");
-				document.getElementById("signin").checked = true;
 				reloadUserProfile(function () {
 					
 					console.log("User profile unloaded: "+response.sub);
+					document.getElementById("signin").checked = true;
 					document.getElementById("user_nav").click();
 				});
 			},
