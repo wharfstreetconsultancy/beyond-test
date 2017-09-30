@@ -454,14 +454,38 @@ app.get('/customer', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /customer" );
 	
-	console.log("Found user: "+JSON.stringify(req.session.user));
+	console.log("Found user: "+JSON.stringify(req.session.customer));
 
-	console.log("No user signed-in.");
+	if(req.session.customer.isAuthenticated()) {
+		console.log("Customer signed-in.");
 
-	// Return error to caller
-    res.writeHead(404, {'Content-Type': 'application/json'});
-    res.write(JSON.stringify({userId: undefined}));
-    res.end();
+		console.log("Getting customer attributes.");
+		profileCustomer(function(customerProfileError, customerProfile) {
+
+	        if(customerProfileError) {
+				
+				console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
+
+				// Return error to caller
+	            res.writeHead(500, {'Content-Type': 'application/json'});
+	            res.write(JSON.stringify({error: customerProfileError}));
+	            res.end();
+	        } else {
+
+				// Return customer to caller
+			    res.writeHead(200, {'Content-Type': 'application/json'});
+			    res.write(JSON.stringify({customer: customerProfile}));
+			    res.end();
+	        }
+		});
+	} else {
+		console.log("No Customer signed-in.");
+
+		// Return error to caller
+	    res.writeHead(404, {'Content-Type': 'application/json'});
+	    res.write(JSON.stringify({customer: null}));
+	    res.end();
+	}
 });
 
 //
@@ -525,7 +549,7 @@ app.post('/customer/session', function (req, res) {
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onFailure: function (error) {
 			
-			console.log("!ERROR! - Failed to sign-in user: "+error);
+			console.log("!ERROR! - Failed to sign-in customer: "+error);
 
 			// Return error to caller
             res.writeHead(400, {'Content-Type': 'application/json'});
@@ -535,39 +559,24 @@ app.post('/customer/session', function (req, res) {
 		onSuccess: function (result) {
 
 			console.log('Sign-in success - username: '+cognitoUser.username);
-			var session = {
-				id: req.sessionID,
-				customerId: cognitoUser.username,
-				keys: result
-			}
 
-			console.log("Getting user attributes.");
-			cognitoUser.getUserAttributes(function(error, result) {
-		        if(error) {
+			console.log("Getting customer attributes.");
+			profileCustomer(function(customerProfileError, customerProfile) {
+		        if(customerProfileError) {
 					
-					console.log("!ERROR! - Failed to sign-in user: "+error);
+					console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
 
 					// Return error to caller
-		            res.writeHead(400, {'Content-Type': 'application/json'});
-		            res.write(JSON.stringify({error: error}));
+		            res.writeHead(500, {'Content-Type': 'application/json'});
+		            res.write(JSON.stringify({error: customerProfileError}));
 		            res.end();
 		        } else {
 
-		        	var userProfile = {};
-		        	var userProfileBuffer = '{';
-			        for(var attribute of result) {
-
-			        	userProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
-			        }
-			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
-			        userProfileBuffer += '}';
-			        userProfile = JSON.parse(userProfileBuffer);
-		        	console.log("User Profile: "+JSON.stringify(userProfile));
-		        	req.session.user = cognitoUser;
+		        	req.session.customer = cognitoUser;
 			        
 					// Return response to caller
 		            res.writeHead(201, {'Content-Type': 'application/json'});
-		            res.write(JSON.stringify(userProfile));
+		            res.write(JSON.stringify(customerProfile));
 		            res.end();
 		        }
 		    });
@@ -608,3 +617,25 @@ app.delete('/customer/session', function (req, res) {
 		}
 	});
 });
+
+function profileCustomer(customer, callback) {
+	cognitoUser.getUserAttributes(function(error, result) {
+        if(error) {
+        	
+        	console.log("!ERROR! - Couldn't get user attributes: "+error);
+        	callback(error, null);
+        } else {
+	    	var customerProfile = {};
+	    	var customerProfileBuffer = '{';
+	        for(var attribute of result) {
+	
+	        	customerProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
+	        }
+	        customerProfileBuffer = customerProfileBuffer.substring(0, customerProfileBuffer.length-1);
+	        customerProfileBuffer += '}';
+	        customerProfile = JSON.parse(customerProfileBuffer);
+	    	console.log("Customer Profile: "+JSON.stringify(customerProfile));
+	    	callback(null, customerProfile);
+        }
+	});
+}
