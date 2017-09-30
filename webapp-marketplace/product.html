@@ -125,7 +125,7 @@ function reloadCustomerPanels() {
 
 function reloadCustomerProfile(callback) {
 
-	console.log("Current customer: "+customer);
+	console.log("Current customer: "+JSON.stringify(customer));
 	if(!customer) {
 
 		var signupElement = document.getElementById("signup");
@@ -306,7 +306,7 @@ $(document).ready(function() {
 		
 				$('#status').empty().text('Sign-in success');
 				customer = response;
-				console.log("Sign-in success: "+customer);
+				console.log("Sign-in success: "+JSON.stringify(customer));
 				reloadCustomerProfile(function () {
 					
 					console.log("Customer profile loaded: "+customer.sub);
