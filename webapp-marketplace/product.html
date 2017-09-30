@@ -140,6 +140,7 @@ function reloadCustomerProfile(callback) {
 		document.getElementById("identity").innerHTML += '<hr>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
+		document.getElementById("identity").innerHTML += '<p><span id="user_msg">'+((signup) ? 'Please provide account details...' :'Please provide youir credentials...')+'</span></p>';
 		document.getElementById("identity").innerHTML += '<input id="email" name="email" type="text" placeholder="Email..."/><br>';
 		document.getElementById("identity").innerHTML += '<input id="password" name="password" type="password" placeholder="Password..."/><br>';
 		if(signup) {
@@ -315,7 +316,7 @@ $(document).ready(function() {
 			},
 			error: function (xhr) {
 
-				$('#status').empty().text('Failed to sign-in: '+xhr.status);
+				document.getElementById("user_msg").innerHTML = 'Failed to sign-in. Please retry...';
 				console.log("Failed to sign-in: "+JSON.stringify(xhr));
 			}
 		});
