@@ -637,7 +637,7 @@ app.delete('/customer/session', function (req, res) {
 
 function profileCustomer(customer, callback) {
 
-	console.log("Profiling customer: "+customer);
+	console.log("Profiling customer: "+JSON.stringify(customer));
 	customer.getUserAttributes(function(error, result) {
         if(error) {
         	
