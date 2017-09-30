@@ -179,7 +179,7 @@ function reloadCustomerProfile(callback) {
 
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+JSON.parse(customer).given_name.substring(0,10)+'</div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+customer.given_name.substring(0,10)+'</div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><button id="signout_btn" type="submit" value="signout" class="btn btn-primary btn-block">Sign-out</button></div>';
