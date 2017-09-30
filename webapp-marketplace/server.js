@@ -456,7 +456,8 @@ app.get('/customer', function (req, res) {
 	
 	console.log("Found user: "+JSON.stringify(req.session.customer));
 
-	if(req.session.customer.isAuthenticated()) {
+	var customer = req.session.customer;
+	if(customer && customer.getSession() && customer.getSession().isValid()) {
 		console.log("Customer signed-in.");
 
 		console.log("Getting customer attributes.");
