@@ -206,6 +206,8 @@ function reloadCustomerCart() {
 }
 
 $(document).load(function() {
+	
+	console.log("Looking up customer.");
 	$.ajax({
 		url: '/customer',
 		type: 'get',
@@ -214,7 +216,7 @@ $(document).load(function() {
 		success: function (response) {
 
 			customer = response;
-			console.log("Customer found: "+customer);
+			console.log("Customer found: "+JSON.stringify(customer));
 			reloadCustomerPanels(function () {
 				
 				console.log("Customer panels loaded.");

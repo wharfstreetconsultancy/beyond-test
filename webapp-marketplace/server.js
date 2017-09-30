@@ -448,11 +448,11 @@ function formatProductViewHtml(product,callback) {
 }
 
 //
-// GET '/customer/id' - Get customer id
-app.get('/customer/id', function (req, res) {
+// GET '/customer' - Get customer id
+app.get('/customer', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: GET /customer/id" );
+	console.log( "Received request: GET /customer" );
 	
 	console.log("Found user: "+JSON.stringify(req.session.user));
 
