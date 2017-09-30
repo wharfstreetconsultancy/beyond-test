@@ -460,7 +460,7 @@ app.get('/customer', function (req, res) {
 		console.log("Customer signed-in.");
 
 		console.log("Getting customer attributes.");
-		profileCustomer(function(customerProfileError, customerProfile) {
+		profileCustomer(req.session.customer, function(customerProfileError, customerProfile) {
 
 	        if(customerProfileError) {
 				
@@ -561,7 +561,7 @@ app.post('/customer/session', function (req, res) {
 			console.log('Sign-in success - username: '+cognitoUser.username);
 
 			console.log("Getting customer attributes.");
-			profileCustomer(function(customerProfileError, customerProfile) {
+			profileCustomer(cognitoUser, function(customerProfileError, customerProfile) {
 		        if(customerProfileError) {
 					
 					console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
@@ -619,7 +619,7 @@ app.delete('/customer/session', function (req, res) {
 });
 
 function profileCustomer(customer, callback) {
-	cognitoUser.getUserAttributes(function(error, result) {
+	customer.getUserAttributes(function(error, result) {
         if(error) {
         	
         	console.log("!ERROR! - Couldn't get user attributes: "+error);
