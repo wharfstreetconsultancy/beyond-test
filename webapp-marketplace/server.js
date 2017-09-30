@@ -458,12 +458,12 @@ app.get('/customer', function (req, res) {
 	if(customer) {
 		
 		console.log("Found customer: "+JSON.stringify(customer));
-		console.log("Sign-in status: "+customer.isSignedIn);
+		console.log("Sign-in status: "+(customer.signInUserSession));
 		
 //		customer.getSession(function (sessionError, session) {
 
 //			if(sessionError || session.isValid()) {
-	        if(!customer.isSignedIn) {
+	        if(!(customer.signInUserSession)) {
 				
 	    		console.log("Customer not signed-in.");
 
