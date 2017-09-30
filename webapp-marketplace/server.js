@@ -448,6 +448,23 @@ function formatProductViewHtml(product,callback) {
 }
 
 //
+// GET '/customer/id' - Get customer id
+app.get('/customer/id', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: GET /customer/id" );
+	
+	console.log("Found user: "+JSON.stringify(req.session.user));
+
+	console.log("No user signed-in.");
+
+	// Return error to caller
+    res.writeHead(404, {'Content-Type': 'application/json'});
+    res.write(JSON.stringify({userId: undefined}));
+    res.end();
+});
+
+//
 // POST '/customer' - Sign-up new user
 app.post('/customer', function (req, res) {
 
@@ -523,50 +540,37 @@ app.post('/customer/session', function (req, res) {
 				customerId: cognitoUser.username,
 				keys: result
 			}
-//			storeSession(session, function (storeSessionError) {
-//	    		if(storeSessionError) {
-//
-//	    			console.log("!ERROR! - Failed to store session id "+sessionID+": "+storeSessionError);
-//	    			
-//		    		// Return error to caller
-//		            res.writeHead(500, {'Content-Type': 'application/json'});
-//		            res.write('Failed to store session id '+sessionID+': '+storeSessionError);
-//					res.end();
-//					return;
-//	    		} else {
 
-					console.log("Getting user attributes.");
-					cognitoUser.getUserAttributes(function(error, result) {
-				        if(error) {
-							
-							console.log("!ERROR! - Failed to sign-in user: "+error);
-		
-							// Return error to caller
-				            res.writeHead(400, {'Content-Type': 'application/json'});
-				            res.write(JSON.stringify({error: error}));
-				            res.end();
-				        } else {
-		
-				        	var userProfile = {};
-				        	var userProfileBuffer = '{';
-					        for(var attribute of result) {
-		
-					        	userProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
-					        }
-					        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
-					        userProfileBuffer += '}';
-					        userProfile = JSON.parse(userProfileBuffer);
-				        	console.log("User Profile: "+JSON.stringify(userProfile));
-				        	req.session.userProf = JSON.stringify(userProfile);
-					        
-							// Return response to caller
-				            res.writeHead(201, {'Content-Type': 'application/json'});
-				            res.write(JSON.stringify(userProfile));
-				            res.end();
-				        }
-				    });
-//	    		}
-//			});
+			console.log("Getting user attributes.");
+			cognitoUser.getUserAttributes(function(error, result) {
+		        if(error) {
+					
+					console.log("!ERROR! - Failed to sign-in user: "+error);
+
+					// Return error to caller
+		            res.writeHead(400, {'Content-Type': 'application/json'});
+		            res.write(JSON.stringify({error: error}));
+		            res.end();
+		        } else {
+
+		        	var userProfile = {};
+		        	var userProfileBuffer = '{';
+			        for(var attribute of result) {
+
+			        	userProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
+			        }
+			        userProfileBuffer = userProfileBuffer.substring(0, userProfileBuffer.length-1);
+			        userProfileBuffer += '}';
+			        userProfile = JSON.parse(userProfileBuffer);
+		        	console.log("User Profile: "+JSON.stringify(userProfile));
+		        	req.session.user = cognitoUser;
+			        
+					// Return response to caller
+		            res.writeHead(201, {'Content-Type': 'application/json'});
+		            res.write(JSON.stringify(userProfile));
+		            res.end();
+		        }
+		    });
 		}
 	});
 });
@@ -578,223 +582,29 @@ app.delete('/customer/session', function (req, res) {
     // Log request received
     console.log( "Received request: DELETE /customer/session" );
 
-	// Get session id
-	var sessionId = req.sessionID;
-	var session = req.session;
+	console.log("Found session (id="+req.sessionID+").");
+	
+	// Destroy session in memory
+	req.session.destroy(function (deleteSessionMemError) {
 
-//	loadSession(sessionId, function (loadSessionError, session) {
-//
-//		if(loadSessionError) {
-//
-//			console.log("!ERROR! - When trying to delete session (id="+sessionId+"): "+loadSessionError);
-//			
-//    		// Return error to caller
-//            res.writeHead(404, {'Content-Type': 'application/json'});
-//            res.write('Failed to delete session (id='+sessionId+'): '+loadSessionError);
-//			res.end();
-//			return;
-//		} else {
+		if(deleteSessionMemError) {
 
-			console.log("Found session (id="+req.sessionID+").");
+			console.log("!ERROR! - Failed to delete session (id="+req.sessionID+") in memory: "+deleteSessionDbError);
 			
-//			validateSession(req, res, session, function (validateSessionError) {
-//	
-//				if(validateSessionError) {
-//					
-//					console.log("!ERROR! - When trying to delete session (id="+req.sessionID+"): "+validateSessionError);
-//
-//					// Return error to caller
-//		            res.writeHead(400, {'Content-Type': 'application/json'});
-//		            res.write('Invalid session (id='+req.sessionID+'): specified. '+validateSessionError);
-//					res.end();
-//					return;
-//				} else {
-
-//					deleteSession(session.id, function (deleteSessionDbError, session) {
-//
-//						if(deleteSessionDbError) {
-//
-//							console.log("!ERROR! - Failed to delete session (id="+session.id+") in DB: "+deleteSessionDbError);
-//							
-//				    		// Return error to caller
-//				            res.writeHead(500, {'Content-Type': 'application/json'});
-//				            res.write('Failed to delete session (id='+session.id+') in DB: '+deleteSessionDbError);
-//							res.end();
-//							return;
-//						} else {
-
-//							console.log("Deleted session (id="+req.sessionID+") in DB.");
-
-							// Destroy session in memory
-							req.session.destroy(function (deleteSessionMemError) {
-
-
-								if(deleteSessionMemError) {
-
-									console.log("!ERROR! - Failed to delete session (id="+session.id+") in memory: "+deleteSessionDbError);
-									
-						    		// Return error to caller
-						            res.writeHead(500, {'Content-Type': 'application/json'});
-						            res.write('Failed to delete session (id='+req.sessionID+') in memory: '+deleteSessionDbError);
-									res.end();
-									return;
-								} else {
-
-									console.log("Destroyed session (id="+req.sessionID+").");
-	
-									// Return success to caller
-						            res.writeHead(204, {'Content-Type': 'application/json'});
-						            res.write(JSON.stringify({session: undefined}));
-									res.end();
-									return;
-								}
-							});
-//						}
-//					});
-//				}
-//			});
-//		}
-//	});
-});
-/*
-function validateSession(req, res, session, callback) {
-
-	// Check for validity with other input data
-	if(session.id != req.sessionID) {callback('Session ID loaded from data source ('+session.id+') does not match session ID from request: '+req.sessionID);}
-	if(session.customerId != req.session.userProfile.sub) {callback('Session customer ID loaded from data source ('+session.customerId+') does not match session customer ID from request: '+req.session.userProfile.sub);}
-	callback(null);
-}
-
-//
-//Load specified session from the data source
-function loadSession(sessionId, callback) {
-
-	// Create load params
-	if(!sessionId || sessionId == 0) {
-
-		callback('No session specified', null);
-		return;
-	} else {
-
-		// Session id specified, create params
-		var params = {
-			TableName: 'SuroorFashionsSessions',
-			ExpressionAttributeValues: {':s': sessionId},
-			FilterExpression: 'id = :s'
-		};
-
-		console.log("Searching for existing session with: "+JSON.stringify(params));
-		// Perform product load action
-		dddc.scan(params, function (err, sessionData) {
-	
-			if(err) {
-	
-				// Return error to caller
-				callback(err, null);
-			} else {
-	
-				// Log loaded  cart
-				console.log("Loaded session data: "+JSON.stringify(sessionData));
-	
-				// Check only one session loaded.
-				if(sessionData.Items.length == 0) {
-					
-					callback('No sessions found for: '+sessionId);
-					return;
-				} else if(sessionData.Items.length > 1) {
-
-					callback('More than one session found for: '+sessionId);
-					return;
-				} else {
-
-					// Return  cart to caller
-					callback(null, sessionData.Items[0]);
-					return;
-				}
-			}
-		});
-	}
-}
-
-
-//
-// Delete specified session from the data source
-function deleteSession(sessionId, callback) {
-
-	// Create load params
-	if(!sessionId || sessionId == 0) {
-
-		callback('No session specified', null);
-		return;
-	} else {
-
-		// Session id specified, create params
-		var params = {
-			TableName: 'SuroorFashionsSessions',
-			ExpressionAttributeValues: {':s': sessionId},
-			FilterExpression: 'id = :s'
-		};
-
-		console.log("Deleting existing session with: "+JSON.stringify(params));
-		// Perform session delete action
-		dddc.deleteItem(params, function (err, sessionData) {
-	
-			if(err) {
-	
-				// Return error to caller
-				callback(err, null);
-			} else {
-	
-				// Log loaded  cart
-				console.log("Deleted session data: "+JSON.stringify(sessionData));
-	
-				// Check only one session loaded.
-				if(sessionData.Items.length == 0) {
-					
-					callback('No sessions found for: '+sessionId);
-					return;
-				} else if(sessiontData.Items.length > 1) {
-
-					callback('More than one session found for: '+sessionId);
-					return;
-				} else {
-
-					// Return  cart to caller
-					callback(null, sessionData.Items[0]);
-					return;
-				}
-			}
-		});
-	}
-}
-
-//
-//Store session into the data source
-function storeSession(session, callback) {
-
-	// Create params for session 'store' operation
-	var storeSessionParams = {
-		TableName: 'SuroorFashionsSessions',
-		Item: session
-	};
-
-	// Log contents of dynamo db store operation
-	console.log("Uploading session with: "+ JSON.stringify(storeSessionParams));
-
-	// Perform product store operation
-	dddc.put(storeSessionParams, function (err, data) {
-		if (err) {
-
-			console.log("Failed to store session id '"+session.id+"'. "+err);
-			callback('Failed to store session id "'+session.id+'. '+err);
+    		// Return error to caller
+            res.writeHead(500, {'Content-Type': 'application/json'});
+            res.write('Failed to delete session (id='+req.sessionID+') in memory: '+deleteSessionDbError);
+			res.end();
 			return;
 		} else {
 
-			// Log output from data store
-			console.log("Data returned from data store: "+JSON.stringify(data));
+			console.log("Destroyed session (id="+req.sessionID+").");
 
-			callback(null);
+			// Return success to caller
+            res.writeHead(204, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify({session: undefined}));
+			res.end();
+			return;
 		}
 	});
-}
-*/
+});

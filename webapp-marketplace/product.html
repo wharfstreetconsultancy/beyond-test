@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
   </head>
-  <body onload="reloadAllPanels()">
+  <body>
+  <!-- body onload="reloadAllPanels()" -->
     <!------------------------------ Header --------------------------->
     <!--This is the Header Content-->
   	<div class="container-fluid">
@@ -113,19 +114,19 @@
 		
 /* #### START DYNAMIC DATA DECLARATIONS #### */
 var restDomain = {rest.domain};
+var customer = null;
 // var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
-function reloadAllPanels() {
+function reloadCustomerPanels() {
 
-	reloadUserProfile(function () {console.log("User loading done.");reloadCart();});
+	reloadCustomerProfile(function () {console.log("User loading done.");reloadCustomerCart();});
 }
 
-function reloadUserProfile(callback) {
+function reloadCustomerProfile(callback) {
 
-	var userProfile = sessionStorage.getItem('userProfile');
-	console.log("Current user: "+userProfile);
-	if(!userProfile) {
+	console.log("Current customer: "+customer);
+	if(!customer) {
 
 		var signupElement = document.getElementById("signup");
 		var signup = (signupElement && signupElement.checked == true);
@@ -174,12 +175,11 @@ function reloadUserProfile(callback) {
 		document.getElementById("identity").innerHTML += '<button id="'+((signup) ? 'signup' : 'signin')+'_btn" type="submit" value="'+((signup) ? 'signup' : 'signin')+'" class="btn btn-primary btn-block">'+((signup) ? 'Sign-up' : 'Sign-in')+'</button>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
-//		document.getElementById("identity").action = 'https://'+restDomain+((signup) ? '/signup' : '/signin');
 	} else {
 
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+JSON.parse(userProfile).given_name.substring(0,10)+'</div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+JSON.parse(customer).given_name.substring(0,10)+'</div>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><button id="signout_btn" type="submit" value="signout" class="btn btn-primary btn-block">Sign-out</button></div>';
@@ -188,7 +188,7 @@ function reloadUserProfile(callback) {
 	callback();
 }
 
-function reloadCart() {
+function reloadCustomerCart() {
 	var localCart = JSON.parse(localStorage.getItem('cart'));
 	console.log("Current cart: "+JSON.stringify(localCart));
 	if(!localCart || !localCart.items || localCart.items.length == 0) {
@@ -205,6 +205,32 @@ function reloadCart() {
 	}
 }
 
+$(document).load(function() {
+	$.ajax({
+		url: '/customer',
+		type: 'get',
+		dataType: 'json',
+		crossDomain: true,
+		success: function (response) {
+
+			customer = response;
+			console.log("Customer found: "+customer);
+			reloadCustomerPanels(function () {
+				
+				console.log("Customer panels loaded.");
+			});
+		},
+		error: function (xhr) {
+
+			console.log("No customer found: "+JSON.stringify(xhr));
+			reloadCustomerPanels(function () {
+				
+				console.log("Customer panels loaded.");
+			});
+		}
+	});
+});
+
 $(document).ready(function() {
 
 	$('#cart_preview').on('reset', function () {
@@ -214,7 +240,7 @@ $(document).ready(function() {
 		return false;		
 	});
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
-		reloadUserProfile(function () {
+		reloadCustomerProfile(function () {
 			console.log("User loading done.");
 			document.getElementById("user_nav").click();
 		});
@@ -230,7 +256,7 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-up success');
 				console.log("Sign-up success: "+response.username);
 				document.getElementById("signin").checked = true;
-				reloadUserProfile(function () {
+				reloadCustomerProfile(function () {
 					
 					console.log("User profile loaded: "+response.sub);
 					document.getElementById("user_nav").click();
@@ -252,11 +278,11 @@ $(document).ready(function() {
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-in success');
-				console.log("Sign-in success: "+response.sub);
-				sessionStorage.setItem('userProfile', JSON.stringify(response));
-				reloadUserProfile(function () {
+				customer = response;
+				console.log("Sign-in success: "+customer);
+				reloadCustomerProfile(function () {
 					
-					console.log("User profile loaded: "+response.sub);
+					console.log("Customer profile loaded: "+customer.sub);
 					document.getElementById("user_nav").click();
 				});
 			},
@@ -270,15 +296,6 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signout_btn', function () {
 
-/*
-		var sessionId = 0;
-		document.cookie && document.cookie.split(';').forEach(function (cookie) {
-			var parts = cookie.split('=');
-			if(parts[0] == 'connect.sid') {
-				sessionId = parts[1];
-			}
-		});
-*/
 		$.ajax({
 			url: '/customer/session',
 			type: 'delete',
@@ -287,10 +304,11 @@ $(document).ready(function() {
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success.');
-				console.log("Sign-out success: "+response);
-				reloadUserProfile(function () {
+				customer = response;
+				console.log("Sign-out success: "+customer);
+				reloadCustomerProfile(function () {
 					
-					console.log("User profile unloaded.");
+					console.log("Customer profile unloaded.");
 					document.getElementById("signin").checked = true;
 					document.getElementById("user_nav").click();
 				});
@@ -301,59 +319,12 @@ $(document).ready(function() {
 				console.log("Failed to sign-out: "+JSON.stringify(xhr));
 			}
 		});
-/*
-		$.delete('/customer/session/'+sessionId, function(session, status){
-			
-			$('#status').empty().text('Sign-out success');
-			console.log("Sign-out success: "+sessionId);
-			document.getElementById("signin").checked = true;
-			reloadUserProfile(function () {
-				
-				console.log("User profile unloaded: "+response.sub);
-				document.getElementById("user_nav").click();
-			});
-		});
-*/
 		return false;
 	});
-/*
-	$('#identity').submit(function () {
-		$(this).ajaxSubmit({
-			success: function (response) {
-				var signupElement = document.getElementById("signup");
-				var signup = (signupElement && signupElement.checked == true);
-				if(signup) {
-
-					$('#status').empty().text('Sign-up success');
-					console.log("Sign-up success: "+response.username);
-					document.getElementById("signin").checked = true;
-					reloadUserProfile(function () {
-						console.log("User profile loaded: "+response.sub);
-						document.getElementById("user_nav").click();
-					});
-				} else {
-
-					$('#status').empty().text('Sign-in success');
-					console.log("Sign-in success: "+response.sub);
-					sessionStorage.setItem('userProfile', JSON.stringify(response));
-					reloadUserProfile(function () {
-						console.log("User profile loaded: "+response.sub);
-						document.getElementById("user_nav").click();
-					});
-				}
-			},
-			error: function (xhr) {
-				$('#status').empty().text('Failed to sign-up/sign-in: '+xhr.status);
-				console.log("Failed to sign-up/sign-in: "+JSON.stringify(xhr));
-			}
-		});
-		return false;
-	});
-*/
 	$('#cart_control').submit(function () {
 
 		if(true) {
-			// No user found - update local cart only
+			// No customer found - update local cart only
 			var localCart = JSON.parse(localStorage.getItem('cart'));
 			var timestamp;
 			if(!localCart || !localCart.items || localCart.items.length == 0) {
@@ -398,7 +369,7 @@ $(document).ready(function() {
 				}
 			});
 		}
-		reloadCart();
+		reloadCustomerCart();
 		document.getElementById("cart_preview_nav").click();
 		return false;		
 	});
