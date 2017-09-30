@@ -454,15 +454,16 @@ app.get('/customer', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /customer" );
 
-//	var customer = req.session.customer; 
-	var customer = userPool.getCurrentUser(); 
+	var customer = req.session.customer; 
 	if(customer) {
 		
 		console.log("Found customer: "+JSON.stringify(customer));
+		console.log("Sign-in status: "+customer.isSignedIn);
 		
-		customer.getSession(function (sessionError, session) {
+//		customer.getSession(function (sessionError, session) {
 
-	        if(sessionError || session.isValid()) {
+//			if(sessionError || session.isValid()) {
+	        if(!customer.isSignedIn) {
 				
 	    		console.log("Customer not signed-in.");
 
@@ -495,7 +496,7 @@ app.get('/customer', function (req, res) {
 			        }
 				});
 	        }
-		});
+//		});
 	} else {
 		console.log("No customer found.");
 
