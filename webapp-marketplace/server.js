@@ -454,33 +454,48 @@ app.get('/customer', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /customer" );
 	
-	console.log("Found user: "+JSON.stringify(req.session.customer));
+	if(req.session.customer) {
+		
+		console.log("Found customer: "+JSON.stringify(req.session.customer));
+		
+		req.session.customer.getSession(function (sessionError, session) {
 
-	var customer = req.session.customer;
-	if(customer && customer.getSession() && customer.getSession().isValid()) {
-		console.log("Customer signed-in.");
-
-		console.log("Getting customer attributes.");
-		profileCustomer(req.session.customer, function(customerProfileError, customerProfile) {
-
-	        if(customerProfileError) {
+	        if(sessionError || session.isValid()) {
 				
-				console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
+	    		console.log("Customer not signed-in.");
 
-				// Return error to caller
-	            res.writeHead(500, {'Content-Type': 'application/json'});
-	            res.write(JSON.stringify({error: customerProfileError}));
-	            res.end();
+	    		// Return error to caller
+	    	    res.writeHead(404, {'Content-Type': 'application/json'});
+	    	    res.write(JSON.stringify({customer: null}));
+	    	    res.end();
 	        } else {
+	        	
+				console.log("Customer signed-in.");
 
-				// Return customer to caller
-			    res.writeHead(200, {'Content-Type': 'application/json'});
-			    res.write(JSON.stringify({customer: customerProfile}));
-			    res.end();
+				profileCustomer(req.session.customer, function(customerProfileError, customerProfile) {
+
+			        if(customerProfileError) {
+						
+						console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
+		
+						// Return error to caller
+			            res.writeHead(500, {'Content-Type': 'application/json'});
+			            res.write(JSON.stringify({error: customerProfileError}));
+			            res.end();
+			        } else {
+			        	
+						console.log("Customer profiled successfully.");
+
+						// Return customer to caller
+					    res.writeHead(200, {'Content-Type': 'application/json'});
+					    res.write(JSON.stringify({customer: customerProfile}));
+					    res.end();
+			        }
+				});
 	        }
 		});
 	} else {
-		console.log("No Customer signed-in.");
+		console.log("No customer found.");
 
 		// Return error to caller
 	    res.writeHead(404, {'Content-Type': 'application/json'});
