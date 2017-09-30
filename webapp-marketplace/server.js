@@ -139,7 +139,7 @@ app.get('/product', function (req, res) {
 	
 			// Check that only one product found
 			if((product) && !Array.isArray(product)) {
-	
+
 				// Get cart id
 //				var cartId = 0;
 //				req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
@@ -453,12 +453,14 @@ app.get('/customer', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: GET /customer" );
-	
-	if(req.session.customer) {
+
+//	var customer = req.session.customer; 
+	var customer = userPool.getCurrentUser(); 
+	if(customer) {
 		
-		console.log("Found customer: "+JSON.stringify(req.session.customer));
+		console.log("Found customer: "+JSON.stringify(customer));
 		
-		req.session.customer.getSession(function (sessionError, session) {
+		customer.getSession(function (sessionError, session) {
 
 	        if(sessionError || session.isValid()) {
 				
@@ -472,7 +474,7 @@ app.get('/customer', function (req, res) {
 	        	
 				console.log("Customer signed-in.");
 
-				profileCustomer(req.session.customer, function(customerProfileError, customerProfile) {
+				profileCustomer(customer, function(customerProfileError, customerProfile) {
 
 			        if(customerProfileError) {
 						
