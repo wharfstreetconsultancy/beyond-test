@@ -205,7 +205,7 @@ function reloadCustomerCart() {
 	}
 }
 
-$(document).load(function() {
+$(document).on('load', function() {
 	alert('Load done!');
 	console.log("Looking up customer.");
 	$.ajax({
