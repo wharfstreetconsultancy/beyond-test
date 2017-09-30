@@ -457,8 +457,7 @@ app.get('/customer', function (req, res) {
 	var customer = req.session.customer; 
 	if(customer) {
 		
-		console.log("Found customer: "+JSON.stringify(customer));
-		console.log("Sign-in status: "+(customer.signInUserSession));
+		console.log("Found customer.");
 		
 //		customer.getSession(function (sessionError, session) {
 
@@ -579,7 +578,6 @@ app.post('/customer/session', function (req, res) {
 
 			console.log('Sign-in success - username: '+cognitoUser.username);
 
-			console.log("Getting customer attributes.");
 			profileCustomer(cognitoUser, function(customerProfileError, customerProfile) {
 		        if(customerProfileError) {
 					
@@ -638,6 +636,8 @@ app.delete('/customer/session', function (req, res) {
 });
 
 function profileCustomer(customer, callback) {
+
+	console.log("Profiling customer: "+customer);
 	customer.getUserAttributes(function(error, result) {
         if(error) {
         	
