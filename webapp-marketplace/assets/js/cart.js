@@ -52,7 +52,7 @@ $(document).ready(function() {
 				quantity: parseInt(document.getElementById('productQuantity').value),
 				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
 				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
-				cost: document.getElementById('productPrice').value,
+				cost: parseFloat(document.getElementById('productPrice').value).toFixed(0),
 				created: timestamp,
 				lastUpdated: timestamp
 		    }
@@ -73,6 +73,7 @@ $(document).ready(function() {
 		    if(existingCartItem.length > 0) {
 
 		    	existingCartItem[0].quantity += newCartItem.quantity;
+		    	existingCartItem[0].cost += newCartItem.cost;
 		    } else {
 		    	
 		    	localCart.items.push(newCartItem);
