@@ -56,6 +56,7 @@ $(document).ready(function() {
 				created: timestamp,
 				lastUpdated: timestamp
 		    }
+	    	console.log("New cart item:\t\t"+newCartItem);
 		    var existingCartItem = $.grep(localCart, function (existingCartItem) {
 		    	
 		    	console.log("Existing:\t"+existingCartItem);
@@ -68,6 +69,7 @@ $(document).ready(function() {
 		    	console.log(sameItem);
 		    	return sameItem;
 		    });
+	    	console.log("Existing cart item:\t"+newCartItem);
 		    if(existingCartItem) {
 
 		    	existingCartItem.quantity += newCartItem.quantity;
