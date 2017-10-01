@@ -59,8 +59,8 @@ $(document).ready(function() {
 	    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
 		    var existingCartItem = localCart.items.filter(function (currentCartItem) {
 		    	
-		    	console.log("Current:\t"+currentCartItem);
-		    	console.log("New:\t\t"+newCartItem);
+		    	console.log("Current:\t"+JSON.stringify(currentCartItem));
+		    	console.log("New:\t\t"+JSON.stringify(newCartItem));
 		    	var sameItem = (
 		    		(currentCartItem.productId === newCartItem.productId) &&
 		    		(currentCartItem.color === newCartItem.color) &&
