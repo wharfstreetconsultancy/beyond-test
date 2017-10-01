@@ -57,7 +57,7 @@ $(document).ready(function() {
 				lastUpdated: timestamp
 		    }
 	    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
-		    var existingCartItem = localCart.filter(function (item) {
+		    var existingCartItem = localCart.items.filter(function (item) {
 		    	
 		    	console.log("Existing:\t"+item);
 		    	console.log("New:\t\t"+newCartItem);
