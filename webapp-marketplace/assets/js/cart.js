@@ -10,7 +10,6 @@ function reloadCustomerCart() {
 	if(!localCart || !localCart.items || localCart.items.length == 0) {
 		document.getElementById("cart_preview").innerHTML = '<p>Cart is empty</p>';
 	} else {
-		localCart.sort(function (a, b) {});
 		document.getElementById("cart_preview").innerHTML = '';
 		document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
 		document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
