@@ -20,7 +20,7 @@ function reloadCustomerCart() {
 		document.getElementById("cart_preview").innerHTML = '';
 		document.getElementById("cart_preview").innerHTML += '<div class="row">';
 		document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-		document.getElementById("cart_preview").innerHTML += totalItems+' items @ ($'totalCost+')';
+		document.getElementById("cart_preview").innerHTML += totalItems+' items @ ($'+totalCost+')';
 		document.getElementById("cart_preview").innerHTML += '</div>';
 		document.getElementById("cart_preview").innerHTML += '</div>';
 		document.getElementById("cart_preview").innerHTML += '<hr>';
