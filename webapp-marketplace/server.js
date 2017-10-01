@@ -73,7 +73,6 @@ app.all('*', function (req, res, next) {
 
 		next();
 		console.log("Not found yet? "+req.url);
-		fs.createReadStream(__dirname+req.url).pipe(res);
 	} else {
 
 		// Request was http - redirect caller to https
