@@ -1,4 +1,4 @@
-<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
+<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
 <div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" class="form-inline"></form></div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
@@ -10,6 +10,7 @@ function reloadCustomerCart() {
 	if(!localCart || !localCart.items || localCart.items.length == 0) {
 		document.getElementById("cart_preview").innerHTML = '<p>Cart is empty</p>';
 	} else {
+		localCart.sort(function (a, b) {});
 		document.getElementById("cart_preview").innerHTML = '';
 		document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
 		document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
@@ -41,12 +42,10 @@ $(document).ready(function() {
 		if(true) {
 			// No customer found - update local cart only
 			var localCart = JSON.parse(localStorage.getItem('cart'));
-			var timestamp;
+			var timestamp = new Date().getTime().toString();
 			if(!localCart || !localCart.items || localCart.items.length == 0) {
-			    timestamp = new Date().getTime().toString();
 				localCart = {id: timestamp.split("").reverse().join(""), items: []};
 			}
-		    timestamp = new Date().getTime().toString();
 		    var newCartItem = {
 				id: timestamp.split("").reverse().join(""),
 				productId: document.getElementById('productId').value,
@@ -58,7 +57,25 @@ $(document).ready(function() {
 				created: timestamp,
 				lastUpdated: timestamp
 		    }
-			localCart.items.push(newCartItem);
+		    var existingCartItem = $.grep(localCart, function (existingCartItem) {
+		    	
+		    	console.log("Existing:\t"+existingCartItem);
+		    	console.log("New:\t\t"+newCartItem);
+		    	var sameItem = (
+		    		(existingCartItem.productId == newCartItem.productId) &&
+		    		(existingCartItem.color == newCartItem.color) &&
+		    		(existingCartItem.size == newCartItem.size)
+		    	);
+		    	console.log(sameItem);
+		    	return sameItem;
+		    });
+		    if(existingCartItem) {
+
+		    	existingCartItem.quantity += newCartItem.quantity;
+		    } else {
+		    	
+		    	localCart.items.push(newCartItem);
+		    }
 			localStorage.setItem('cart', JSON.stringify(localCart));
 			console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
 		} else {
