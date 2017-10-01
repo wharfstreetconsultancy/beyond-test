@@ -299,12 +299,12 @@ $(document).ready(function() {
 				console.log("Failed to sign-in: "+xhr.responseJSON.error.code);
 				console.log("Error message returned: "+xhr.responseJSON.error.message);
 				var errorMessage = 'Failed to sign-in. Please retry...';
-				if(xhr.responseJSON.error.code === 'NotAuthorizedException') {
+				if(xhr.responseJSON.error.code == 'NotAuthorizedException') {
 					errorMessage = xhr.responseJSON.error.message+' Please try again...';
-				} else if(xhr.responseJSON.error.code === 'UserNotConfirmedException') {
+				} else if(xhr.responseJSON.error.code == 'UserNotConfirmedException') {
 					errorMessage = xhr.responseJSON.error.message+' Please check your mail...';
 				}
-				document.getElementById("user_msg").innerHTML = 'Failed to sign-in. Please try again...';
+				document.getElementById("user_msg").innerHTML = errorMessage;
 			}
 		});
 		return false;
