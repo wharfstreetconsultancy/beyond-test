@@ -372,7 +372,7 @@ function formatProductViewHtml(product,callback) {
 		if(product.colors) {
 
 			productColorSelectorHtml = 'Color Choices:<br>';
-			productColorSelectorHtml += '<select name=\'newCartItem[productColor]\'>';
+			productColorSelectorHtml += '<select id=\'productColor\' name=\'newCartItem[productColor]\'>';
 
 			// For each color that the product has
 			for(var color of product.colors) {
@@ -388,7 +388,7 @@ function formatProductViewHtml(product,callback) {
 		if(product.sizes) {
 
 			productSizeSelectorHtml = 'Size Choices:<br>';
-			productSizeSelectorHtml += '<select name=\'newCartItem[productSize]\'>';
+			productSizeSelectorHtml += '<select name=\'productSize\' name=\'newCartItem[productSize]\'>';
 
 			// For each size that the product has
 			for(var size of product.sizes) {
