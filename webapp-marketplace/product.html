@@ -125,7 +125,7 @@ function reloadCustomerPanels() {
 
 function reloadCustomerProfile(callback) {
 
-	var customer = sessionStorage.setItem('customer');
+	var customer = sessionStorage.getItem('customer');
 	console.log("Current customer: "+JSON.stringify(customer));
 	if(!customer) {
 
