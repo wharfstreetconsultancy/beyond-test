@@ -50,8 +50,8 @@ $(document).ready(function() {
 				productId: document.getElementById('productId').value,
 				productName: document.getElementById('productName').value, 
 				quantity: parseInt(document.getElementById('productQuantity').value),
-				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : undefined,
-				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : undefined,
+				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
+				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
 				cost: document.getElementById('productPrice').value,
 				created: timestamp,
 				lastUpdated: timestamp
