@@ -49,7 +49,7 @@ $(document).ready(function() {
 				id: timestamp.split("").reverse().join(""),
 				productId: document.getElementById('productId').value,
 				productName: document.getElementById('productName').value, 
-				quantity: document.getElementById('productQuantity').value,
+				quantity: parseInt(document.getElementById('productQuantity').value),
 				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : undefined,
 				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : undefined,
 				cost: document.getElementById('productPrice').value,
@@ -57,14 +57,14 @@ $(document).ready(function() {
 				lastUpdated: timestamp
 		    }
 	    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
-		    var existingCartItem = localCart.items.filter(function (item) {
+		    var existingCartItem = localCart.items.filter(function (currentCartItem) {
 		    	
-		    	console.log("Existing:\t"+item);
+		    	console.log("Current:\t"+currentCartItem);
 		    	console.log("New:\t\t"+newCartItem);
 		    	var sameItem = (
-		    		(item.productId == newCartItem.productId) &&
-		    		(item.color == newCartItem.color) &&
-		    		(item.size == newCartItem.size)
+		    		(currentCartItem.productId === newCartItem.productId) &&
+		    		(currentCartItem.color === newCartItem.color) &&
+		    		(currentCartItem.size === newCartItem.size)
 		    	);
 		    	console.log(sameItem);
 		    	return sameItem;
