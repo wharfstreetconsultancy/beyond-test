@@ -71,7 +71,7 @@ $(document).ready(function() {
 				quantity: parseInt(document.getElementById('productQuantity').value),
 				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
 				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
-				cost: parseFloat(document.getElementById('productPrice').value).toFixed(0),
+				cost: parseFloat(document.getElementById('productPrice').value).toFixed(2),
 				created: timestamp,
 				lastUpdated: timestamp
 		    }
