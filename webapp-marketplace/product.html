@@ -114,7 +114,7 @@
 		
 /* #### START DYNAMIC DATA DECLARATIONS #### */
 var restDomain = {rest.domain};
-var customer = null;
+// var customer = null;
 // var cartItems = {cart.items};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
@@ -125,6 +125,7 @@ function reloadCustomerPanels() {
 
 function reloadCustomerProfile(callback) {
 
+	var customer = sessionStorage.setItem('customer');
 	console.log("Current customer: "+JSON.stringify(customer));
 	if(!customer) {
 
@@ -235,7 +236,7 @@ $(document).on('load', function() {
 });
 
 $(document).ready(function() {
-	alert('Load just happened!');
+/*
 	console.log("Looking up customer.");
 	$.ajax({
 		url: '/customer',
@@ -260,7 +261,7 @@ $(document).ready(function() {
 			});
 		}
 	});
-
+*/
 	$('#cart_preview').on('reset', function () {
 		localStorage.removeItem('cart');
 		reloadCart();
@@ -303,10 +304,10 @@ $(document).ready(function() {
 		$('#identity').ajaxSubmit({
 			
 			url: '/customer/session',
-			success: function (response) {
+			success: function (customer) {
 		
 				$('#status').empty().text('Sign-in success');
-				customer = response;
+				sessionStorage.setItem('customer', customer);
 				console.log("Sign-in success: "+JSON.stringify(customer));
 				reloadCustomerProfile(function () {
 					
@@ -332,7 +333,7 @@ $(document).ready(function() {
 			success: function (response) {
 
 				$('#status').empty().text('Sign-out success.');
-				customer = response;
+				sessionStorage.removeItem('customer');
 				console.log("Sign-out success: "+customer);
 				reloadCustomerProfile(function () {
 					

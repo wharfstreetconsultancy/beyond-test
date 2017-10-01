@@ -21,8 +21,8 @@ AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.Authentica
 AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
-    UserPoolId : 'us-west-2_jnmkbOGZY',
-    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
+    UserPoolId: 'us-west-2_jnmkbOGZY',
+    ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
 });
 
 //
