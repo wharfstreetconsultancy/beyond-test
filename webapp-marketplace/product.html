@@ -182,10 +182,22 @@ function reloadCustomerProfile(callback) {
 		customer = JSON.parse(customer);
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+customer.given_name.substring(0,10)+'</div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4">';
+		document.getElementById("identity").innerHTML += customer.given_name+' '+customer.family_name;
 		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<hr>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
-		document.getElementById("identity").innerHTML += '<div class="col-lg-4"><button id="signout_btn" type="submit" value="signout" class="btn btn-primary btn-block">Sign-out</button></div>';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4">';
+		document.getElementById("identity").innerHTML += 'My Details<br>';
+		document.getElementById("identity").innerHTML += 'My Orders<br>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '</div>';
+		document.getElementById("identity").innerHTML += '<hr>';
+		document.getElementById("identity").innerHTML += '<div class="row">';
+		document.getElementById("identity").innerHTML += '<div class="col-lg-4">';
+		document.getElementById("identity").innerHTML += '<button id="signout_btn" type="submit" value="signout" class="btn btn-primary btn-block">Sign-out</button>';
+		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
 	}
 	callback();
@@ -300,7 +312,7 @@ $(document).ready(function() {
 				console.log("Error message returned: "+xhr.responseJSON.error.message);
 				var errorMessage = 'Failed to sign-in. Please retry...';
 				if(xhr.responseJSON.error.code == 'NotAuthorizedException') {
-					errorMessage = xhr.responseJSON.error.message+' Please try again...';
+					errorMessage = xhr.responseJSON.error.message+' Please retry...';
 				} else if(xhr.responseJSON.error.code == 'UserNotConfirmedException') {
 					errorMessage = xhr.responseJSON.error.message+' Please check your mail...';
 				}
