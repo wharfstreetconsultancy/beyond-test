@@ -11,7 +11,9 @@ function reloadCustomerCart() {
 		
 		document.getElementById("cart_preview").innerHTML = '<p>Cart is empty</p>';
 	} else {
-		
+
+		var totalItems = 0;
+		var totalCost = 0.00;
 		for(var cartItem of localCart.items) {
 			
 			totalItems += cartItem.quantity;
