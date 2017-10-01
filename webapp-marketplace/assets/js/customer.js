@@ -58,7 +58,7 @@ function reloadCustomerProfile(callback) {
 		document.getElementById("identity").innerHTML += '<button id="'+((signup) ? 'signup' : 'signin')+'_btn" type="submit" value="'+((signup) ? 'signup' : 'signin')+'" class="btn btn-primary btn-block">'+((signup) ? 'Sign-up' : 'Sign-in')+'</button>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
-		document.getElementById("user_nav").innerHTML += ' Sign-Up/In';
+		document.getElementById("user_nav").innerHTML = ' Sign-Up/In';
 	} else {
 
 		customer = JSON.parse(customer);
@@ -81,7 +81,7 @@ function reloadCustomerProfile(callback) {
 		document.getElementById("identity").innerHTML += '<button id="signout_btn" type="submit" value="signout" class="btn btn-primary btn-block">Sign-out</button>';
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
-		document.getElementById("user_nav").innerHTML += ' My Account';
+		document.getElementById("user_nav").innerHTML = ' My Account';
 	}
 	callback();
 }

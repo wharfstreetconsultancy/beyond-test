@@ -42,7 +42,8 @@
             	<li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
   				<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
   				<li><a href="contact.html">Contact</a></li>
-            	<li>
+  				<li><span id="customer_management"></span></li>
+  				<li>
            			<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
            			<div class="dropdown-menu" aria-labelledby="cart_preview_nav"><form id="cart_preview" class="form-inline"></form></div>
             	</li>
@@ -133,7 +134,7 @@ function reloadCart() {
 }
 
 $(document).ready(function() {
-
+	$("#customer_management").load("js/customer.js");
 	$('#cart_preview').on('reset', function () {
 		localStorage.removeItem('cart');
 		reloadCart();
