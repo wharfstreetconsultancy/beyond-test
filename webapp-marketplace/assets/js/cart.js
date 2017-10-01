@@ -31,7 +31,7 @@ $(document).ready(function() {
 	$('#cart_preview').on('reset', function () {
 
 		localStorage.removeItem('cart');
-		reloadCart();
+		reloadCustomerCart();
 		document.getElementById("cart_preview_nav").click();
 		return false;		
 	});
