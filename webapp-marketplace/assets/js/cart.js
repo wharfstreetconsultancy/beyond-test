@@ -57,14 +57,14 @@ $(document).ready(function() {
 				lastUpdated: timestamp
 		    }
 	    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
-		    var existingCartItem = $.grep(localCart, function (existingCartItem) {
+		    var existingCartItem = $.grep(localCart, function (item) {
 		    	
-		    	console.log("Existing:\t"+existingCartItem);
+		    	console.log("Existing:\t"+item);
 		    	console.log("New:\t\t"+newCartItem);
 		    	var sameItem = (
-		    		(existingCartItem.productId == newCartItem.productId) &&
-		    		(existingCartItem.color == newCartItem.color) &&
-		    		(existingCartItem.size == newCartItem.size)
+		    		(item.productId == newCartItem.productId) &&
+		    		(item.color == newCartItem.color) &&
+		    		(item.size == newCartItem.size)
 		    	);
 		    	console.log(sameItem);
 		    	return sameItem;
