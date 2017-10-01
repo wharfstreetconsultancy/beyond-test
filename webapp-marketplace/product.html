@@ -126,7 +126,7 @@ function reloadCustomerPanels() {
 function reloadCustomerProfile(callback) {
 
 	var customer = sessionStorage.getItem('customer');
-	console.log("Current customer: "+JSON.stringify(customer));
+	console.log("Current customer: "+customer);
 	if(!customer) {
 
 		var signupElement = document.getElementById("signup");
@@ -179,6 +179,7 @@ function reloadCustomerProfile(callback) {
 		document.getElementById("identity").innerHTML += '</div>';
 	} else {
 
+		customer = JSON.parse(customer);
 		document.getElementById("identity").innerHTML = '';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-4">User: '+customer.given_name.substring(0,10)+'</div>';
