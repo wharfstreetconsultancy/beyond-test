@@ -72,7 +72,7 @@ app.all('*', function (req, res, next) {
 	if(req.connection.encrypted) {
 
 		next();
-		console.log("Not found yet?");
+		console.log("Not found yet? "+req.url);
 	} else {
 
 		// Request was http - redirect caller to https
