@@ -244,13 +244,15 @@ $(document).ready(function() {
 		dataType: 'json',
 		crossDomain: true,
 		success: function (response) {
-
+			
 			customer = response;
 			console.log("Customer found: "+JSON.stringify(customer));
+*/
 			reloadCustomerPanels(function () {
 				
 				console.log("Customer panels loaded.");
 			});
+/*
 		},
 		error: function (xhr) {
 
