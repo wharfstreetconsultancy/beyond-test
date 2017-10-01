@@ -87,9 +87,9 @@ function reloadCustomerProfile(callback) {
 }
 
 $(document).ready(function() {
-	reloadCustomerPanels(function () {
+	reloadCustomerProfile(function () {
 		
-		console.log("Customer panels loaded.");
+		console.log("Customer profile loaded.");
 	});
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
 		reloadCustomerProfile(function () {

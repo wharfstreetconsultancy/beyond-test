@@ -117,11 +117,11 @@
 var restDomain = {rest.domain};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 
+/*
 function reloadCustomerPanels() {
 
 	reloadCustomerProfile(function () {console.log("User loading done.");reloadCustomerCart();});
 }
-/*
 function reloadCustomerProfile(callback) {
 
 	var customer = sessionStorage.getItem('customer');
@@ -223,9 +223,9 @@ function reloadCustomerCart() {
 
 $(document).ready(function() {
 	$("#customer_management").load("js/customer.js");
-	reloadCustomerPanels(function () {
+	reloadCustomerCart(function () {
 		
-		console.log("Customer panels loaded.");
+		console.log("Customer cart loaded.");
 	});
 	$('#cart_preview').on('reset', function () {
 		localStorage.removeItem('cart');
