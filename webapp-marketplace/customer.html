@@ -1,127 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Suroor Fashions - Marketplace</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
-  </head>
-  <body>
-  <!-- body onload="reloadAllPanels()" -->
-    <!------------------------------ Header --------------------------->
-    <!--This is the Header Content-->
-  	<div class="container-fluid">
-  		<div class="row">
-  			<div class="col-sm-1 header">
-  				<div class="col-xs-1 col-md-1 col-lg-1 text-center">
-  					<a href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Marketplace"></a>
-  				</div>
-  			</div>
-  		</div>
-    </div>
-  	<nav class="navbar navbar-default">
-  		  <div class="container-fluid nav-con">
-  			<!--Brand and toggle get grouped for better mobile display-->
-  			<div class="navbar-header">
-  				<div class="col-sm-1 header">
-  				  <button type="button" class="navbar-toggle x collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-  					<span class="sr-only">Toggle navigation</span>
-  					<span class="icon-bar"></span>
-  					<span class="icon-bar second-bar"></span>
-  				  </button>
-  			  	</div>
-  			</div>
-  			<!--Collect the nav links, forms, and other content for toggling-->
-  			<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
-  			  <ul class="myNav nav navbar-nav">
-				<li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
-  				<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
-  				<li><a href="contact.html">Contact</a></li>
-  				<li><span id="customer_management"></span></li>
-            	<!-- li>
-           			<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-           			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div>
-            	</li -->
-            	<li>
-           			<a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cart</a>
-           			<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" class="form-inline"></form></div>
-            	</li>
-  			  </ul>
-  			</div>
-  		  </div>
-    </nav>
-    <!---------------------------Body ------------------------->
-	<div class="body">
-		<div class="container">
-			<div class="col-lg-8 col-lg-offset-2">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						{product.name}
-					</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-lg-4">
-								{product.description}
-							</div>
-							<div class="col-lg-4">
-								{product.image.carousel}
-							</div>
-							<div class="col-lg-4">
-								<form id="cart_control" name="cart_control" method="post" enctype="application/json">
-									<input type="hidden" id="productId" name="newCartItem[productId]" value="{product.id}"/>
-									<input type="hidden" id="productName" name="newCartItem[productName]" value="{product.name}"/>
-									<input type="hidden" id="productPrice" name="newCartItem[productPrice]" value="{product.price}"/>
-									<p><input type="submit" id="add_to_cart" name="add_to_cart" value="Add To Cart"/></p>
-									<p>{product.color.selector}</p>
-									<p>{product.size.selector}</p>
-									<p>Price:<br>${product.price}</p>
-									<p><select id="productQuantity" name="newCartItem[productQuantity]"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></p>
-								</form>
-							</div>
-						</div>
-					</div>
-					<div class="panel-footer">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!------------------------------- Footer --------------------->
-    <footer>
-      <div class="container-fluid">
-        <div class="footer">
-          <p class="copyright">&copy 2017 Suroor Fashions | All Rights Reserved</p>
-          <p class="links"><a href="#">Terms of use </a></p>
-          <span class="links">|</span>
-          <p class="links"><a href="#">Privacy Policy </a></p>
-          <span class="links">|</span>
-          <p class="links"><a href="#">Sales & Return Policy</a></p>
-        </div>
-      </div>
-    </footer>
-
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-		<script>
-		
-/* #### START DYNAMIC DATA DECLARATIONS #### */
-var restDomain = {rest.domain};
-/* #### END DYNAMIC DATA DECLARATIONS #### */
-
-function reloadCustomerPanels() {
-
-	reloadCustomerProfile(function () {console.log("User loading done.");reloadCustomerCart();});
-}
-/*
+<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+<!-- script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script -->
+<script>
 function reloadCustomerProfile(callback) {
 
 	var customer = sessionStorage.getItem('customer');
@@ -203,37 +85,12 @@ function reloadCustomerProfile(callback) {
 	}
 	callback();
 }
-*/
-function reloadCustomerCart() {
-	var localCart = JSON.parse(localStorage.getItem('cart'));
-	console.log("Current cart: "+JSON.stringify(localCart));
-	if(!localCart || !localCart.items || localCart.items.length == 0) {
-		document.getElementById("cart_preview").innerHTML = '<p>Cart is empty</p>';
-	} else {
-		document.getElementById("cart_preview").innerHTML = '';
-		document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
-		document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
-		document.getElementById("cart_preview").innerHTML += '<hr>';
-		for(var cartItem of localCart.items) {
-			document.getElementById("cart_preview").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
-			console.log("Current cart item: "+JSON.stringify(cartItem));
-		}
-	}
-}
 
 $(document).ready(function() {
-	$("#customer_management").load("customer.html");
 	reloadCustomerPanels(function () {
 		
 		console.log("Customer panels loaded.");
 	});
-	$('#cart_preview').on('reset', function () {
-		localStorage.removeItem('cart');
-		reloadCart();
-		document.getElementById("cart_preview_nav").click();
-		return false;		
-	});
-/*
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
 		reloadCustomerProfile(function () {
 			console.log("User loading done.");
@@ -244,7 +101,7 @@ $(document).ready(function() {
 	$('#identity').on('click', '#signup_btn', function () {
 
 		$('#identity').ajaxSubmit({
-			
+
 			url: '/customer',
 			type: 'post',
 			dataType: 'json',
@@ -327,61 +184,6 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-*/
-	$('#cart_control').submit(function () {
-
-		if(true) {
-			// No customer found - update local cart only
-			var localCart = JSON.parse(localStorage.getItem('cart'));
-			var timestamp;
-			if(!localCart || !localCart.items || localCart.items.length == 0) {
-			    timestamp = new Date().getTime().toString();
-				localCart = {id: timestamp.split("").reverse().join(""), items: []};
-			}
-		    timestamp = new Date().getTime().toString();
-		    var newCartItem = {
-				id: timestamp.split("").reverse().join(""),
-				productId: document.getElementById('productId').value,
-				productName: document.getElementById('productName').value, 
-				quantity: document.getElementById('productQuantity').value,
-				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : undefined,
-				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : undefined,
-				cost: document.getElementById('productPrice').value,
-				created: timestamp,
-				lastUpdated: timestamp
-		    }
-			localCart.items.push(newCartItem);
-			localStorage.setItem('cart', JSON.stringify(localCart));
-			console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
-		} else {
-
-			var cartId = 0;
-			if(document.cookie.length > 0) {
-				var cookieParts = document.cookie.split('=');
-				cartId = cookieParts[1];
-			}
-			this.action = 'https://'+restDomain+'/cart/'+cartId+'/item';
-			$('#status').empty().text('Cart is updating...');
-			console.log("Cart is updating - call "+this.action);
-			
-			$(this).ajaxSubmit({
-				error: function (xhr) {
-					$('#status').empty().text('Cart update error: '+xhr.status);
-					console.log("Cart update error: "+xhr.status);
-				},
-				success: function (newCartItem) {
-					$('#status').empty().text('Cart update success');
-					console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
-					// cartItems.push(newCartItem);
-				}
-			});
-		}
-		reloadCustomerCart();
-		document.getElementById("cart_preview_nav").click();
-		return false;		
-	});
 });
 
-		</script>
-	</body>
-</html>
+</script>
