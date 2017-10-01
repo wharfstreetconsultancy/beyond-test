@@ -309,7 +309,7 @@ $(document).ready(function() {
 			success: function (customer) {
 		
 				$('#status').empty().text('Sign-in success');
-				sessionStorage.setItem('customer', customer);
+				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
 				reloadCustomerProfile(function () {
 					
