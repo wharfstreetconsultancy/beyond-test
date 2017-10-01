@@ -208,34 +208,6 @@ function reloadCustomerCart() {
 	}
 }
 
-$(document).on('load', function() {
-	alert('Load done!');
-	console.log("Looking up customer.");
-	$.ajax({
-		url: '/customer',
-		type: 'get',
-		dataType: 'json',
-		crossDomain: true,
-		success: function (response) {
-
-			customer = response;
-			console.log("Customer found: "+JSON.stringify(customer));
-			reloadCustomerPanels(function () {
-				
-				console.log("Customer panels loaded.");
-			});
-		},
-		error: function (xhr) {
-
-			console.log("No customer found: "+JSON.stringify(xhr));
-			reloadCustomerPanels(function () {
-				
-				console.log("Customer panels loaded.");
-			});
-		}
-	});
-});
-
 $(document).ready(function() {
 /*
 	console.log("Looking up customer.");
@@ -280,9 +252,9 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signup_btn', function () {
 
-		alert('Hit signup button! '+$(this).id);
 		$(this).ajaxSubmit({
 			
+			url: '/customer',
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-up success');
