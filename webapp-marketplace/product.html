@@ -252,11 +252,11 @@ $(document).ready(function() {
 	});
 	$('#identity').on('click', '#signup_btn', function () {
 
-		$(this).ajaxSubmit({
+		$('#identity').ajaxSubmit({
 			
 			url: '/customer',
 			type: 'post',
-//			dataType: 'json',
+			dataType: 'json',
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-up success');
