@@ -255,6 +255,8 @@ $(document).ready(function() {
 		$(this).ajaxSubmit({
 			
 			url: '/customer',
+			type: 'post',
+			dataType: 'json',
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-up success');
@@ -279,6 +281,8 @@ $(document).ready(function() {
 		$('#identity').ajaxSubmit({
 			
 			url: '/customer/session',
+			type: 'post',
+			dataType: 'json',
 			success: function (customer) {
 		
 				$('#status').empty().text('Sign-in success');
