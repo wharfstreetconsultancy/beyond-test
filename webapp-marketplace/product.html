@@ -337,7 +337,7 @@ $(document).ready(function() {
 
 				$('#status').empty().text('Sign-out success.');
 				sessionStorage.removeItem('customer');
-				console.log("Sign-out success: "+customer);
+				console.log("Sign-out success: "+response);
 				reloadCustomerProfile(function () {
 					
 					console.log("Customer profile unloaded.");
