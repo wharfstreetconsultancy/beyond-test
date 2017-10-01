@@ -286,11 +286,11 @@ $(document).ready(function() {
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-up success');
-				console.log("Sign-up success: "+response.username);
+				console.log("Sign-up success: "+response);
 				document.getElementById("signin").checked = true;
 				reloadCustomerProfile(function () {
 					
-					console.log("User profile loaded: "+response.sub);
+					console.log("User profile loaded: "+response);
 					document.getElementById("user_nav").click();
 				});
 			},
