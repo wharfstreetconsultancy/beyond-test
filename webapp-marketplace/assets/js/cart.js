@@ -5,39 +5,38 @@
 <!-- script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script -->
 <script>
 function reloadCustomerCart() {
+
 	var localCart = JSON.parse(localStorage.getItem('cart'));
 	console.log("Current cart: "+JSON.stringify(localCart));
-	if(!localCart || !localCart.items || localCart.items.length == 0) {
+	var totalItems = 0;
+	var totalCost = 0.00;
+	for(var cartItem of localCart.items) {
 		
-		document.getElementById("cart_preview").innerHTML = '<p>Cart is empty</p>';
-	} else {
-
-		var totalItems = 0;
-		var totalCost = 0.00;
-		for(var cartItem of localCart.items) {
-			
-			totalItems += cartItem.quantity;
-			totalCost += cartItem.cost;
-		}
-		document.getElementById("cart_preview").innerHTML = '';
-		document.getElementById("cart_preview").innerHTML += '<div class="row">';
-		document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-		document.getElementById("cart_preview").innerHTML += totalItems+' items @ ($'+totalCost+')';
-		document.getElementById("cart_preview").innerHTML += '</div>';
-		document.getElementById("cart_preview").innerHTML += '</div>';
-		document.getElementById("cart_preview").innerHTML += '<hr>';
+		totalItems += cartItem.quantity;
+		totalCost += cartItem.cost;
+	}
+	document.getElementById("cart_preview").innerHTML = '';
+	document.getElementById("cart_preview").innerHTML += '<div class="row">';
+	document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
+	document.getElementById("cart_preview").innerHTML += totalItems+' item(s) @ ($'+totalCost+')';
+	document.getElementById("cart_preview").innerHTML += '</div>';
+	document.getElementById("cart_preview").innerHTML += '</div>';
+	document.getElementById("cart_preview").innerHTML += '<hr>';
+	if(localCart && localCart.items) {
 		for(var cartItem of localCart.items) {
 			
 			document.getElementById("cart_preview").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
 		}
-		document.getElementById("cart_preview").innerHTML += '<hr>';
-		document.getElementById("cart_preview").innerHTML += '<div class="row">';
-		document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-		document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
-		document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
-		document.getElementById("cart_preview").innerHTML += '</div>';
-		document.getElementById("cart_preview").innerHTML += '</div>';
+		if(localCart.items.length > 0) {
+			document.getElementById("cart_preview").innerHTML += '<hr>';
+			document.getElementById("cart_preview").innerHTML += '<div class="row">';
+			document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
+			document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
+			document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
+			document.getElementById("cart_preview").innerHTML += '</div>';
+			document.getElementById("cart_preview").innerHTML += '</div>';
+		}
 	}
 }
 
