@@ -70,9 +70,9 @@ $(document).ready(function() {
 		    	return sameItem;
 		    });
 	    	console.log("Existing cart item:\t"+JSON.stringify(existingCartItem));
-		    if(existingCartItem) {
+		    if(existingCartItem.length > 0) {
 
-		    	existingCartItem.quantity += newCartItem.quantity;
+		    	existingCartItem[0].quantity += newCartItem.quantity;
 		    } else {
 		    	
 		    	localCart.items.push(newCartItem);
