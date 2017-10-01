@@ -260,11 +260,11 @@ $(document).ready(function() {
 			success: function (response) {
 		
 				$('#status').empty().text('Sign-up success');
-				console.log("Sign-up success: "+response);
+				console.log("Sign-up success: "+JSON.stringify(response));
 				document.getElementById("signin").checked = true;
 				reloadCustomerProfile(function () {
 					
-					console.log("User profile loaded: "+response);
+					console.log("User profile loaded: "+JSON.stringify(response));
 					document.getElementById("user_nav").click();
 				});
 			},
@@ -296,8 +296,15 @@ $(document).ready(function() {
 			},
 			error: function (xhr) {
 
-				document.getElementById("user_msg").innerHTML = 'Failed to sign-in. Please retry...';
-				console.log("Failed to sign-in: "+JSON.stringify(xhr));
+				console.log("Failed to sign-in: "+xhr.responseJSON.error.code);
+				console.log("Error message returned: "+xhr.responseJSON.error.message);
+				var errorMessage = 'Failed to sign-in. Please retry...';
+				if(xhr.responseJSON.error.code == 'NotAuthorizedException') {
+					errorMessage = xhr.responseJSON.error.message+' Please try again...';
+				} else if(xhr.responseJSON.error.code == 'UserNotConfirmedException') {
+					errorMessage = xhr.responseJSON.error.message+' Please check your mail...';
+				}
+				document.getElementById("user_msg").innerHTML = 'Failed to sign-in. Please try again...';
 			}
 		});
 		return false;
