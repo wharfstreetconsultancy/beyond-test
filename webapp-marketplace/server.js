@@ -388,7 +388,7 @@ function formatProductViewHtml(product,callback) {
 		if(product.sizes) {
 
 			productSizeSelectorHtml = 'Size Choices:<br>';
-			productSizeSelectorHtml += '<select name=\'productSize\' name=\'newCartItem[productSize]\'>';
+			productSizeSelectorHtml += '<select id=\'productSize\' name=\'newCartItem[productSize]\'>';
 
 			// For each size that the product has
 			for(var size of product.sizes) {
