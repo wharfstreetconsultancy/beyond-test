@@ -59,9 +59,6 @@ $(document).ready(function() {
 
 	$('#cart_control').submit(function () {
 
-		var customer = sessionStorage.getItem('customer');
-		console.log("Current customer: "+customer);
-			
 		var localCart = JSON.parse(localStorage.getItem('cart'));
 		var timestamp = new Date().getTime().toString();
 		if(!localCart || !localCart.items || localCart.items.length == 0) {
@@ -103,10 +100,12 @@ $(document).ready(function() {
 		localStorage.setItem('cart', JSON.stringify(localCart));
 		console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
 
+		var customer = sessionStorage.getItem('customer');
+		console.log("Current customer: "+JSON.stringify(customer));
 		if(customer) {
 
 			$('#status').empty().text('Cart is updating...');
-			console.log("Cart is updating.");
+			console.log("Cart is updating: ");
 			
 			$(this).ajaxSubmit({
 				url: '/cart/'+customer.sub+'/item',
