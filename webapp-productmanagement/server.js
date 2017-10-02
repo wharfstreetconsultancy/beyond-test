@@ -978,8 +978,6 @@ app.post('/cart/:id/item', function (req, res) {
     // Log request received
     console.log( "Received request: POST /cart/"+req.params.id+"/item" );
 
-    console.log("Requested new cart item: "+util.inspect(req.body));
-
     var timestamp = new Date().getTime().toString();
     var newCartItem = req.body.newCartItem;
 //    var newCartItem = {
@@ -1013,56 +1011,60 @@ app.post('/cart/:id/item', function (req, res) {
 
 			// Handle error
 			if(loadCartError) {
+				
+				// Cart does not exist - create and store cart
+				console.log("Unexpected error: "+loadCartError);
 
 				// Return error to caller
                 res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
                 res.write('Failed to load cart id "'+req.params.id+'": '+loadCartError);
 				res.end();
 				return;
-			}
-
-			if(!customerCart) {
-
-				// Cart does not exist - create and store cart
-				console.log("Cart does not exist - create and store cart");
-
-		        timestamp = new Date().getTime().toString();
-				// Create new cart
-				var customerCart = {
-					id: timestamp.split("").reverse().join(""),
-					items: [newCartItem]
-				}
-				console.log("Cart created: "+JSON.stringify(customerCart))
 			} else {
 
-				console.log("Cart found: "+JSON.stringify(customerCart))
+				if(!customerCart) {
+	
+					// Cart does not exist - create and store cart
+					console.log("Cart does not exist - create and store cart");
+	
+			        timestamp = new Date().getTime().toString();
+					// Create new cart
+					var customerCart = {
+						id: timestamp.split("").reverse().join(""),
+						items: [newCartItem]
+					}
+					console.log("Cart created: "+JSON.stringify(customerCart))
+				} else {
+	
+					console.log("Cart found: "+JSON.stringify(customerCart))
+				}
+				
+				// Add new cart item to cart
+				customerCart.items.push(newCartItem);
+	
+		    	// Store cart into data source
+		    	storeCart(cart, function (storeCartError) {
+		    		if(storeCartError) {
+	
+		    			console.log("Error: "+storeCartError);
+		    			
+			    		// Return error to caller
+			            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+			            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
+						res.end();
+						return;
+		    		} else {
+	
+		    			console.log("Cart stored successfully.");
+		    			
+		    			// Return new cart item to caller
+		    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+		    			res.write(JSON.stringify(newCartItem));
+		    			res.end();
+		    			return
+		    		}
+		    	});
 			}
-			
-			// Add new cart item to cart
-			customerCart.items.push(newCartItem);
-
-	    	// Store cart into data source
-	    	storeCart(cart, function (storeCartError) {
-	    		if(storeCartError) {
-
-	    			console.log("Error: "+storeCartError);
-	    			
-		    		// Return error to caller
-		            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-		            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
-					res.end();
-					return;
-	    		} else {
-
-	    			console.log("Cart stored successfully.");
-	    			
-	    			// Return new cart item to caller
-	    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
-	    			res.write(JSON.stringify(newCartItem));
-	    			res.end();
-	    			return
-	    		}
-	    	});
 		});
 	} else {
 
@@ -1110,11 +1112,11 @@ function loadCart(cartId, callback) {
 				// Check only one cart loaded.
 				if(cartData.Items.length == 0) {
 					
-					callback('No carts found for: '+cartId);
+					callback(null, null);
 					return;
 				} else if(cartData.Items.length > 1) {
 
-					callback('More than one cart found for: '+cartId);
+					callback('More than one cart found for: '+cartId, null);
 					return;
 				} else {
 
