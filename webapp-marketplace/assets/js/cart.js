@@ -105,7 +105,7 @@ $(document).ready(function() {
 
 		if(customer) {
 
-			this.action = 'https://'+restDomain+'/cart/'+customer/sub+'/item';
+			this.action = '/cart/'+customer.sub+'/item';
 			$('#status').empty().text('Cart is updating...');
 			console.log("Cart is updating - call "+this.action);
 			
