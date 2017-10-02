@@ -181,6 +181,7 @@ $(document).ready(function() {
 		    		reloadCustomerCart();
 					alert("2");
 		    		document.getElementById("cart_preview_nav").click();
+					alert("3");
 		    		return false;		
 				},
 				error: function (xhr) {
@@ -192,12 +193,14 @@ $(document).ready(function() {
 		    		return false;		
 				}
 			});
+			alert("4");
 		} else {
 
     		reloadCustomerCart();
     		document.getElementById("cart_preview_nav").click();
     		return false;		
 		}
+		alert("5");
 	});
 });
 
