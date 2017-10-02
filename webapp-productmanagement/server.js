@@ -978,7 +978,7 @@ app.post('/cart/:id/item', function (req, res) {
     // Log request received
     console.log( "Received request: POST /cart/"+req.params.id+"/item" );
 
-    console.log("Requested new cart item: "+JSON.stringify(req.body));
+    console.log("Requested new cart item: "+utils.inspect(req.body));
 
     var timestamp = new Date().getTime().toString();
     var newCartItem = req.body.newCartItem;
