@@ -113,7 +113,7 @@ $(document).ready(function() {
 				type: 'post',
 				dataType: 'json',
 				data: {newCartItem: newCartItem},
-				success: function (newCartItem) {
+				success: function (uploadedCartItem) {
 					
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
