@@ -109,7 +109,7 @@ $(document).ready(function() {
 			console.log("Cart is updating: ");
 			
 			$(this).ajaxSubmit({
-				url: '/cart/'+customer.sub+'/item',
+				url: 'https://'+restDomain+'/cart/'+customer.sub+'/item',
 				type: 'post',
 				dataType: 'json',
 				success: function (newCartItem) {

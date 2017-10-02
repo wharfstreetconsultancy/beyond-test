@@ -47,8 +47,9 @@ var options = {
 };
 
 var securePort = process.env.SECURE_PORT;
-var restPort = process.env.REST_PORT;
 var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
+// var restHost = process.env.REST_HOST;
+var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
