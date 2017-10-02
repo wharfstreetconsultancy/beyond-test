@@ -128,13 +128,13 @@ app.get('/product', function (req, res) {
 	console.log( "Received request: GET /product" );
 
 	// Load cart from REST API
-	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
-
-		if(cartLoadErrorMessage) {
-			
-			// Log error and continue
-			console.log(cartLoadErrorMessage);
-		}
+//	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
+//
+//		if(cartLoadErrorMessage) {
+//			
+//			// Log error and continue
+//			console.log(cartLoadErrorMessage);
+//		}
 		
 		// Load all specified product from REST API
 		loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
@@ -167,7 +167,7 @@ app.get('/product', function (req, res) {
 						.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
 						.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
 						.pipe(replaceStream('{rest.domain}', JSON.stringify(restDomain)))
-						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
+//						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
 						.pipe(res);
 		        });
 			} else {
@@ -182,12 +182,12 @@ app.get('/product', function (req, res) {
 						.pipe(replaceStream('{error.message}', errorMessage))
 						.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
 						.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
-						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
+//						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
 						.pipe(res);
 		        });
 			}
 		});
-	});
+//	});
 });
 
 //
@@ -216,6 +216,7 @@ app.get('/cart', function (req, res) {
 	});
 
 });
+
 //
 // Load existing product from data source
 function loadExistingProducts(req, res, callback) {
@@ -252,14 +253,14 @@ function loadExistingProducts(req, res, callback) {
 function loadExistingCart(req, res, callback) {
 
 	// Get cart id
-	var cartId = 0;
-	req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
-		var parts = cookie.split('=');
-		if(parts[0] == 'connect.sid') {
-			cartId = parts[1];
-		}
-	});
-	console.log("Derived cart id: "+cartId);
+//	var cartId = 0;
+//	req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
+//		var parts = cookie.split('=');
+//		if(parts[0] == 'connect.sid') {
+//			cartId = parts[1];
+//		}
+//	});
+//	console.log("Derived cart id: "+cartId);
 
 	request.get({url:'https://'+restDomain+'/cart/'+cartId, agent: agent}, function (cartLoadError, cartLoadResponse, cartLoadBody) {
 		
