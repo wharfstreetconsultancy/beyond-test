@@ -177,7 +177,9 @@ $(document).ready(function() {
 					
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
+					alert("1");
 		    		reloadCustomerCart();
+					alert("2");
 		    		document.getElementById("cart_preview_nav").click();
 		    		return false;		
 				},
