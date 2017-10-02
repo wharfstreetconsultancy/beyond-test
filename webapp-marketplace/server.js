@@ -697,7 +697,7 @@ app.delete('/cart/:id', function (req, res) {
         // Log request received
         console.log( "Received request: DELETE /cart/"+req.params.id );
 
-        deleteCart(req.params.id, function (deleteCartError, existingCart) {
+        deleteCart(req.params.id, function (deleteCartError) {
 
         	// Handle error
         	if(deleteCartError) {
@@ -714,7 +714,7 @@ app.delete('/cart/:id', function (req, res) {
 
         		// Return cart items to caller
 				res.writeHead(200, {'Content-Type': 'application/json'});
-				res.write(JSON.stringify(existingCart));
+				res.write(JSON.stringify({cart: null}));
 				res.end();
 				return;
         	}
@@ -883,7 +883,7 @@ function deleteCart(cartId, callback) {
 	// Create load params
 	if(!cartId || cartId == 0) {
 
-		callback('No cart specified', null);
+		callback('No cart specified');
 		return;
 	} else {
 
@@ -901,7 +901,7 @@ function deleteCart(cartId, callback) {
 	
 				console.log("Failed to delete cart id '"+cartId+"'. "+err);
 				// Return error to caller
-				callback('Failed to delete cart id "'+cartId+'. '+err, null);
+				callback('Failed to delete cart id "'+cartId+'. '+err);
 			} else {
 	
 				// Log loaded  cart
@@ -919,7 +919,7 @@ function deleteCart(cartId, callback) {
 //				} else {
 
 					// Return  cart to caller
-					callback(null, cartData.Items[0]);
+					callback(null);
 					return;
 //				}
 			}
