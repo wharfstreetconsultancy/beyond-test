@@ -707,7 +707,7 @@ app.delete('/cart/:id', function (req, res) {
         		
         		// Throw 'cart not found' response to caller
 				res.writeHead(404, {'Content-Type': 'application/json'});
-				res.write(cartError);
+				res.write(deleteCartError);
 				res.end();
 				return;
         	} else {
