@@ -763,7 +763,7 @@ app.post('/cart/:id/item', function (req, res) {
 				console.log("Unexpected error: "+loadCartError);
 
 				// Return error to caller
-                res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+                res.writeHead(500, {'Content-Type': 'application/json'});
                 res.write('Failed to load cart id "'+req.params.id+'": '+loadCartError);
 				res.end();
 				return;
@@ -795,7 +795,7 @@ app.post('/cart/:id/item', function (req, res) {
 		    			console.log("Error: "+storeCartError);
 		    			
 			    		// Return error to caller
-			            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+			            res.writeHead(500, {'Content-Type': 'application/json'});
 			            res.write('Failed to store cart id "'+customerCart.id+'": '+storeCartError);
 						res.end();
 						return;
@@ -804,7 +804,7 @@ app.post('/cart/:id/item', function (req, res) {
 		    			console.log("Cart stored successfully.");
 		    			
 		    			// Return new cart item to caller
-		    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': customerCart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+customerCart.id+'/item/'+newCartItem.id});
+		    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': customerCart.id, Location: 'https://'+restDomain+'/cart/'+customerCart.id+'/item/'+newCartItem.id});
 		    			res.write(JSON.stringify(newCartItem));
 		    			res.end();
 		    			return
@@ -815,7 +815,7 @@ app.post('/cart/:id/item', function (req, res) {
 	} else {
 
 		// Return error to caller
-        res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+        res.writeHead(500, {'Content-Type': 'application/json'});
         res.write('Failed to load cart id "'+req.params.id+'": No cart specified.');
 		res.end();
 		return;
