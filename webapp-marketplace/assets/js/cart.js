@@ -59,56 +59,53 @@ $(document).ready(function() {
 
 	$('#cart_control').submit(function () {
 
-		if(true) {
-			// No customer found - update local cart only
-			var localCart = JSON.parse(localStorage.getItem('cart'));
-			var timestamp = new Date().getTime().toString();
-			if(!localCart || !localCart.items || localCart.items.length == 0) {
-				localCart = {id: timestamp.split("").reverse().join(""), items: []};
-			}
-		    var newCartItem = {
-				id: timestamp.split("").reverse().join(""),
-				productId: document.getElementById('productId').value,
-				productName: document.getElementById('productName').value, 
-				quantity: parseInt(document.getElementById('productQuantity').value),
-				color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
-				size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
-				cost: parseFloat(document.getElementById('productPrice').value) * parseInt(document.getElementById('productQuantity').value),
-				created: timestamp,
-				lastUpdated: timestamp
-		    }
-	    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
-		    var existingCartItem = localCart.items.filter(function (currentCartItem) {
-		    	
-		    	console.log("Current:\t"+JSON.stringify(currentCartItem));
-		    	console.log("New:\t\t"+JSON.stringify(newCartItem));
-		    	var sameItem = (
-		    		(currentCartItem.productId === newCartItem.productId) &&
-		    		(currentCartItem.color === newCartItem.color) &&
-		    		(currentCartItem.size === newCartItem.size)
-		    	);
-		    	console.log(sameItem);
-		    	return sameItem;
-		    });
-	    	console.log("Existing cart item:\t"+JSON.stringify(existingCartItem));
-		    if(existingCartItem.length > 0) {
+		var customer = sessionStorage.getItem('customer');
+		console.log("Current customer: "+customer);
+			
+		var localCart = JSON.parse(localStorage.getItem('cart'));
+		var timestamp = new Date().getTime().toString();
+		if(!localCart || !localCart.items || localCart.items.length == 0) {
+			localCart = {id: timestamp.split("").reverse().join(""), items: []};
+		}
+	    var newCartItem = {
+			id: timestamp.split("").reverse().join(""),
+			productId: document.getElementById('productId').value,
+			productName: document.getElementById('productName').value, 
+			quantity: parseInt(document.getElementById('productQuantity').value),
+			color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
+			size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
+			cost: parseFloat(document.getElementById('productPrice').value) * parseInt(document.getElementById('productQuantity').value),
+			created: timestamp,
+			lastUpdated: timestamp
+	    }
+    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
+	    var existingCartItem = localCart.items.filter(function (currentCartItem) {
 
-		    	existingCartItem[0].quantity += newCartItem.quantity;
-		    	existingCartItem[0].cost += newCartItem.cost;
-		    } else {
-		    	
-		    	localCart.items.push(newCartItem);
-		    }
-			localStorage.setItem('cart', JSON.stringify(localCart));
-			console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
-		} else {
+	    	console.log("Current:\t"+JSON.stringify(currentCartItem));
+	    	console.log("New:\t\t"+JSON.stringify(newCartItem));
+	    	var sameItem = (
+	    		(currentCartItem.productId === newCartItem.productId) &&
+	    		(currentCartItem.color === newCartItem.color) &&
+	    		(currentCartItem.size === newCartItem.size)
+	    	);
+	    	console.log(sameItem);
+	    	return sameItem;
+	    });
+    	console.log("Existing cart item:\t"+JSON.stringify(existingCartItem));
+	    if(existingCartItem.length > 0) {
 
-			var cartId = 0;
-			if(document.cookie.length > 0) {
-				var cookieParts = document.cookie.split('=');
-				cartId = cookieParts[1];
-			}
-			this.action = 'https://'+restDomain+'/cart/'+cartId+'/item';
+	    	existingCartItem[0].quantity += newCartItem.quantity;
+	    	existingCartItem[0].cost += newCartItem.cost;
+	    } else {
+
+	    	localCart.items.push(newCartItem);
+	    }
+		localStorage.setItem('cart', JSON.stringify(localCart));
+		console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
+
+		if(customer) {
+
+			this.action = 'https://'+restDomain+'/cart/'+customer/sub+'/item';
 			$('#status').empty().text('Cart is updating...');
 			console.log("Cart is updating - call "+this.action);
 			
