@@ -57,8 +57,8 @@ agent = new https.Agent({
 });
 
 var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
-var authClientId = '6v6h3ob7p9qip7jdm596shvoea';
-var authClientSecret = '57hupab0iqhlhpivubqe4quu1eeqoq0kjpunerklr4s60mrbcvv';
+var authClientId = '';
+var authClientSecret = '';
 
 //
 // Create and run web server
