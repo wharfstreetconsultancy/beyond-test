@@ -113,7 +113,7 @@ $(document).ready(function() {
 				type: 'post',
 				dataType: 'json',
 				data: {newCartItem: newCartItem},
-				processData: false,
+//				processData: false,
 				success: function (newCartItem) {
 					
 					$('#status').empty().text('Cart update success');
