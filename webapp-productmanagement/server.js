@@ -979,64 +979,35 @@ app.post('/cart/:id/item', function (req, res) {
     console.log( "Received request: POST /cart/"+req.params.id+"/item" );
 
     var timestamp = new Date().getTime().toString();
-    var newCartItem = {
-		id: timestamp.split("").reverse().join(""),
-		productId: req.body.newCartItem.productId,
-		productName: req.body.newCartItem.productName, 
-		quantity: req.body.newCartItem.quantity,
-		color: (req.body.newCartItem.color) ? req.body.newCartItem.color : undefined,
-		size: (req.body.newCartItem.size) ? req.body.newCartItem.size : undefined,
-		cost: '5.55',
-		created: timestamp,
-		lastUpdated: timestamp
-    }
+    var newCartItem = req.body.newCartItem;
+//    var newCartItem = {
+//		id: timestamp.split("").reverse().join(""),
+//		productId: req.body.newCartItem.productId,
+//		productName: req.body.newCartItem.productName, 
+//		quantity: req.body.newCartItem.quantity,
+//		color: (req.body.newCartItem.color) ? req.body.newCartItem.color : null,
+//		size: (req.body.newCartItem.size) ? req.body.newCartItem.size : null,
+//		cost: '5.55',
+//		created: timestamp,
+//		lastUpdated: timestamp
+//    }
 
     console.log("Requested new cart item: "+JSON.stringify(newCartItem));
     
-    // Create a cart update observer object
-    var cartUpdateObserver = new events.EventEmitter();
-
-    // Update product
-    cartUpdateObserver.on('store_cart', function(cart) {
-
-		// Add new cart item to cart
-		cart.items.push(newCartItem);
-
-    	// Store cart into data source
-    	storeCart(cart, function (storeCartError) {
-    		if(storeCartError) {
-
-    			console.log("Error: "+storeCartError);
-    			
-	    		// Return error to caller
-	            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-	            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
-				res.end();
-				return;
-    		} else {
-
-    			// console.log("Creating cookie: "+cartCookieName+"="+cart.id);
-    			
-    			// Set cart id into a cookie with the response
-    			// res.cookie(cartCookieName, cart.id, {maxAge: (30*24*60*60*1000), httpOnly: false});
-    			// console.log("Cookie created");
-    			
-    			// Return new cart item to caller
-    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
-    			res.write(JSON.stringify(newCartItem));
-    			res.end();
-    			return
-    		}
-    	});
-    });
+//    // Create a cart update observer object
+//    var cartUpdateObserver = new events.EventEmitter();
+//
+//    // Update product
+//    cartUpdateObserver.on('store_cart', function(cart) {
+//    });
 
 	if (req.params.id != 0 && req.params.id != 'undefined') {
 		
 		// Cart exists - load cart
-		console.log("Cart exists - load cart");
+		console.log("Try to load cart");
 		
 		// Load existing cart
-		loadCart(req.params.id, function (loadCartError, existingCart) {
+		loadCart(req.params.id, function (loadCartError, customerCart) {
 
 			// Handle error
 			if(loadCartError) {
@@ -1048,24 +1019,56 @@ app.post('/cart/:id/item', function (req, res) {
 				return;
 			}
 
-			// Trigger cart store
-			cartUpdateObserver.emit('store_cart', existingCart);
+			if(!customerCart) {
+
+				// Cart does not exist - create and store cart
+				console.log("Cart does not exist - create and store cart");
+
+		        timestamp = new Date().getTime().toString();
+				// Create new cart
+				var customerCart = {
+					id: timestamp.split("").reverse().join(""),
+					items: [newCartItem]
+				}
+				console.log("Cart created: "+JSON.stringify(customerCart))
+			} else {
+
+				console.log("Cart found: "+JSON.stringify(customerCart))
+			}
+			
+			// Add new cart item to cart
+			customerCart.items.push(newCartItem);
+
+	    	// Store cart into data source
+	    	storeCart(cart, function (storeCartError) {
+	    		if(storeCartError) {
+
+	    			console.log("Error: "+storeCartError);
+	    			
+		    		// Return error to caller
+		            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+		            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
+					res.end();
+					return;
+	    		} else {
+
+	    			console.log("Cart stored successfully.");
+	    			
+	    			// Return new cart item to caller
+	    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+	    			res.write(JSON.stringify(newCartItem));
+	    			res.end();
+	    			return
+	    		}
+	    	});
 		});
 	} else {
 
-		// Cart does not exist - create and store cart
-		console.log("Cart does not exist - create and store cart");
-
-        timestamp = new Date().getTime().toString();
-		// Create new cart
-		var newCart = {
-			id: timestamp.split("").reverse().join(""),
-			items: [newCartItem]
-		}
-		console.log("Cart created: "+JSON.stringify(newCart))
-
-		// Trigger cart store
-		cartUpdateObserver.emit('store_cart', newCart);
+		// Return error to caller
+        res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+        res.write('Failed to load cart id "'+req.params.id+'": Cart not found.');
+		res.end();
+		return;
 	}
 });
 

@@ -67,7 +67,7 @@ $(document).ready(function() {
 	    var newCartItem = {
 			id: timestamp.split("").reverse().join(""),
 			productId: document.getElementById('productId').value,
-			productName: document.getElementById('productName').value, 
+			productName: document.getElementById('productName').value,
 			quantity: parseInt(document.getElementById('productQuantity').value),
 			color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
 			size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
@@ -108,16 +108,20 @@ $(document).ready(function() {
 			$('#status').empty().text('Cart is updating...');
 			console.log("Cart is updating: ");
 			
-			$(this).ajaxSubmit({
+			$.ajax({
 				url: 'https://'+restDomain+'/cart/'+customer.sub+'/item',
 				type: 'post',
 				dataType: 'json',
+				data: {newCartItem: newCartItem},
+				processData: false,
 				success: function (newCartItem) {
+					
 					$('#status').empty().text('Cart update success');
-					console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
+					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
 					// cartItems.push(newCartItem);
 				},
 				error: function (xhr) {
+					
 					$('#status').empty().text('Cart update error: '+xhr.status);
 					console.log("Cart update error: "+xhr.status);
 				}
