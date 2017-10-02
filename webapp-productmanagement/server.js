@@ -924,7 +924,6 @@ function loadProduct(productId, callback) {
 	});
 }
 
-
 //
 // GET - cart API - Get entire cart for current user
 app.get('/cart/:id', function (req, res) {
@@ -933,6 +932,34 @@ app.get('/cart/:id', function (req, res) {
         console.log( "Received request: GET /cart/"+req.params.id );
 
         loadCart(req.params.id, function (cartError, existingCart) {
+
+        	// Handle error
+        	if(cartError) {
+        		
+        		// Throw 'cart not found' response to caller
+				res.writeHead(404, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(cartError));
+				res.end();
+				return;
+        	} else {
+
+        		// Return cart items to caller
+				res.writeHead(200, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(existingCart));
+				res.end();
+				return;
+        	}
+        });
+});
+
+//
+// DELETE - cart API - Get entire cart for current user
+app.delete('/cart/:id', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: DELETE /cart/"+req.params.id );
+
+        deleteCart(req.params.id, function (cartError, existingCart) {
 
         	// Handle error
         	if(cartError) {
@@ -980,27 +1007,9 @@ app.post('/cart/:id/item', function (req, res) {
 
     var timestamp = new Date().getTime().toString();
     var newCartItem = req.body.newCartItem;
-//    var newCartItem = {
-//		id: timestamp.split("").reverse().join(""),
-//		productId: req.body.newCartItem.productId,
-//		productName: req.body.newCartItem.productName, 
-//		quantity: req.body.newCartItem.quantity,
-//		color: (req.body.newCartItem.color) ? req.body.newCartItem.color : null,
-//		size: (req.body.newCartItem.size) ? req.body.newCartItem.size : null,
-//		cost: '5.55',
-//		created: timestamp,
-//		lastUpdated: timestamp
-//    }
 
     console.log("Requested new cart item: "+JSON.stringify(newCartItem));
     
-//    // Create a cart update observer object
-//    var cartUpdateObserver = new events.EventEmitter();
-//
-//    // Update product
-//    cartUpdateObserver.on('store_cart', function(cart) {
-//    });
-
 	if(req.params.id != 0 && req.params.id != 'undefined') {
 		
 		// Cart exists - load cart
@@ -1079,7 +1088,6 @@ app.post('/cart/:id/item', function (req, res) {
 // Load specified cart from the data source
 function loadCart(cartId, callback) {
 
-	var params;
 	// Create load params
 	if(!cartId || cartId == 0) {
 
@@ -1088,9 +1096,8 @@ function loadCart(cartId, callback) {
 	} else {
 
 		// Cart id specified, create params
-		params = {
+		var params = {
 			TableName: 'SuroorFashionsCarts',
-			// Limit: 10,
             ExpressionAttributeValues: {':c': cartId},
 			FilterExpression: 'id = :c'
 		};
@@ -1123,6 +1130,57 @@ function loadCart(cartId, callback) {
 					callback(null, cartData.Items[0]);
 					return;
 				}
+			}
+		});
+	}
+}
+
+//
+// Delete specified cart from the data source
+function deleteCart(cartId, callback) {
+
+	// Create load params
+	if(!cartId || cartId == 0) {
+
+		callback('No cart specified', null);
+		return;
+	} else {
+
+		// Cart id specified, create params
+		var params = {
+			TableName: 'SuroorFashionsCarts',
+            ExpressionAttributeValues: {':c': cartId},
+			FilterExpression: 'id = :c'
+		};
+
+		console.log("Deleting existing cart with: "+JSON.stringify(params));
+		// Perform product delete action
+		dddc.deleteItem(params, function (err, cartData) {
+	
+			if(err) {
+	
+				// Return error to caller
+				callback(err, null);
+			} else {
+	
+				// Log loaded  cart
+				console.log("Deleted cart data: "+JSON.stringify(cartData));
+	
+//				// Check only one cart loaded.
+//				if(cartData.Items.length == 0) {
+//					
+//					callback(null, null);
+//					return;
+//				} else if(cartData.Items.length > 1) {
+//
+//					callback('More than one cart found for: '+cartId, null);
+//					return;
+//				} else {
+
+					// Return  cart to caller
+					callback(null, cartData.Items[0]);
+					return;
+//				}
 			}
 		});
 	}
