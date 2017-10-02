@@ -76,7 +76,7 @@ $(document).ready(function() {
 			console.log("Cart is updating: ");
 			
 			$.ajax({
-				url: 'https://'+restDomain+'/cart/'+customer.sub+'/item',
+				url: '/cart/'+customer.sub,
 				type: 'delete',
 				dataType: 'json',
 				success: function (uploadedCartItem) {
@@ -169,7 +169,7 @@ $(document).ready(function() {
 			console.log("Cart is updating: ");
 			
 			$.ajax({
-				url: 'https://'+restDomain+'/cart/'+customer.sub+'/item',
+				url: '/cart/'+customer.sub+'/item',
 				type: 'post',
 				dataType: 'json',
 				data: {newCartItem: newCartItem},
