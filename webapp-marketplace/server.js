@@ -893,7 +893,7 @@ function deleteCart(cartId, callback) {
 
 		console.log("Deleting existing cart with: "+JSON.stringify(params));
 		// Perform product delete action
-		dddc.deleteItem(params, function (err, cartData) {
+		dddc.delete(params, function (err, cartData) {
 	
 			if(err) {
 	
