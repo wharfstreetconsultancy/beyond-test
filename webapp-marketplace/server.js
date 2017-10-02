@@ -890,8 +890,7 @@ function deleteCart(cartId, callback) {
 		// Cart id specified, create params
 		var params = {
 			TableName: 'SuroorFashionsCarts',
-            ExpressionAttributeValues: {':c': cartId},
-			FilterExpression: 'id = :c'
+            Key: cartId
 		};
 
 		console.log("Deleting existing cart with: "+JSON.stringify(params));
