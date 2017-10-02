@@ -93,14 +93,14 @@ app.get('/', function (req, res) {
 	console.log( "Received request: GET /" );
 
 
-	// Load cart from REST API
-	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
-
-		if(cartLoadErrorMessage) {
-			
-			// Log error and continue
-			console.log(cartLoadErrorMessage);
-		}
+//	// Load cart from REST API
+//	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
+//
+//		if(cartLoadErrorMessage) {
+//			
+//			// Log error and continue
+//			console.log(cartLoadErrorMessage);
+//		}
 
 		// Load all existing products from REST API
 		loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
@@ -117,7 +117,7 @@ app.get('/', function (req, res) {
 					.pipe(res);
 	        });
 		});
-	});
+//	});
 });
 
 //
