@@ -1043,14 +1043,14 @@ app.post('/cart/:id/item', function (req, res) {
 				customerCart.items.push(newCartItem);
 	
 		    	// Store cart into data source
-		    	storeCart(cart, function (storeCartError) {
+		    	storeCart(customerCart, function (storeCartError) {
 		    		if(storeCartError) {
 	
 		    			console.log("Error: "+storeCartError);
 		    			
 			    		// Return error to caller
 			            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-			            res.write('Failed to store cart id "'+cart.id+'": '+storeCartError);
+			            res.write('Failed to store cart id "'+customerCart.id+'": '+storeCartError);
 						res.end();
 						return;
 		    		} else {
@@ -1058,7 +1058,7 @@ app.post('/cart/:id/item', function (req, res) {
 		    			console.log("Cart stored successfully.");
 		    			
 		    			// Return new cart item to caller
-		    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': cart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+cart.id+'/item/'+newCartItem.id});
+		    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': customerCart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+customerCart.id+'/item/'+newCartItem.id});
 		    			res.write(JSON.stringify(newCartItem));
 		    			res.end();
 		    			return
