@@ -57,12 +57,12 @@ $(document).ready(function() {
 
 		//
 		// Return to caller
-        var cartObserver = new events.EventEmitter().on('cart_updated', function() {
-
-    		reloadCustomerCart();
-    		document.getElementById("cart_preview_nav").click();
-    		return false;		
-        });
+//        var cartObserver = new events.EventEmitter().on('cart_updated', function() {
+//
+//    		reloadCustomerCart();
+//    		document.getElementById("cart_preview_nav").click();
+//    		return false;		
+//        });
 
 		//
 		// Remote cart management
@@ -83,18 +83,24 @@ $(document).ready(function() {
 					
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
-					cartObserver.emit('cart_updated');
+		    		reloadCustomerCart();
+		    		document.getElementById("cart_preview_nav").click();
+		    		return false;		
 				},
 				error: function (xhr) {
 					
 					$('#status').empty().text('Cart update error: '+xhr.status);
 					console.log("Cart update error: "+xhr.status);
-					cartObserver.emit('cart_updated');
+		    		reloadCustomerCart();
+		    		document.getElementById("cart_preview_nav").click();
+		    		return false;		
 				}
 			});
 		} else {
 			
-			cartObserver.emit('cart_updated');
+    		reloadCustomerCart();
+    		document.getElementById("cart_preview_nav").click();
+    		return false;		
 		}
 	});
 
@@ -145,12 +151,12 @@ $(document).ready(function() {
 
 		//
 		// Return to caller
-        var cartObserver = new events.EventEmitter().on('cart_updated', function() {
-
-    		reloadCustomerCart();
-    		document.getElementById("cart_preview_nav").click();
-    		return false;		
-        });
+//        var cartObserver = new events.EventEmitter().on('cart_updated', function() {
+//
+//    		reloadCustomerCart();
+//    		document.getElementById("cart_preview_nav").click();
+//    		return false;		
+//        });
         
 		//
 		// Remote cart management
@@ -171,18 +177,24 @@ $(document).ready(function() {
 					
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
-					cartObserver.emit('cart_updated');
+		    		reloadCustomerCart();
+		    		document.getElementById("cart_preview_nav").click();
+		    		return false;		
 				},
 				error: function (xhr) {
 					
 					$('#status').empty().text('Cart update error: '+xhr.status);
 					console.log("Cart update error: "+xhr.status);
-					cartObserver.emit('cart_updated');
+		    		reloadCustomerCart();
+		    		document.getElementById("cart_preview_nav").click();
+		    		return false;		
 				}
 			});
 		} else {
 
-			cartObserver.emit('cart_updated');
+    		reloadCustomerCart();
+    		document.getElementById("cart_preview_nav").click();
+    		return false;		
 		}
 	});
 });
