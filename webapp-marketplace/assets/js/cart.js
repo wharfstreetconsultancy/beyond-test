@@ -62,7 +62,7 @@ $(document).ready(function() {
     		reloadCustomerCart();
     		document.getElementById("cart_preview_nav").click();
     		return false;		
-        }
+        });
 
 		//
 		// Remote cart management
@@ -150,7 +150,7 @@ $(document).ready(function() {
     		reloadCustomerCart();
     		document.getElementById("cart_preview_nav").click();
     		return false;		
-        }
+        });
         
 		//
 		// Remote cart management
