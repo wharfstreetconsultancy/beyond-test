@@ -105,19 +105,21 @@ $(document).ready(function() {
 
 		if(customer) {
 
-			this.action = '/cart/'+customer.sub+'/item';
 			$('#status').empty().text('Cart is updating...');
-			console.log("Cart is updating - call "+this.action);
+			console.log("Cart is updating.");
 			
 			$(this).ajaxSubmit({
-				error: function (xhr) {
-					$('#status').empty().text('Cart update error: '+xhr.status);
-					console.log("Cart update error: "+xhr.status);
-				},
+				url: '/cart/'+customer.sub+'/item',
+				type: 'post',
+				dataType: 'json',
 				success: function (newCartItem) {
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(newCartItem));
 					// cartItems.push(newCartItem);
+				},
+				error: function (xhr) {
+					$('#status').empty().text('Cart update error: '+xhr.status);
+					console.log("Cart update error: "+xhr.status);
 				}
 			});
 		}
