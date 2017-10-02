@@ -661,3 +661,295 @@ function profileCustomer(customer, callback) {
         }
 	});
 }
+
+//
+// GET - cart API - Get entire cart for current user
+app.get('/cart/:id', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: GET /cart/"+req.params.id );
+
+        loadCart(req.params.id, function (cartError, existingCart) {
+
+        	// Handle error
+        	if(cartError) {
+        		
+        		// Throw 'cart not found' response to caller
+				res.writeHead(404, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(cartError));
+				res.end();
+				return;
+        	} else {
+
+        		// Return cart items to caller
+				res.writeHead(200, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(existingCart));
+				res.end();
+				return;
+        	}
+        });
+});
+
+//
+// DELETE - cart API - Get entire cart for current user
+app.delete('/cart/:id', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: DELETE /cart/"+req.params.id );
+
+        deleteCart(req.params.id, function (cartError, existingCart) {
+
+        	// Handle error
+        	if(cartError) {
+        		
+        		// Throw 'cart not found' response to caller
+				res.writeHead(404, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(cartError));
+				res.end();
+				return;
+        	} else {
+
+        		// Return cart items to caller
+				res.writeHead(200, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(existingCart));
+				res.end();
+				return;
+        	}
+        });
+});
+
+//
+// GET - cart API - Get entire cart for current user
+app.get('/cart/:id/item', function (req, res) {
+
+        // Log request received
+        console.log( "Received request: GET /cart/"+req.params.id );
+
+        var cartItems = [];
+        if(req.params.id == 0) {
+        	console.log("Cart is empty.");
+        }
+        
+		// Return cart items to caller
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify(cartItems));
+		res.end();
+});
+
+//
+// POST - cart API - Create new cart item
+app.post('/cart/:id/item', function (req, res) {
+
+    // Log request received
+    console.log( "Received request: POST /cart/"+req.params.id+"/item" );
+
+    var timestamp = new Date().getTime().toString();
+    var newCartItem = req.body.newCartItem;
+
+    console.log("Requested new cart item: "+JSON.stringify(newCartItem));
+    
+	if(req.params.id != 0 && req.params.id != 'undefined') {
+		
+		// Cart exists - load cart
+		console.log("Try to load cart (id: "+req.params.id+").");
+		
+		// Load existing cart
+		loadCart(req.params.id, function (loadCartError, customerCart) {
+
+			// Handle error
+			if(loadCartError) {
+				
+				// Cart does not exist - create and store cart
+				console.log("Unexpected error: "+loadCartError);
+
+				// Return error to caller
+                res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+                res.write('Failed to load cart id "'+req.params.id+'": '+loadCartError);
+				res.end();
+				return;
+			} else {
+
+				if(!customerCart) {
+	
+					// Cart does not exist - create and store cart
+					console.log("Cart does not exist - create and store cart");
+	
+					// Create new cart
+					var customerCart = {
+						id: req.params.id,
+						items: [newCartItem]
+					}
+					console.log("Cart created: "+JSON.stringify(customerCart))
+				} else {
+	
+					console.log("Cart found: "+JSON.stringify(customerCart))
+				}
+				
+				// Add new cart item to cart
+				customerCart.items.push(newCartItem);
+	
+		    	// Store cart into data source
+		    	storeCart(customerCart, function (storeCartError) {
+		    		if(storeCartError) {
+	
+		    			console.log("Error: "+storeCartError);
+		    			
+			    		// Return error to caller
+			            res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+			            res.write('Failed to store cart id "'+customerCart.id+'": '+storeCartError);
+						res.end();
+						return;
+		    		} else {
+	
+		    			console.log("Cart stored successfully.");
+		    			
+		    			// Return new cart item to caller
+		    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': customerCart.id, 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain, Location: 'https://'+restDomain+'/cart/'+customerCart.id+'/item/'+newCartItem.id});
+		    			res.write(JSON.stringify(newCartItem));
+		    			res.end();
+		    			return
+		    		}
+		    	});
+			}
+		});
+	} else {
+
+		// Return error to caller
+        res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
+        res.write('Failed to load cart id "'+req.params.id+'": No cart specified.');
+		res.end();
+		return;
+	}
+});
+
+//
+// Load specified cart from the data source
+function loadCart(cartId, callback) {
+
+	// Create load params
+	if(!cartId || cartId == 0) {
+
+		callback('No cart specified', null);
+		return;
+	} else {
+
+		// Cart id specified, create params
+		var params = {
+			TableName: 'SuroorFashionsCarts',
+            ExpressionAttributeValues: {':c': cartId},
+			FilterExpression: 'id = :c'
+		};
+
+		console.log("Searching for existing cart with: "+JSON.stringify(params));
+		// Perform product load action
+		dddc.scan(params, function (err, cartData) {
+	
+			if(err) {
+	
+				// Return error to caller
+				callback(err, null);
+			} else {
+	
+				// Log loaded  cart
+				console.log("Loaded cart data: "+JSON.stringify(cartData));
+	
+				// Check only one cart loaded.
+				if(cartData.Items.length == 0) {
+					
+					callback(null, null);
+					return;
+				} else if(cartData.Items.length > 1) {
+
+					callback('More than one cart found for: '+cartId, null);
+					return;
+				} else {
+
+					// Return  cart to caller
+					callback(null, cartData.Items[0]);
+					return;
+				}
+			}
+		});
+	}
+}
+
+//
+// Delete specified cart from the data source
+function deleteCart(cartId, callback) {
+
+	// Create load params
+	if(!cartId || cartId == 0) {
+
+		callback('No cart specified', null);
+		return;
+	} else {
+
+		// Cart id specified, create params
+		var params = {
+			TableName: 'SuroorFashionsCarts',
+            ExpressionAttributeValues: {':c': cartId},
+			FilterExpression: 'id = :c'
+		};
+
+		console.log("Deleting existing cart with: "+JSON.stringify(params));
+		// Perform product delete action
+		dddc.deleteItem(params, function (err, cartData) {
+	
+			if(err) {
+	
+				// Return error to caller
+				callback(err, null);
+			} else {
+	
+				// Log loaded  cart
+				console.log("Deleted cart data: "+JSON.stringify(cartData));
+	
+//				// Check only one cart loaded.
+//				if(cartData.Items.length == 0) {
+//					
+//					callback(null, null);
+//					return;
+//				} else if(cartData.Items.length > 1) {
+//
+//					callback('More than one cart found for: '+cartId, null);
+//					return;
+//				} else {
+
+					// Return  cart to caller
+					callback(null, cartData.Items[0]);
+					return;
+//				}
+			}
+		});
+	}
+}
+
+//
+// Store cart into the data source
+function storeCart(cart, callback) {
+
+	// Create params for cart 'store' operation
+	var storeCartParams = {
+		TableName: 'SuroorFashionsCarts',
+		Item: cart
+	};
+
+	// Log contents of dynamo db store operation
+	console.log("Uploading cart with: "+ JSON.stringify(storeCartParams));
+
+	// Perform product store operation
+	dddc.put(storeCartParams, function (err, data) {
+		if (err) {
+
+			console.log("Failed to store cart id '"+cart.id+"'. "+err);
+			callback('Failed to store cart id "'+cart.id+'. '+err);
+			return;
+		} else {
+
+			// Log output from data store
+			console.log("Data returned from data store: "+JSON.stringify(data));
+
+			callback(null);
+		}
+	});
+}
