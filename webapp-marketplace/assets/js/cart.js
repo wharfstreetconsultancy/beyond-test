@@ -20,14 +20,14 @@ function reloadCustomerCart() {
 	document.getElementById("cart_preview").innerHTML = '';
 	document.getElementById("cart_preview").innerHTML += '<div class="row">';
 	document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-	document.getElementById("cart_preview").innerHTML += totalItems+' item(s) @ ($'+totalCost+')';
+	document.getElementById("cart_preview").innerHTML += totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
 	document.getElementById("cart_preview").innerHTML += '</div>';
 	document.getElementById("cart_preview").innerHTML += '</div>';
 	document.getElementById("cart_preview").innerHTML += '<hr>';
 	if(localCart && localCart.items) {
 		for(var cartItem of localCart.items) {
 			
-			document.getElementById("cart_preview").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> ('+cartItem.cost+')<br>';
+			document.getElementById("cart_preview").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> - ('+cartItem.color+'/'+cartItem.size+') - ($'+cartItem.cost.toFixed(2)+')<br>';
 			console.log("Current cart item: "+JSON.stringify(cartItem));
 		}
 		if(localCart.items.length > 0) {
