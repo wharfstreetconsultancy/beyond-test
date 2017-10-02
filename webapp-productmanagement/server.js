@@ -978,6 +978,8 @@ app.post('/cart/:id/item', function (req, res) {
     // Log request received
     console.log( "Received request: POST /cart/"+req.params.id+"/item" );
 
+    console.log("Requested new cart item: "+JSON.stringify(req.body));
+
     var timestamp = new Date().getTime().toString();
     var newCartItem = req.body.newCartItem;
 //    var newCartItem = {
@@ -1001,10 +1003,10 @@ app.post('/cart/:id/item', function (req, res) {
 //    cartUpdateObserver.on('store_cart', function(cart) {
 //    });
 
-	if (req.params.id != 0 && req.params.id != 'undefined') {
+	if(req.params.id != 0 && req.params.id != 'undefined') {
 		
 		// Cart exists - load cart
-		console.log("Try to load cart");
+		console.log("Try to load cart (id: "+req.params.id+").");
 		
 		// Load existing cart
 		loadCart(req.params.id, function (loadCartError, customerCart) {
@@ -1066,7 +1068,7 @@ app.post('/cart/:id/item', function (req, res) {
 
 		// Return error to caller
         res.writeHead(500, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://'+allowedOriginDomain});
-        res.write('Failed to load cart id "'+req.params.id+'": Cart not found.');
+        res.write('Failed to load cart id "'+req.params.id+'": No cart specified.');
 		res.end();
 		return;
 	}
