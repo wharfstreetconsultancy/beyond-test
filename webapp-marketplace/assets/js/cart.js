@@ -101,9 +101,10 @@ $(document).ready(function() {
 		console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
 
 		var customer = sessionStorage.getItem('customer');
-		console.log("Current customer: "+JSON.stringify(customer));
+		console.log("Current customer: "+customer);
 		if(customer) {
 
+			customer = JSON.parse(customer);
 			$('#status').empty().text('Cart is updating...');
 			console.log("Cart is updating: ");
 			
