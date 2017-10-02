@@ -1027,10 +1027,9 @@ app.post('/cart/:id/item', function (req, res) {
 					// Cart does not exist - create and store cart
 					console.log("Cart does not exist - create and store cart");
 	
-			        timestamp = new Date().getTime().toString();
 					// Create new cart
 					var customerCart = {
-						id: timestamp.split("").reverse().join(""),
+						id: req.params.id,
 						items: [newCartItem]
 					}
 					console.log("Cart created: "+JSON.stringify(customerCart))
