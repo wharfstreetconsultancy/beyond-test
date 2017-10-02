@@ -10,10 +10,12 @@ function reloadCustomerCart() {
 	console.log("Current cart: "+JSON.stringify(localCart));
 	var totalItems = 0;
 	var totalCost = 0.00;
-	for(var cartItem of localCart.items) {
-		
-		totalItems += cartItem.quantity;
-		totalCost += cartItem.cost;
+	if(localCart && localCart.items) {
+		for(var cartItem of localCart.items) {
+			
+			totalItems += cartItem.quantity;
+			totalCost += cartItem.cost;
+		}
 	}
 	document.getElementById("cart_preview").innerHTML = '';
 	document.getElementById("cart_preview").innerHTML += '<div class="row">';
