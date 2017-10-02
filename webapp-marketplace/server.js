@@ -697,14 +697,17 @@ app.delete('/cart/:id', function (req, res) {
         // Log request received
         console.log( "Received request: DELETE /cart/"+req.params.id );
 
-        deleteCart(req.params.id, function (cartError, existingCart) {
+        deleteCart(req.params.id, function (deleteCartError, existingCart) {
 
         	// Handle error
-        	if(cartError) {
+        	if(deleteCartError) {
+				
+				// Cart does not exist - create and store cart
+				console.log("Unexpected error: "+deleteCartError);
         		
         		// Throw 'cart not found' response to caller
 				res.writeHead(404, {'Content-Type': 'application/json'});
-				res.write(JSON.stringify(cartError));
+				res.write(cartError);
 				res.end();
 				return;
         	} else {
@@ -897,8 +900,9 @@ function deleteCart(cartId, callback) {
 	
 			if(err) {
 	
+				console.log("Failed to delete cart id '"+cartId+"'. "+err);
 				// Return error to caller
-				callback(err, null);
+				callback('Failed to delete cart id "'+cartId+'. '+err, null);
 			} else {
 	
 				// Log loaded  cart
@@ -942,7 +946,7 @@ function storeCart(cart, callback) {
 		if (err) {
 
 			console.log("Failed to store cart id '"+cart.id+"'. "+err);
-			callback('Failed to store cart id "'+cart.id+'. '+err);
+			callback('Failed to store cart id "'+cart.id+'. '+err, null);
 			return;
 		} else {
 
