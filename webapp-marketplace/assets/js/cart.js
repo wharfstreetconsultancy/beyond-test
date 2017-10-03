@@ -100,15 +100,15 @@ $(document).ready(function() {
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
 			alert("1");
-			$('#cart_preview').ajaxSubmit({
+			$('#cart_preview').ajaxForm({
 	
 				//url: '/checkout',
 				//type: 'post',
 				dataType: 'json',
 				data: {cart: localCart}
 			});
+			$('#cart_preview').submit();
 			alert("2");
-			return true;
 		}
 	});
 
