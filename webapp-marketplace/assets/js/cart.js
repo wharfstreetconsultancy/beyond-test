@@ -34,7 +34,7 @@ function reloadCustomerCart() {
 			document.getElementById("cart_preview").innerHTML += '<hr>';
 			document.getElementById("cart_preview").innerHTML += '<div class="row">';
 			document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-			document.getElementById("cart_preview").innerHTML += '<button id="check_out_cart_btn" type="submit" value="check_out_cart" class="btn btn-primary btn-block">Checkout</button>
+			document.getElementById("cart_preview").innerHTML += '<button id="check_out_cart_btn" type="submit" value="check_out_cart" class="btn btn-primary btn-block">Checkout</button>';
 //			document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
 			document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
 			document.getElementById("cart_preview").innerHTML += '</div>';
@@ -94,7 +94,7 @@ $(document).ready(function() {
     		return false;		
 		}
 	});
-/*
+
 	$('#cart_preview').on('click', '#check_out_cart_btn', function () {
 
 		var localCart = JSON.parse(localStorage.getItem('cart'));
@@ -108,7 +108,7 @@ $(document).ready(function() {
 		});
 		return true;
 	});
-*/	
+	
 
 	$('#cart_control').on('click', '#add_to_cart_btn', function () {
 
