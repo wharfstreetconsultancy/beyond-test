@@ -158,7 +158,7 @@ app.get('/product', function (req, res) {
 
 //
 //Load existing product from data source
-function isAuthenticated(req, res, next) {
+function isAuthenticated(req, res) {
 
 	var customer = req.session.customer; 
 	if(!customer || !customer.signInUserSession) {
@@ -171,7 +171,7 @@ function isAuthenticated(req, res, next) {
 	} else {
 		
 		console.log("Customer found and signed-in.");
-		next();
+//		next();
 	}
 }
 
