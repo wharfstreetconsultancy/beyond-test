@@ -177,6 +177,7 @@ app.post('/checkout', function (req, res) {
 
 		// Add dynamic elements to response page
 	    fs.createReadStream(__dirname+'/checkout.html').pipe(res);
+	    return;
 	}
 });
 
