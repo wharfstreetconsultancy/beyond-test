@@ -165,13 +165,12 @@ $(document).ready(function() {
 				dataType: 'json',
 				data: {newCartItem: newCartItem},
 				success: function (uploadedCartItem) {
-					try {
+
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
 		    		reloadCustomerCart();
 		    		document.getElementById("cart_preview_nav").click();
-		    		return false;
-					} catch(err) {alert(err);}
+//		    		return false;
 				},
 				error: function (xhr) {
 					
@@ -179,15 +178,16 @@ $(document).ready(function() {
 					console.log("Cart update error: "+xhr.status);
 		    		reloadCustomerCart();
 		    		document.getElementById("cart_preview_nav").click();
-		    		return false;		
+//		    		return false;		
 				}
 			});
 		} else {
 
     		reloadCustomerCart();
     		document.getElementById("cart_preview_nav").click();
-    		return false;		
+//    		return false;		
 		}
+		return false;		
 	});
 });
 
