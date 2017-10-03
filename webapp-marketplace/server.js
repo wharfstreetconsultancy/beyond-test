@@ -92,32 +92,20 @@ app.get('/', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /" );
 
+	// Load all existing products from REST API
+	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
-//	// Load cart from REST API
-//	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
-//
-//		if(cartLoadErrorMessage) {
-//			
-//			// Log error and continue
-//			console.log(cartLoadErrorMessage);
-//		}
+        // Format products into appropriate HTML
+        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
 
-		// Load all existing products from REST API
-		loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
-	
-	        // Format products into appropriate HTML
-	        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
-	
-	            // Add dynamic elements to response page
-	            fs.createReadStream(__dirname+'/index.html')
-					.pipe(replaceStream('{error.message}', '&nbsp;'))
-					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
-					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
-//					.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
-					.pipe(res);
-	        });
-		});
-//	});
+            // Add dynamic elements to response page
+            fs.createReadStream(__dirname+'/index.html')
+				.pipe(replaceStream('{error.message}', '&nbsp;'))
+				.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+				.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
+				.pipe(res);
+        });
+	});
 });
 
 //
@@ -127,95 +115,77 @@ app.get('/product', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /product" );
 
-	// Load cart from REST API
-//	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
-//
-//		if(cartLoadErrorMessage) {
-//			
-//			// Log error and continue
-//			console.log(cartLoadErrorMessage);
-//		}
-		
-		// Load all specified product from REST API
-		loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
-	
-			// Check that only one product found
-			if((product) && !Array.isArray(product)) {
+	// Load all specified product from REST API
+	loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
 
-				// Get cart id
-//				var cartId = 0;
-//				req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
-//					var parts = cookie.split('=');
-//					if(parts[0] == 'connect.sid') {
-//						cartId = parts[1];
-//					}
-//				});
-//				console.log("Derived cart id: "+cartId);
-	
-		        // Format product into appropriate HTML
-		        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
-	
-		        // Load current shopping cart
-		        
-					// Add dynamic elements to response page
-			        fs.createReadStream(__dirname+'/product.html')
-						.pipe(replaceStream('{product.id}', product.id))
-						.pipe(replaceStream('{product.name}', product.name))
-						.pipe(replaceStream('{product.description}', product.description))
-						.pipe(replaceStream('{product.price}', product.price))
-						.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
-						.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
-						.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
-						.pipe(replaceStream('{rest.domain}', JSON.stringify(restDomain)))
-//						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
-						.pipe(res);
-		        });
-			} else {
-				
-				// Something went wrong - multiple products found - determine cause
-				var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
-		        // Format products into appropriate HTML
-		        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
-	
-		            // Add dynamic elements to response page
-		            fs.createReadStream(__dirname+'/index.html')
-						.pipe(replaceStream('{error.message}', errorMessage))
-						.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
-						.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
-//						.pipe(replaceStream('{cart.items}', (cart && cart.items) ? JSON.stringify(cart.items) : '[]'))
-						.pipe(res);
-		        });
-			}
-		});
-//	});
-});
+		// Check that only one product found
+		if((product) && !Array.isArray(product)) {
 
-//
-// GET '/cart' - View cart page
-app.get('/cart', function (req, res) {
+	        // Format product into appropriate HTML
+	        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
 
-	// Log request received
-	console.log( "Received request: GET /cart" );
-
-	var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
-	    UserPoolId : 'us-west-2_jnmkbOGZY',
-	    ClientId : 'm1f0r4q7uqgr9vd0qbqouspha'
-	});
-	
-	// Load cart from REST API
-	loadExistingCart(req, res, function (cartLoadErrorMessage, cart) {
-
-		if(cartLoadErrorMessage) {
-			
-			// Log error and continue
-			console.log(cartLoadErrorMessage);
+	        // Load current shopping cart
+	        
+				// Add dynamic elements to response page
+		        fs.createReadStream(__dirname+'/product.html')
+					.pipe(replaceStream('{product.id}', product.id))
+					.pipe(replaceStream('{product.name}', product.name))
+					.pipe(replaceStream('{product.description}', product.description))
+					.pipe(replaceStream('{product.price}', product.price))
+					.pipe(replaceStream('{product.image.carousel}', productImageCarouselHtml))
+					.pipe(replaceStream('{product.color.selector}', productColorSelectorHtml))
+					.pipe(replaceStream('{product.size.selector}', productSizeSelectorHtml))
+					.pipe(replaceStream('{rest.domain}', JSON.stringify(restDomain)))
+					.pipe(res);
+	        });
 		} else {
 			
-		}
-		
-	});
+			// Something went wrong - multiple products found - determine cause
+			var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
+	        // Format products into appropriate HTML
+	        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
 
+	            // Add dynamic elements to response page
+	            fs.createReadStream(__dirname+'/index.html')
+					.pipe(replaceStream('{error.message}', errorMessage))
+					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
+					.pipe(res);
+	        });
+		}
+	});
 });
+
+//
+// POST '/checkout' - View cart checkout page
+app.post('/checkout', isAuthenticated, function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /checkout" );
+
+    // Add dynamic elements to response page
+    fs.createReadStream(__dirname+'/checkout.html')
+		.pipe(res);
+});
+
+//
+//Load existing product from data source
+function isAuthenticated(req, res, next) {
+
+	var customer = req.session.customer; 
+	if(!customer || !customer.signInUserSession) {
+		
+		console.log("No customer found - redirect to sign-in.");
+
+		// Return error to caller
+	    res.redirect('/signin');
+	    return;
+	} else {
+		
+		console.log("Customer found and signed-in.");
+		next();
+	}
+}
 
 //
 // Load existing product from data source

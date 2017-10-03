@@ -34,7 +34,8 @@ function reloadCustomerCart() {
 			document.getElementById("cart_preview").innerHTML += '<hr>';
 			document.getElementById("cart_preview").innerHTML += '<div class="row">';
 			document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-			document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
+			document.getElementById("cart_preview").innerHTML += '<button id="check_out_cart_btn" type="submit" value="check_out_cart" class="btn btn-primary btn-block">Checkout</button>
+//			document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
 			document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
 			document.getElementById("cart_preview").innerHTML += '</div>';
 			document.getElementById("cart_preview").innerHTML += '</div>';
@@ -94,7 +95,21 @@ $(document).ready(function() {
 		}
 	});
 
-//	$('#cart_control').submit(function () {
+	$('#cart_preview').on('click', '#check_out_cart_btn', function () {
+
+		var localCart = JSON.parse(localStorage.getItem('cart'));
+
+		$('#identity').ajaxSubmit({
+
+			url: '/checkout',
+			type: 'post',
+			dataType: 'json',
+			data: {cart: localCart}
+		});
+		return true;
+	});
+	
+
 	$('#cart_control').on('click', '#add_to_cart_btn', function () {
 
 		//
@@ -141,15 +156,6 @@ $(document).ready(function() {
 		console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
 
 		//
-		// Return to caller
-//        var cartObserver = new events.EventEmitter().on('cart_updated', function() {
-//
-//    		reloadCustomerCart();
-//    		document.getElementById("cart_preview_nav").click();
-//    		return false;		
-//        });
-        
-		//
 		// Remote cart management
 		var customer = sessionStorage.getItem('customer');
 		console.log("Current customer: "+customer);
@@ -170,7 +176,6 @@ $(document).ready(function() {
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
 		    		reloadCustomerCart();
 		    		document.getElementById("cart_preview_nav").click();
-//		    		return false;
 				},
 				error: function (xhr) {
 					
@@ -178,14 +183,12 @@ $(document).ready(function() {
 					console.log("Cart update error: "+xhr.status);
 		    		reloadCustomerCart();
 		    		document.getElementById("cart_preview_nav").click();
-//		    		return false;		
 				}
 			});
 		} else {
 
     		reloadCustomerCart();
     		document.getElementById("cart_preview_nav").click();
-//    		return false;		
 		}
 		return false;		
 	});
