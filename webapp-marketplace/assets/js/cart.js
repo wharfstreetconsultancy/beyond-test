@@ -165,12 +165,13 @@ $(document).ready(function() {
 				dataType: 'json',
 				data: {newCartItem: newCartItem},
 				success: function (uploadedCartItem) {
-					
+					try {
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
 		    		reloadCustomerCart();
 		    		document.getElementById("cart_preview_nav").click();
-		    		return false;		
+		    		return false;
+					} catch(err) {alert(err);}
 				},
 				error: function (xhr) {
 					
