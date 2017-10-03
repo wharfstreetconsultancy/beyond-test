@@ -99,14 +99,14 @@ $(document).ready(function() {
 
 		var localCart = JSON.parse(localStorage.getItem('cart'));
 
-		$('#identity').ajaxSubmit({
+		$('#cart_preview').ajaxSubmit({
 
 			url: '/checkout',
 			type: 'post',
 			dataType: 'json',
 			data: {cart: localCart}
 		});
-		return false;
+		return true;
 	});
 	
 
