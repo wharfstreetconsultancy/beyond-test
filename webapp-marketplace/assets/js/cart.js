@@ -99,7 +99,7 @@ $(document).ready(function() {
 
 		var localCart = JSON.parse(localStorage.getItem('cart'));
 
-		$('#cart_preview').ajaxForm({
+		$('#cart_preview').ajaxSubmit({
 
 //			url: '/checkout',
 			type: 'post',
