@@ -157,18 +157,6 @@ app.get('/product', function (req, res) {
 });
 
 //
-// POST '/checkout' - View cart checkout page
-app.post('/checkout', isAuthenticated(req, res, next), function (req, res) {
-
-	// Log request received
-	console.log( "Received request: POST /checkout" );
-
-    // Add dynamic elements to response page
-    fs.createReadStream(__dirname+'/checkout.html')
-		.pipe(res);
-});
-
-//
 //Load existing product from data source
 function isAuthenticated(req, res, next) {
 
@@ -186,6 +174,18 @@ function isAuthenticated(req, res, next) {
 		next();
 	}
 }
+
+//
+// POST '/checkout' - View cart checkout page
+app.post('/checkout', isAuthenticated(req, res, next), function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /checkout" );
+
+    // Add dynamic elements to response page
+    fs.createReadStream(__dirname+'/checkout.html')
+		.pipe(res);
+});
 
 //
 // Load existing product from data source
