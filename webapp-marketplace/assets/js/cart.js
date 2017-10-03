@@ -100,7 +100,7 @@ $(document).ready(function() {
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
 			alert("1");
-			$('#cart_preview').ajaxForm({
+			$('#cart_preview').ajaxSubmit({
 	
 				//url: '/checkout',
 				//type: 'post',
