@@ -73,6 +73,7 @@ app.all('*', function (req, res, next) {
 	if(req.connection.encrypted) {
 
 		next();
+		return;
 		console.log("Not found yet? "+req.url);
 	} else {
 
