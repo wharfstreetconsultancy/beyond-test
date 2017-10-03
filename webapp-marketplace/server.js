@@ -73,7 +73,6 @@ app.all('*', function (req, res, next) {
 	if(req.connection.encrypted) {
 
 		next();
-		return;
 		console.log("Not found yet? "+req.url);
 	} else {
 
@@ -82,8 +81,8 @@ app.all('*', function (req, res, next) {
         console.log("Redirecting http request to: "+secureUrl);
 		res.redirect(secureUrl);
 		res.end();
-		return;
 	}
+	return;
 });
 
 //
@@ -177,8 +176,7 @@ app.post('/checkout', function (req, res) {
 		console.log("Customer found and signed-in.");
 
 		// Add dynamic elements to response page
-	    fs.createReadStream(__dirname+'/product.html').pipe(res);
-	    return;
+	    fs.createReadStream(__dirname+'/checkout.html').pipe(res);
 	}
 });
 
