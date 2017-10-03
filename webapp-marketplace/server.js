@@ -177,7 +177,7 @@ function isAuthenticated(req, res, next) {
 
 //
 // POST '/checkout' - View cart checkout page
-app.post('/checkout', isAuthenticated(req, res, next), function (req, res) {
+app.post('/checkout', isAuthenticated, function (req, res) {
 
 	// Log request received
 	console.log( "Received request: POST /checkout" );
