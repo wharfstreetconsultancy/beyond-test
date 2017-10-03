@@ -158,8 +158,11 @@ app.get('/product', function (req, res) {
 });
 
 //
-//Load existing product from data source
-function isAuthenticated(req, res) {
+// POST '/checkout' - View cart checkout page
+app.post('/checkout', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /checkout" );
 
 	var customer = req.session.customer; 
 	if(!customer || !customer.signInUserSession) {
@@ -172,20 +175,11 @@ function isAuthenticated(req, res) {
 	} else {
 		
 		console.log("Customer found and signed-in.");
-//		next();
+
+		// Add dynamic elements to response page
+	    fs.createReadStream(__dirname+'/checkout.html')
+			.pipe(res);
 	}
-}
-
-//
-// POST '/checkout' - View cart checkout page
-app.post('/checkout', isAuthenticated, function (req, res) {
-
-	// Log request received
-	console.log( "Received request: POST /checkout" );
-
-    // Add dynamic elements to response page
-    fs.createReadStream(__dirname+'/checkout.html')
-		.pipe(res);
 });
 
 //
