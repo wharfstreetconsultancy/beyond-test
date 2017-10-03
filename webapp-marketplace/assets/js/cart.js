@@ -94,21 +94,23 @@ $(document).ready(function() {
     		return false;		
 		}
 	});
-/*
+
 	$('#cart_preview').on('click', '#check_out_cart_btn', function () {
 
-		var localCart = JSON.parse(localStorage.getItem('cart'));
-
-		$('#cart_preview').ajaxSubmit({
-
-			url: '/checkout',
-			type: 'post',
-			dataType: 'json',
-			data: {cart: localCart}
-		});
-		return true;
+		var localCart = localStorage.getItem('cart');
+		if(localCart) {
+			alert("1");
+			$('#cart_preview').ajaxForm({
+	
+				//url: '/checkout',
+				//type: 'post',
+				dataType: 'json',
+				data: {cart: localCart}
+			});
+			alert("2");
+		}
 	});
-*/	
+
 
 	$('#cart_control').on('click', '#add_to_cart_btn', function () {
 
