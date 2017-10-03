@@ -1,5 +1,5 @@
 <a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
-<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout" class="form-inline"></form></div>
+<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout" method="post" class="form-inline"></form></div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
 <!-- script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script -->
@@ -94,21 +94,21 @@ $(document).ready(function() {
     		return false;		
 		}
 	});
-
+/*
 	$('#cart_preview').on('click', '#check_out_cart_btn', function () {
 
 		var localCart = JSON.parse(localStorage.getItem('cart'));
 
 		$('#cart_preview').ajaxSubmit({
 
-//			url: '/checkout',
+			url: '/checkout',
 			type: 'post',
 			dataType: 'json',
 			data: {cart: localCart}
 		});
 		return true;
 	});
-	
+*/	
 
 	$('#cart_control').on('click', '#add_to_cart_btn', function () {
 
