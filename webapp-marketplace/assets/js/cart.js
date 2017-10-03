@@ -94,7 +94,7 @@ $(document).ready(function() {
     		return false;		
 		}
 	});
-
+/*
 	$('#cart_preview').on('click', '#check_out_cart_btn', function () {
 
 		var localCart = JSON.parse(localStorage.getItem('cart'));
@@ -108,7 +108,7 @@ $(document).ready(function() {
 		});
 		return true;
 	});
-	
+*/	
 
 	$('#cart_control').on('click', '#add_to_cart_btn', function () {
 
