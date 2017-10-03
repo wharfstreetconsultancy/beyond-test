@@ -106,7 +106,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			data: {cart: localCart}
 		});
-		return true;
+		return false;
 	});
 	
 

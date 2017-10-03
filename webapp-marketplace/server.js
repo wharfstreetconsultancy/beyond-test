@@ -166,7 +166,7 @@ function isAuthenticated(req, res, next) {
 		console.log("No customer found - redirect to sign-in.");
 
 		// Return error to caller
-	    res.redirect('/');
+	    res.redirect('/signin');
 	    return;
 	} else {
 		
