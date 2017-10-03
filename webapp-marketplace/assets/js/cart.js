@@ -56,20 +56,10 @@ $(document).ready(function() {
 		localStorage.removeItem('cart');
 
 		//
-		// Return to caller
-//        var cartObserver = new events.EventEmitter().on('cart_updated', function() {
-//
-//    		reloadCustomerCart();
-//    		document.getElementById("cart_preview_nav").click();
-//    		return false;		
-//        });
-
-		//
 		// Remote cart management
 		var customer = sessionStorage.getItem('customer');
 		console.log("Current customer: "+customer);
 		if(customer) {
-
 
 			customer = JSON.parse(customer);
 			$('#status').empty().text('Cart is updating...');
@@ -104,7 +94,8 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#cart_control').submit(function () {
+//	$('#cart_control').submit(function () {
+	$('#cart_control').on('click', '#add_to_cart_btn', function () {
 
 		//
 		// Local cart management
