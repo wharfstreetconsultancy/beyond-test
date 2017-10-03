@@ -108,6 +108,7 @@ $(document).ready(function() {
 				data: {cart: localCart}
 			});
 			alert("2");
+			return true;
 		}
 	});
 
