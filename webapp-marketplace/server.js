@@ -177,8 +177,7 @@ app.post('/checkout', function (req, res) {
 		console.log("Customer found and signed-in.");
 
 		// Add dynamic elements to response page
-	    fs.createReadStream(__dirname+'/checkout.html')
-			.pipe(res);
+	    fs.createReadStream(__dirname+'/product.html').pipe(res);
 	    return;
 	}
 });
