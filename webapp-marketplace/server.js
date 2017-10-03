@@ -183,7 +183,7 @@ app.post('/checkout', function (req, res) {
 
 		// Add dynamic elements to response page
 	    fs.createReadStream(__dirname+'/checkout.html')
-			.pipe(replaceStream('{latest.cart}', latestCart))
+			.pipe(replaceStream('{latest.cart}', (latestCart) ? JSON.stringify(latestCart) : ''))
 	    	.pipe(res);
 	}
 });
