@@ -141,9 +141,9 @@ app.get('/product', function (req, res) {
 		} else {
 			
 			// Something went wrong - multiple products found - determine cause
-			var errorMessage = ((productsList.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
+			var errorMessage = ((product.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
 	        // Format products into appropriate HTML
-	        formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
+	        formatProductsCarouselsHtml(product, function(productsListClothingHtml, productsListJewelleryHtml) {
 
 	            // Add dynamic elements to response page
 	            fs.createReadStream(__dirname+'/index.html')
