@@ -170,14 +170,21 @@ app.post('/checkout', function (req, res) {
 
 		// Return error to caller
 	    res.redirect('/signin');
-	    return;
 	} else {
 		
 		console.log("Customer found and signed-in.");
 
+		var latestCart = req.body.cart;
+		console.log("Customer cart: "+latestCart);
+
+		if(latestCart) {
+			
+		}
+
 		// Add dynamic elements to response page
-	    fs.createReadStream(__dirname+'/checkout.html').pipe(res);
-	    return;
+	    fs.createReadStream(__dirname+'/checkout.html')
+			.pipe(replaceStream('{latest.cart}', latestCart))
+	    	.pipe(res);
 	}
 });
 

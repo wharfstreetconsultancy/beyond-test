@@ -54,10 +54,10 @@
 			<div class="col-lg-8 col-lg-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Your Shopping Cart
+						Your Shopping Cart...
 					</div>
 					<div class="panel-body">
-						You've got some stuff....
+						<table id="cart_items"></table>
 					</div>
 					<div class="panel-footer">
 					</div>
@@ -87,7 +87,7 @@
 		<script>
 		
 /* #### START DYNAMIC DATA DECLARATIONS #### */
-var restDomain = {rest.domain};
+var latestCart = {latest.cart};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 $(document).ready(function() {
 
