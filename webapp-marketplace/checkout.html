@@ -95,8 +95,8 @@ $(document).ready(function() {
 	$("#cart_management").load("js/cart.js");
 	
 	if(latestCart) {
-		console.log("Latest cart: "+latestCart);
-		for(var item of JSON.parse(latestCart).items) {
+		console.log("Latest cart: "+JSON.stringify(latestCart));
+		for(var item of latestCart.items) {
 			document.getElementById("cart_items").innerHTML += '<tr><td>'+item.quantity+'</td><td>'+item.quantity+'</td><td>'+item.quantity+'</td></tr>';
 		}
 	}
