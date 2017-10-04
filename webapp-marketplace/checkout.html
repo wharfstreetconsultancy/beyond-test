@@ -51,20 +51,22 @@
     <!---------------------------Body ------------------------->
 	<div class="body">
 		<div class="container">
-				<div class="col-lg-8 col-lg-offset-2">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							Your Shopping Cart...
-						</div>
-						<div class="panel-body" id="cart_inventory">
-							<div class="row">
-								<div class="col-lg-4">Quantity</div><div class="col-lg-4">Product</div><div class="col-lg-4">Size</div>
-							</div>
-						</div>
-						<div class="panel-footer">
+			<div class="col-lg-8 col-lg-offset-2">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						Your Shopping Cart...
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-4">Quantity</div>
+							<div class="col-lg-4">Product</div>
+							<div class="col-lg-4">Size</div>
 						</div>
 					</div>
+					<div class="panel-footer">
+					</div>
 				</div>
+			</div>
 		</div>
 	</div>
 
@@ -97,7 +99,7 @@ $(document).ready(function() {
 	$("#cart_management").load("js/cart.js");
 	
 	if(latestCart) {
-		/*		
+/*		
 		document.getElementById("cart_inventory").innerHTML = '<div class="row">';
 		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
@@ -110,7 +112,7 @@ $(document).ready(function() {
 			totalCost += cartItem.cost;
 		}
 		document.getElementById("cart_inventory").innerHTML += '</div>';
-		*/
+*/
 //		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
 	} else {
 		
