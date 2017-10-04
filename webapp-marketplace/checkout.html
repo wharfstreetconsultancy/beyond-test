@@ -95,7 +95,7 @@ $(document).ready(function() {
 	
 	if(latestCart) {
 		document.getElementById("cart_inventory").innerHTML = '<table border="1">';
-		document.getElementById("cart_inventory").innerHTML += '<tr><th>Quantity</th><th>Product</th><th>Size</th><th>Color</th><th>Per-Item Cost</th><th>Total Cost</th></tr>';
+		document.getElementById("cart_inventory").innerHTML += '<tr><td>Quantity</td><td>Product</td><td>Size</td><td>Color</td><td>Per-Item Cost</td><td>Total Cost</td></tr>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
 		var totalItems = 0;
 		var totalCost = 0.00;
