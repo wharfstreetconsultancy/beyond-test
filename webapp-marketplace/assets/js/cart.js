@@ -99,17 +99,22 @@ $(document).ready(function() {
 
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
+/*
 			alert("1");
 			$('#cart_preview').ajaxForm({
 	
 				//url: '/checkout',
 				//type: 'post',
+				target: document.location''@@@@@@@@@@@
 				dataType: 'json',
 				data: {cart: localCart}
 			});
 			$('#cart_preview').submit();
 			alert("2");
+*/
+			document.getElementById("cart_preview").innerHTML += '<input type="hidden" name="cart" value="'+JSON.stringify(localCart)+'"/>'
 		}
+		return true;
 	});
 
 

@@ -174,16 +174,16 @@ app.post('/checkout', function (req, res) {
 		
 		console.log("Customer found and signed-in.");
 
-		var latestCart = req.body.cart;
-		console.log("Customer cart: "+latestCart);
+		var cart = req.body.cart;
+		console.log("Customer cart: "+cart);
 
-		if(latestCart) {
+		if(cart) {
 			
 		}
 
 		// Add dynamic elements to response page
 	    fs.createReadStream(__dirname+'/checkout.html')
-			.pipe(replaceStream('{latest.cart}', (latestCart) ? JSON.stringify(latestCart) : ''))
+			.pipe(replaceStream('{latest.cart}', (cart) ? JSON.stringify(cart) : 'null'))
 	    	.pipe(res);
 	}
 });
