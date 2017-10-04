@@ -54,10 +54,9 @@
 			<div class="col-lg-8 col-lg-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Your Shopping Cart...
+						<div id="cart_title" class="pull-left">Your Shopping Cart...</div><div id="cart_cost_summary" class="pull-right"></div>
 					</div>
-					<div class="panel-body">
-						<table id="cart_items"></table>
+					<div class="panel-body" id="cart_inventory">
 					</div>
 					<div class="panel-footer">
 					</div>
@@ -95,10 +94,21 @@ $(document).ready(function() {
 	$("#cart_management").load("js/cart.js");
 	
 	if(latestCart) {
+		document.getElementById("cart_inventory").innerHTML = '<table border="1">';
+		document.getElementById("cart_inventory").innerHTML += '<tr><th>Quantity</th><th>Product</th><th>Size</th><th>Color</th><th>Per-Item Cost</th><th>Total Cost</th></tr>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
-		for(var item of latestCart.items) {
-			document.getElementById("cart_items").innerHTML += '<tr><td>'+item.quantity+'</td><td>'+item.quantity+'</td><td>'+item.quantity+'</td></tr>';
+		var totalItems = 0;
+		var totalCost = 0.00;
+		for(var cartItem of latestCart.items) {
+			
+			document.getElementById("cart_inventory").innerHTML += '<tr><td>'+cartItem.quantity+'</td><td>'+cartItem.productName+'</td><td>'+cartItem.size+'</td><td>'+cartItem.color+'</td><td>'+cartItem.cost+'</td><td>'+cartItem.cost+'</td></tr>';
+			totalItems += cartItem.quantity;
+			totalCost += cartItem.cost;
 		}
+		document.getElementById("cart_inventory").innerHTML += '</table>';
+		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
+	} else {
+		document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
 	}
 });
 		</script>

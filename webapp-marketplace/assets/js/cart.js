@@ -114,8 +114,7 @@ $(document).ready(function() {
 */
 			document.getElementById("cart_preview").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
 		}
-		alert("Check it ouuuuut! "+document.getElementById("cart_preview").innerHTML);
-		return true;
+ 		return true;
 	});
 
 
