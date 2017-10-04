@@ -96,7 +96,7 @@ $(document).ready(function() {
 	
 	if(latestCart) {
 		for(var item of latestCart) {
-			document.getElementById("cart_preview").innerHTML += '<tr><td>'+item.quantity+'</td><td>'+item.quantity+'</td><td>'+item.quantity+'</td></tr>';
+			document.getElementById("cart_items").innerHTML += '<tr><td>'+item.quantity+'</td><td>'+item.quantity+'</td><td>'+item.quantity+'</td></tr>';
 		}
 	}
 });

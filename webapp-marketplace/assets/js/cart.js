@@ -106,14 +106,13 @@ $(document).ready(function() {
 	
 				//url: '/checkout',
 				//type: 'post',
-				target: document.location''@@@@@@@@@@@
 				dataType: 'json',
 				data: {cart: localCart}
 			});
 			$('#cart_preview').submit();
 			alert("2");
 */
-			document.getElementById("cart_preview").innerHTML += '<input type="hidden" name="cart" value="'+localCart+'"/>'
+			document.getElementById("cart_preview").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
 		}
 		alert("Check it ouuuuut! "+document.getElementById("cart_preview").innerHTML);
 		return true;
