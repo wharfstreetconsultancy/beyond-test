@@ -93,6 +93,12 @@ $(document).ready(function() {
 
 	$("#customer_management").load("js/customer.js");
 	$("#cart_management").load("js/cart.js");
+	
+	if(latestCart) {
+		for(var item of latestCart) {
+			document.getElementById("cart_preview").innerHTML += '<tr><td>'+item.quantity+'</td><td>'+item.quantity+'</td><td>'+item.quantity+'</td></tr>';
+		}
+	}
 });
 		</script>
 	</body>
