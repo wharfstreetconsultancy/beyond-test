@@ -113,7 +113,7 @@ $(document).ready(function() {
 			$('#cart_preview').submit();
 			alert("2");
 */
-			document.getElementById("cart_preview").innerHTML += '<input type="hidden" name="cart" value="'+JSON.stringify(localCart)+'"/>'
+			document.getElementById("cart_preview").innerHTML += '<input type="hidden" name="cart" value="'+localCart+'"/>'
 		}
 		alert("Check it ouuuuut! "+document.getElementById("cart_preview").innerHTML);
 		return true;
