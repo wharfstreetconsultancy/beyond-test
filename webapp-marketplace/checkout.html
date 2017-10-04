@@ -55,7 +55,11 @@
 				<div class="col-lg-8 col-lg-offset-2">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
-							<div id="cart_title" class="pull-left">Your Shopping Cart...</div><div id="cart_cost_summary" class="pull-right"></div>
+							<div class="container">
+								<div class="row">
+									<div id="cart_title" class="col-lg-6">Your Shopping Cart...</div><div id="cart_cost_summary" class="col-lg-6"></div>
+								</div>
+							</div>
 						</div>
 						<div class="panel-body" id="cart_inventory">
 						</div>
@@ -96,17 +100,19 @@ $(document).ready(function() {
 	$("#cart_management").load("js/cart.js");
 	
 	if(latestCart) {
+		document.getElementById("cart_inventory").innerHTML = '<div class="container">';
 		document.getElementById("cart_inventory").innerHTML = '<div class="row">';
-		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">Quantity</div><div class="col-lg-1">Product</div><div class="col-lg-1">Size</div><div class="col-lg-1">Color</div><div class="col-lg-1">Per-Item Cost</div><div class="col-lg-1">Total Cost</div>';
+		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
 		var totalItems = 0;
 		var totalCost = 0.00;
 		for(var cartItem of latestCart.items) {
 			
-			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">'+cartItem.quantity+'</div><div class="col-lg-1">'+cartItem.productName+'</div><div class="col-lg-1">'+cartItem.size+'</div><div class="col-lg-1">'+cartItem.color+'</div><div class="col-lg-1">'+cartItem.cost+'</div><div class="col-lg-1">'+cartItem.cost+'</div>';
+			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">'+cartItem.quantity+'</div><div class="col-lg-2">'+cartItem.productName+'</div><div class="col-lg-2">'+cartItem.size+'</div><div class="col-lg-2">'+cartItem.color+'</div><div class="col-lg-2">'+cartItem.cost+'</div><div class="col-lg-2">'+cartItem.cost+'</div>';
 			totalItems += cartItem.quantity;
 			totalCost += cartItem.cost;
 		}
+		document.getElementById("cart_inventory").innerHTML += '</div>';
 		document.getElementById("cart_inventory").innerHTML += '</div>';
 		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
 	} else {
