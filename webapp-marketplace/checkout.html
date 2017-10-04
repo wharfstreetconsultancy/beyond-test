@@ -51,14 +51,16 @@
     <!---------------------------Body ------------------------->
 	<div class="body">
 		<div class="container">
-			<div class="col-lg-8 col-lg-offset-2">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div id="cart_title" class="pull-left">Your Shopping Cart...</div><div id="cart_cost_summary" class="pull-right"></div>
-					</div>
-					<div class="panel-body" id="cart_inventory">
-					</div>
-					<div class="panel-footer">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<div id="cart_title" class="pull-left">Your Shopping Cart...</div><div id="cart_cost_summary" class="pull-right"></div>
+						</div>
+						<div class="panel-body" id="cart_inventory">
+						</div>
+						<div class="panel-footer">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -94,18 +96,18 @@ $(document).ready(function() {
 	$("#cart_management").load("js/cart.js");
 	
 	if(latestCart) {
-		document.getElementById("cart_inventory").innerHTML = '<table>';
-		document.getElementById("cart_inventory").innerHTML += '<tr><td>Quantity</td><td>Product</td><td>Size</td><td>Color</td><td>Per-Item Cost</td><td>Total Cost</td></tr>';
+		document.getElementById("cart_inventory").innerHTML = '<div class="row">';
+		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">Quantity</div><div class="col-lg-1">Product</div><div class="col-lg-1">Size</div><div class="col-lg-1">Color</div><div class="col-lg-1">Per-Item Cost</div><div class="col-lg-1">Total Cost</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
 		var totalItems = 0;
 		var totalCost = 0.00;
 		for(var cartItem of latestCart.items) {
 			
-			document.getElementById("cart_inventory").innerHTML += '<tr><td>'+cartItem.quantity+'</td><td>'+cartItem.productName+'</td><td>'+cartItem.size+'</td><td>'+cartItem.color+'</td><td>'+cartItem.cost+'</td><td>'+cartItem.cost+'</td></tr>';
+			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">'+cartItem.quantity+'</div><div class="col-lg-1">'+cartItem.productName+'</div><div class="col-lg-1">'+cartItem.size+'</div><div class="col-lg-1">'+cartItem.color+'</div><div class="col-lg-1">'+cartItem.cost+'</div><div class="col-lg-1">'+cartItem.cost+'</div>';
 			totalItems += cartItem.quantity;
 			totalCost += cartItem.cost;
 		}
-		document.getElementById("cart_inventory").innerHTML += '</table>';
+		document.getElementById("cart_inventory").innerHTML += '</div>';
 		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
 	} else {
 		document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
