@@ -94,7 +94,7 @@ $(document).ready(function() {
 	$("#cart_management").load("js/cart.js");
 	
 	if(latestCart) {
-		document.getElementById("cart_inventory").innerHTML = '<table border="1">';
+		document.getElementById("cart_inventory").innerHTML = '<table>';
 		document.getElementById("cart_inventory").innerHTML += '<tr><td>Quantity</td><td>Product</td><td>Size</td><td>Color</td><td>Per-Item Cost</td><td>Total Cost</td></tr>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
 		var totalItems = 0;
