@@ -58,7 +58,9 @@
 							Your Shopping Cart...
 						</div>
 						<div class="panel-body" id="cart_inventory">
-							&nbsp;
+							<div class="row">
+								<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>
+							</div>
 						</div>
 						<div class="panel-footer">
 						</div>
@@ -97,11 +99,10 @@ $(document).ready(function() {
 	$("#cart_management").load("js/cart.js");
 	
 	if(latestCart) {
-		
+		/*		
 		document.getElementById("cart_inventory").innerHTML = '<div class="row">';
 		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
-		/*
 		var totalItems = 0;
 		var totalCost = 0.00;
 		for(var cartItem of latestCart.items) {
