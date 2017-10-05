@@ -798,7 +798,7 @@ app.post('/cart/:id/item', function (req, res) {
 		    			res.writeHead(201, {'Content-Type': 'application/json', 'CartId': customerCart.id, Location: 'https://'+restDomain+'/cart/'+customerCart.id+'/item/'+newCartItem.id});
 		    			res.write(JSON.stringify(newCartItem));
 		    			res.end();
-		    			return
+		    			return;
 		    		}
 		    	});
 			}
@@ -953,8 +953,15 @@ app.get('/client_token', function (req, res) {
     console.log( "Received request: GET /client_token" );
 
     gateway.clientToken.generate({}, function (err, response) {
-		res.send(response.clientToken);
-	});
+
+		console.log("Got client token.");
+		
+		// Return new cart item to caller
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify({clientToken: response.clientToken}));
+		res.end();
+		return;
+    });
 });
 
 //
