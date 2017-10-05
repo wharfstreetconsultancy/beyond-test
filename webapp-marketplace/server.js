@@ -166,8 +166,11 @@ app.get('/product', function (req, res) {
 });
 
 //
-// POST '/checkout_confirmation' - View cart checkout page
-app.post('/checkout_confirmation', function (req, res) {
+// POST '/signin' - View cart checkout page
+app.post('/signin', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /signin" );
 });
 
 //
