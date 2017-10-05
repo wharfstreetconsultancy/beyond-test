@@ -24,6 +24,9 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
     UserPoolId: 'us-west-2_jnmkbOGZY',
     ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
 });
+var gateway = braintree.connect({
+	accessToken: useYourAccessToken
+});
 
 //
 // Manage HTTP server container
@@ -927,3 +930,77 @@ function storeCart(cart, callback) {
 		}
 	});
 }
+
+//
+// GET '/client_token' - Generate a client token for the payment gateway
+app.get('/client_token', function (req, res) {
+
+    // Log request received
+    console.log( "Received request: GET /client_token" );
+
+    gateway.clientToken.generate({}, function (err, response) {
+		res.send(response.clientToken);
+	});
+});
+
+//
+// POST '/checkout' - Record a payment authorisation
+app.post("/checkout", function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /checkout" );
+	
+	var nonce = req.body.payment_method_nonce;
+	// Use payment method nonce here
+});
+
+//
+// POST '/transaction' - Create a payment transaction
+app.post('/transaction', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /transaction" );
+
+	var saleRequest = {
+		amount: req.body.amount,
+		merchantAccountId: "USD",
+		paymentMethodNonce: req.body.nonce,
+		orderId: "Mapped to PayPal Invoice Number",
+		descriptor: {
+			name: "Descriptor displayed in customer CC statements. 22 char max"
+		},
+		shipping: {
+			firstName: "Jen",
+			lastName: "Smith",
+			company: "Braintree",
+			streetAddress: "1 E 1st St",
+			extendedAddress: "5th Floor",
+			locality: "Bartlett",
+			region: "IL",
+			postalCode: "60103",
+			countryCodeAlpha2: "US"
+		},
+		options: {
+			paypal: {
+				customField: "PayPal custom field",
+				description: "Description for PayPal email receipt"
+			},
+			submitForSettlement: true
+		}
+	};
+
+	gateway.transaction.sale(saleRequest, function (err, result) {
+		
+		if (err) {
+			
+			res.send("<h1>Error:  " + err + "</h1>");
+		} else if (result.success) {
+			
+			res.send("<h1>Success! Transaction ID: " + result.transaction.id + "</h1>");
+		} else {
+			
+			res.send("<h1>Error:  " + result.message + "</h1>");
+		}
+	});
+});
+

@@ -54,6 +54,7 @@
 					</div>
 					<div class="panel-body">
 						<div id="cart_cost_summary" class="row"></div>
+						<div id="paypal-button"></div>
 						<div id="cart_inventory" class="row"></div>
 					</div>
 					<div class="panel-footer">
@@ -80,6 +81,9 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+		<script src="https://js.braintreegateway.com/web/3.22.2/js/client.min.js"></script>
+		<script src="https://js.braintreegateway.com/web/3.22.2/js/paypal-checkout.min.js"></script>
 		<script>
 var latestCart = {latest.cart};
 $(document).ready(function() {
@@ -99,8 +103,75 @@ $(document).ready(function() {
 			totalCost += cartItem.cost;
 		}
 		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
+
+		// Create a client.
+		braintree.client.create({authorization: 'CLIENT_TOKEN_FROM_SERVER'}, function (clientErr, clientInstance) {
+
+			// Stop if there was a problem creating the client.
+			// This could happen if there is a network error or if the authorization
+			// is invalid.
+			if (clientErr) {
+
+				console.error('Error creating client:', clientErr);
+				return;
+			}
+
+			// Create a PayPal Checkout component.
+			braintree.paypalCheckout.create({client: clientInstance}, function (paypalCheckoutErr, paypalCheckoutInstance) {
+
+				// Stop if there was a problem creating PayPal Checkout.
+				// This could happen if there was a network error or if it's incorrectly
+				// configured.
+				if (paypalCheckoutErr) {
+					console.error('Error creating PayPal Checkout:', paypalCheckoutErr);
+					return;
+				}
+
+				// Set up PayPal with the checkout.js library
+				paypal.Button.render({
+
+					env: 'production', // or 'sandbox'
+					commit: true, // This will add the transaction amount to the PayPal button
+					payment: function () {
+						return paypalCheckoutInstance.createPayment({
+							flow: 'checkout', // Required
+							amount: 10.00, // Required
+							currency: 'USD', // Required
+							enableShippingAddress: true,
+							shippingAddressEditable: false,
+							shippingAddressOverride: {
+								recipientName: 'Scruff McGruff',
+								line1: '1234 Main St.',
+								line2: 'Unit 1',
+								city: 'Chicago',
+								countryCode: 'US',
+								postalCode: '60652',
+								state: 'IL',
+								phone: '123.456.7890'
+							}
+						});
+					},
+					onAuthorize: function (data, actions) {
+						return paypalCheckoutInstance.tokenizePayment(data).then(function (payload) {
+							// Submit `payload.nonce` to your server
+						});
+					},
+					onCancel: function (data) {
+						console.log('checkout.js payment cancelled', JSON.stringify(data, 0, 2));
+					},
+					
+					onError: function (err) {
+						console.error('checkout.js error', err);
+					}
+				}, '#paypal-button').then(function () {
+				// The PayPal button will be rendered in an html element with the id
+				// `paypal-button`. This function will be called when the PayPal button
+				// is set up and ready to be used.
+				});
+			});
+		});
 	} else {
-		
+
 		document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
 	}
 });
