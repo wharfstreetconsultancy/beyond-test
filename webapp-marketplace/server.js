@@ -22,11 +22,13 @@ AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.Authentica
 AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
-    UserPoolId: 'us-west-2_jnmkbOGZY',
-    ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
+	UserPoolId: 'us-west-2_jnmkbOGZY',
+	ClientId: process.env.AUTH_CLIENT
+	// ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
 });
 var gateway = braintree.connect({
-	accessToken: useYourAccessToken
+	accessToken: process.env.PAYMENT_GATEWAY
+	// accessToken: 'AFcWxV21C7fd0v3bYYYRCpSSRl31AdCkz5DOJwF7.eSQ9XFlz8KTi4YK'
 });
 
 //
@@ -36,7 +38,8 @@ app.use(express.static('assets'));
 app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
-	secret: 'keyboard cat named leon',
+	// secret: 'keyboard cat named leon',
+	secret: process.env.SESSION_SECRET,
 	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessions'}),
 	resave: false,
 	saveUninitialized: true,
@@ -161,11 +164,11 @@ app.get('/product', function (req, res) {
 });
 
 //
-// POST '/checkout' - View cart checkout page
-app.post('/checkout', function (req, res) {
+// POST '/checkout_confirmation' - View cart checkout page
+app.post('/checkout_confirmation', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: POST /checkout" );
+	console.log( "Received request: POST /checkout_confirmation" );
 
 	var customer = req.session.customer; 
 	if(!customer || !customer.signInUserSession) {
