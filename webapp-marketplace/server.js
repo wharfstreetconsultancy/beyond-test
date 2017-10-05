@@ -21,11 +21,13 @@ AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
 AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
+console.log("AUTH_CLIENT="+AUTH_CLIENT);
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	UserPoolId: 'us-west-2_jnmkbOGZY',
 	ClientId: process.env.AUTH_CLIENT
 	// ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
 });
+console.log("PAYMENT_GATEWAY="+PAYMENT_GATEWAY);
 var gateway = braintree.connect({
 	accessToken: process.env.PAYMENT_GATEWAY
 	// accessToken: 'AFcWxV21C7fd0v3bYYYRCpSSRl31AdCkz5DOJwF7.eSQ9XFlz8KTi4YK'
