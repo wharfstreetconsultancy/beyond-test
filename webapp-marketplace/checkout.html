@@ -106,10 +106,10 @@ $(document).ready(function() {
 
 
 		var customer = sessionStorage.getItem('customer');
-		console.log("Current customer: "+customer);
 
 		if(customer) {
 
+			console.log("Current customer: "+JSON.stringify(customer));
 			$.ajax({
 
 				url: '/client_token',
@@ -153,6 +153,7 @@ $(document).ready(function() {
 								payment: function () {
 
 									console.log("ADDRESS: "+JSON.stringify(customer.address));
+
 									return paypalCheckoutInstance.createPayment({
 										flow: 'checkout', // Required
 										amount: totalCost, // Required
