@@ -119,11 +119,11 @@ $(document).ready(function() {
 	
 					console.log("Failed to get payment gateway client token: "+JSON.stringify(xhr));
 				},
-				success: function (clientToken) {
+				success: function (response) {
 	
-					console.log("Got payment gateway client token: "+JSON.stringify(clientToken));
+					console.log("Got payment gateway client token: "+JSON.stringify(response.clientToken));
 					// Create a client.
-					braintree.client.create({authorization: clientToken}, function (clientErr, clientInstance) {
+					braintree.client.create({authorization: response.clientToken}, function (clientErr, clientInstance) {
 	
 						// Stop if there was a problem creating the client.
 						// This could happen if there is a network error or if the authorization
