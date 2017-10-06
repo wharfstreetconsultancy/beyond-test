@@ -1055,7 +1055,7 @@ app.post('/transaction', function (req, res) {
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: JSON.stringify(result.message.split('\n'))}));
+			res.write(JSON.stringify({error: result.message.split('\n')}));
 			res.end();
 			return;
 		}
