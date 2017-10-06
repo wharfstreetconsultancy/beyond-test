@@ -656,7 +656,6 @@ function profileCustomer(customer, callback) {
 	});
 }
 
-function buildObjectFromString
 //
 // GET - cart API - Get entire cart for current user
 app.get('/cart/:id', function (req, res) {
