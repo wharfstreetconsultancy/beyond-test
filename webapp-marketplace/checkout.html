@@ -194,10 +194,13 @@ $(document).ready(function() {
 
 												console.log('Payment transaction failed: '+xhr.responseJSON.error);
 												document.getElementById("cart_cost_summary").innerHTML = '';
-												document.getElementById("cart_inventory").innerHTML = '';
+												document.getElementById("cart_title").innerHTML = 'Order Status...';
+												document.getElementById("cart_inventory").innerHTML = 'Payment transaction failed:';
+												document.getElementById("cart_inventory").innerHTML += '<ul>';
 												for(var errorMessage of xhr.responseJSON.error) {
-													document.getElementById("cart_inventory").innerHTML += errorMessage;
+													document.getElementById("cart_inventory").innerHTML += '<li>'+errorMessage+'</li>';
 												}
+												document.getElementById("cart_inventory").innerHTML += '</ul>';
 											},
 											success: function (response) {
 								
@@ -213,6 +216,7 @@ $(document).ready(function() {
 								onError: function (error) {
 
 									console.log('Payment authorisation failed: '+JSON.stringify(error));
+									document.getElementById("cart_title").innerHTML = 'Order Status...';
 									document.getElementById("cart_cost_summary").innerHTML = '';
 									document.getElementById("cart_inventory").innerHTML = '';
 									document.getElementById("cart_inventory").innerHTML += error;
