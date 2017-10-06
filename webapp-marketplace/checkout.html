@@ -152,6 +152,7 @@ $(document).ready(function() {
 								commit: true, // This will add the transaction amount to the PayPal button
 								payment: function () {
 
+									console.log("CUSTOMER: "+JSON.stringify(customer));
 									console.log("ADDRESS: "+JSON.stringify(customer.address));
 
 									return paypalCheckoutInstance.createPayment({
