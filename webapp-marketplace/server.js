@@ -1031,7 +1031,7 @@ app.post('/transaction', function (req, res) {
 		
 		if (err) {
 			
-			console.log("Payment transaction failed ("+err+")");
+			console.log("Payment transaction returned an error ("+err+")");
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
@@ -1055,7 +1055,7 @@ app.post('/transaction', function (req, res) {
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: 'Payment transaction failed ('+result.message+')'}));
+			res.write(JSON.stringify({error: JSON.stringify(result.message.split('\n'))}));
 			res.end();
 			return;
 		}

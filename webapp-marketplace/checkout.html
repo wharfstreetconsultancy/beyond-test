@@ -180,7 +180,10 @@ $(document).ready(function() {
 
 									return paypalCheckoutInstance.tokenizePayment(data).then(function (payload) {
 
+										console.log("Payment gateway request data: "+JSON.stringify(data));
+										console.log("Payment gateway request actions: "+JSON.stringify(actions));
 										console.log("Payment gateway response: "+JSON.stringify(payload));
+
 										// Submit `payload.nonce` to server
 										$.ajax({
 							
@@ -202,9 +205,14 @@ $(document).ready(function() {
 
 									console.log('checkout.js payment cancelled', JSON.stringify(data, 0, 2));
 								},
-								onError: function (err) {
+								onError: function (error) {
 
-									console.error('checkout.js error', err);
+									console.log('Payment request failed: '+JSON.stringify(err));
+									document.getElementById("cart_cost_summary").innerHTML = '';
+									document.getElementById("cart_inventory").innerHTML = '';
+									for(var errorMessage of errorMessages) {
+										document.getElementById("cart_inventory").innerHTML += errorMessage;
+									}
 								}
 							}, '#paypal-button').then(function () {
 							// The PayPal button will be rendered in an html element with the id
