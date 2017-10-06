@@ -512,7 +512,7 @@ app.post('/customer', function (req, res) {
 
 	var attributeList = [];
 	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
-	attributeList.push({Name: 'address', Value: replaceall('"','', JSON.stringify(req.body.address))});
+	attributeList.push({Name: 'address', Value: replaceall('"','\"', JSON.stringify(req.body.address))});
 	attributeList.push({Name: 'given_name', Value: req.body.given_name});
 	attributeList.push({Name: 'family_name', Value: req.body.family_name});
 
