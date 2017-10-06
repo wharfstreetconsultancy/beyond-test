@@ -512,7 +512,8 @@ app.post('/customer', function (req, res) {
 
 	var attributeList = [];
 	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
-	attributeList.push({Name: 'address', Value: replaceall('"','\"', JSON.stringify(req.body.address))});
+	attributeList.push({Name: 'address', Value: JSON.stringify(req.body.address)});
+//	attributeList.push({Name: 'address', Value: replaceall('"','', JSON.stringify(req.body.address))});
 	attributeList.push({Name: 'given_name', Value: req.body.given_name});
 	attributeList.push({Name: 'family_name', Value: req.body.family_name});
 
@@ -636,12 +637,17 @@ function profileCustomer(customer, callback) {
         	callback(error, null);
         } else {
 	    	var customerProfile = {};
+	    	
 	    	var customerProfileBuffer = '{';
 	        for(var attribute of result) {
-	
-	        	customerProfileBuffer += '"'+attribute.getName().Name+'":"'+attribute.getName().Value+'",';
+
+	        	var key = attribute.getName().Name;
+	        	var value = attribute.getName().Value;
+	        	customerProfileBuffer += '"'+key+'":'+((value.startsWith('{') && value.endsWith('}')) ? value : '"'+value+'"')+',';
 	        }
-	        customerProfileBuffer = customerProfileBuffer.substring(0, customerProfileBuffer.length-1);
+	        if(customerProfileBuffer.endsWith(',')) {
+	        	customerProfileBuffer = customerProfileBuffer.substring(0, customerProfileBuffer.length-1);
+	        }
 	        customerProfileBuffer += '}';
 	        customerProfile = JSON.parse(customerProfileBuffer);
 	    	console.log("Customer Profile: "+JSON.stringify(customerProfile));
@@ -650,6 +656,7 @@ function profileCustomer(customer, callback) {
 	});
 }
 
+function buildObjectFromString
 //
 // GET - cart API - Get entire cart for current user
 app.get('/cart/:id', function (req, res) {
