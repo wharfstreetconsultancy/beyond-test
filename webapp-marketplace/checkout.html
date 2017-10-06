@@ -191,8 +191,13 @@ $(document).ready(function() {
 											type: 'post',
 											dataType: 'json',
 											error: function (xhr) {
-								
-												console.log("Failed to create a payment transaction: "+JSON.stringify(xhr));
+
+												console.log('Payment transaction failed: '+xhr.responseJSON.error);
+												document.getElementById("cart_cost_summary").innerHTML = '';
+												document.getElementById("cart_inventory").innerHTML = '';
+												for(var errorMessage of xhr.responseJSON.error) {
+													document.getElementById("cart_inventory").innerHTML += errorMessage;
+												}
 											},
 											success: function (response) {
 								
@@ -207,12 +212,10 @@ $(document).ready(function() {
 								},
 								onError: function (error) {
 
-									console.log('Payment request failed: '+JSON.stringify(err));
+									console.log('Payment authorisation failed: '+JSON.stringify(error));
 									document.getElementById("cart_cost_summary").innerHTML = '';
 									document.getElementById("cart_inventory").innerHTML = '';
-									for(var errorMessage of errorMessages) {
-										document.getElementById("cart_inventory").innerHTML += errorMessage;
-									}
+									document.getElementById("cart_inventory").innerHTML += error;
 								}
 							}, '#paypal-button').then(function () {
 							// The PayPal button will be rendered in an html element with the id
