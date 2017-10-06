@@ -988,7 +988,7 @@ app.post('/transaction', function (req, res) {
 	// Log request received
 	console.log( "Received request: POST /transaction" );
 	
-	console.log("Request body:\n"+util.inspect(req.body));
+	console.log("Request body:\n"+JSON.stringify(req.body));
 
 	var saleRequest = {
 		amount: req.body.amount,
