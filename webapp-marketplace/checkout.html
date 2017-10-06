@@ -50,11 +50,12 @@
 			<div class="col-lg-8 col-lg-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Your Shopping Cart...
+						<div id="cart_title" class="col-lg-8 col-lg-offset-1"></div>
+						<div id="paypal-button" class="col-lg-3"></div>
 					</div>
 					<div class="panel-body">
 						<div id="cart_cost_summary" class="row"></div>
-						<div id="paypal-button"></div>
+						<!-- div id="paypal-button"></div -->
 						<div id="cart_inventory" class="row"></div>
 					</div>
 					<div class="panel-footer">
@@ -102,6 +103,7 @@ $(document).ready(function() {
 			totalItems += cartItem.quantity;
 			totalCost += cartItem.cost;
 		}
+		document.getElementById("cart_title").innerHTML = 'Your Cart Items...';
 		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
 
 
@@ -178,7 +180,22 @@ $(document).ready(function() {
 
 									return paypalCheckoutInstance.tokenizePayment(data).then(function (payload) {
 
-										// Submit `payload.nonce` to your server
+										console.log("Payment gateway response: "+JSON.stringify(payload));
+										// Submit `payload.nonce` to server
+										$.ajax({
+							
+											url: '/transaction',
+											type: 'post',
+											dataType: 'json',
+											error: function (xhr) {
+								
+												console.log("Failed to create a payment transaction: "+JSON.stringify(xhr));
+											},
+											success: function (response) {
+								
+												console.log("Created payment transaction: "+JSON.stringify(response));
+											}
+										});
 									});
 								},
 								onCancel: function (data) {

@@ -960,7 +960,7 @@ app.get('/client_token', function (req, res) {
 
     gateway.clientToken.generate({}, function (err, response) {
 
-		console.log("Got client token.");
+		console.log("Got payment gateway client token.");
 		
 		// Return new cart item to caller
 		res.writeHead(200, {'Content-Type': 'application/json'});
@@ -997,6 +997,15 @@ app.post('/transaction', function (req, res) {
 			name: "Descriptor displayed in customer CC statements. 22 char max"
 		},
 		shipping: {
+//			firstName: "Jen",
+//			lastName: "Smith",
+//			company: "Braintree",
+//			streetAddress: "1 E 1st St",
+//			extendedAddress: "5th Floor",
+//			locality: "Bartlett",
+//			region: "IL",
+//			postalCode: "60103",
+//			countryCodeAlpha2: "US"
 			firstName: "Jen",
 			lastName: "Smith",
 			company: "Braintree",
@@ -1020,13 +1029,33 @@ app.post('/transaction', function (req, res) {
 		
 		if (err) {
 			
-			res.send("<h1>Error:  " + err + "</h1>");
+			console.log("Payment transaction failed ("+err+")");
+
+			// Return new cart item to caller
+			res.writeHead(500, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({error: 'Payment transaction failed ('+err+')'}));
+			res.end();
+			return;
 		} else if (result.success) {
-			
-			res.send("<h1>Success! Transaction ID: " + result.transaction.id + "</h1>");
+
+			console.log("Payment transaction successful (id: "+result.transaction.id+")");
+			console.log("Response: "+JSON.stringify(result));
+
+			// Return new cart item to caller
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({transactionId: result.transaction.id}));
+			res.end();
+			return;
 		} else {
 			
-			res.send("<h1>Error:  " + result.message + "</h1>");
+			console.log("Payment transaction failed ("+result.message+")");
+			console.log("Response: "+JSON.stringify(result));
+
+			// Return new cart item to caller
+			res.writeHead(500, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({error: 'Payment transaction failed ('+result.message+')'}));
+			res.end();
+			return;
 		}
 	});
 });
