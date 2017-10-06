@@ -159,13 +159,15 @@ $(document).ready(function() {
 									console.log("ADDRESS: "+JSON.stringify(customer.address));
 
 									return paypalCheckoutInstance.createPayment({
-										flow: 'checkout', // Required
-										amount: totalCost, // Required
-										currency: 'USD', // Required
+										flow: 'checkout',
+										amount: totalCost,
+										currency: 'USD',
 										enableShippingAddress: true,
 										shippingAddressEditable: false,
 										shippingAddressOverride: {
 											recipientName: customer.given_name+' '+customer.family_name,
+											firstName: customer.given_name,
+											lastName: customer.family_name,
 											line1: customer.address.line1,
 											line2: customer.address.line2,
 											city: customer.address.city,
@@ -190,10 +192,12 @@ $(document).ready(function() {
 											url: '/transaction',
 											type: 'post',
 											dataType: 'json',
+											data: {amount: totalAmount, payload: payload},
 											error: function (xhr) {
 
 												console.log('Payment transaction failed: '+xhr.responseJSON.error);
 												document.getElementById("cart_cost_summary").innerHTML = '';
+												document.getElementById("paypal_button").innerHTML = '';
 												document.getElementById("cart_title").innerHTML = 'Order Status...';
 												document.getElementById("cart_inventory").innerHTML = 'Payment transaction failed:';
 												document.getElementById("cart_inventory").innerHTML += '<ul>';
@@ -216,10 +220,10 @@ $(document).ready(function() {
 								onError: function (error) {
 
 									console.log('Payment authorisation failed: '+JSON.stringify(error));
-									document.getElementById("cart_title").innerHTML = 'Order Status...';
 									document.getElementById("cart_cost_summary").innerHTML = '';
-									document.getElementById("cart_inventory").innerHTML = '';
-									document.getElementById("cart_inventory").innerHTML += error;
+									document.getElementById("paypal_button").innerHTML = '';
+									document.getElementById("cart_title").innerHTML = 'Order Status...';
+									document.getElementById("cart_inventory").innerHTML = error;
 								}
 							}, '#paypal-button').then(function () {
 							// The PayPal button will be rendered in an html element with the id

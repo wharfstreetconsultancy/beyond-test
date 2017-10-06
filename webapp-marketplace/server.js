@@ -993,7 +993,7 @@ app.post('/transaction', function (req, res) {
 	var saleRequest = {
 		amount: req.body.amount,
 		merchantAccountId: "USD",
-		paymentMethodNonce: req.body.nonce,
+		paymentMethodNonce: req.body.payload.nonce,
 		orderId: "Mapped to PayPal Invoice Number",
 		descriptor: {
 			name: "Descriptor displayed in customer CC statements. 22 char max"
@@ -1008,15 +1008,15 @@ app.post('/transaction', function (req, res) {
 //			region: "IL",
 //			postalCode: "60103",
 //			countryCodeAlpha2: "US"
-			firstName: "Jen",
-			lastName: "Smith",
-			company: "Braintree",
-			streetAddress: "1 E 1st St",
-			extendedAddress: "5th Floor",
-			locality: "Bartlett",
-			region: "IL",
-			postalCode: "60103",
-			countryCodeAlpha2: "US"
+			firstName: req.body.payload.details.firstName,
+			lastName: req.body.payload.details.lastName,
+//			company: "Braintree",
+			streetAddress: req.body.payload.details.shippingAddress.line1,
+			extendedAddress: req.body.payload.details.shippingAddress.line2,
+			locality: req.body.payload.details.shippingAddress.city,
+			region: req.body.payload.details.shippingAddress.state,
+			postalCode: req.body.payload.details.shippingAddress.postalCode,
+			countryCodeAlpha2: req.body.payload.details.shippingAddress.countryCode
 		},
 		options: {
 			paypal: {
