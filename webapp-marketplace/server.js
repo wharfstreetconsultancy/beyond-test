@@ -993,7 +993,8 @@ app.post('/transaction', function (req, res) {
 	var parts = req.body.shippingAddress.recipientName.split(' ');
 	var firstName = parts[0];
 	var lastName = parts[1];
-	var orderId = '12345678901234';
+//	var orderId = '12345678901234';
+	var orderId = new Date().getTime().toString().split('').reverse().join('').substring(0,14);
 	var descriptor = 'SuroorF'+'*'+orderId;
 	console.log("Descriptor: "+descriptor);
 
@@ -1001,7 +1002,7 @@ app.post('/transaction', function (req, res) {
 		amount: req.body.amount,
 		merchantAccountId: "USD",
 		paymentMethodNonce: req.body.nonce,
-		orderId: orderId, // !!!!!!!!!!!!!
+		orderId: orderId,
 		descriptor: {
 			name: descriptor
 		},
