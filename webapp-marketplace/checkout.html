@@ -194,7 +194,7 @@ $(document).ready(function() {
 												firstName: customer.given_name,
 												lastName: customer.family_name,
 												amount: totalAmount,
-												payload: payload
+												shippingAddress: payload.details.shippingAddress
 											},
 											error: function (xhr) {
 
