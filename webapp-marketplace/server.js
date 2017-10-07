@@ -1003,15 +1003,23 @@ app.post('/transaction', function (req, res) {
 			name: "Descriptor displayed in customer CC statements. 22 char max"
 		},
 		shipping: {
-			firstName: firstName,
-			lastName: lastName,
-//			company: "Braintree",
-			streetAddress: req.body.shippingAddress.line1,
-			extendedAddress: req.body.shippingAddress.line2,
-			locality: req.body.shippingAddress.city,
-			region: req.body.shippingAddress.state,
-			postalCode: req.body.shippingAddress.postalCode,
-			countryCodeAlpha2: req.body.shippingAddress.countryCode
+//			firstName: firstName,
+//			lastName: lastName,
+//			streetAddress: req.body.shippingAddress.line1,
+//			extendedAddress: req.body.shippingAddress.line2,
+//			locality: req.body.shippingAddress.city,
+//			region: req.body.shippingAddress.state,
+//			postalCode: req.body.shippingAddress.postalCode,
+//			countryCodeAlpha2: req.body.shippingAddress.countryCode
+
+			firstName: 'Paul',
+			lastName: 'Smith',
+			streetAddress: '2450 Union St',
+			extendedAddress: 'Unit 104',
+			locality: 'San Francisco',
+			region: 'CA',
+			postalCode: '991234',
+			countryCodeAlpha2: 'US'
 		},
 		options: {
 			paypal: {
