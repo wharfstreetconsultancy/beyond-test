@@ -993,16 +993,15 @@ app.post('/transaction', function (req, res) {
 	var parts = req.body.shippingAddress.recipientName.split(' ');
 	var firstName = parts[0];
 	var lastName = parts[1];
+	var orderId = '123456789012';
 
 	var saleRequest = {
-//		amount: '2.99',
 		amount: req.body.amount,
 		merchantAccountId: "USD",
-//		paymentMethodNonce: '3fcb2f65-e85b-0bab-5824-dff65bf89c5d',
 		paymentMethodNonce: req.body.nonce,
-		orderId: "Mapped to PayPal Invoice Number",
+		orderId: orderId, // !!!!!!!!!!!!!
 		descriptor: {
-			name: "Descriptor displayed in customer CC statements. 22 char max"
+			name: 'Suroor#'+'*'+orderId
 		},
 		shipping: {
 			firstName: firstName,
@@ -1013,15 +1012,6 @@ app.post('/transaction', function (req, res) {
 			region: req.body.shippingAddress.state,
 			postalCode: req.body.shippingAddress.postalCode,
 			countryCodeAlpha2: req.body.shippingAddress.countryCode
-
-//			firstName: 'Paul',
-//			lastName: 'Smith',
-//			streetAddress: '2450 Union St',
-//			extendedAddress: 'Unit 104',
-//			locality: 'San Francisco',
-//			region: 'CA',
-//			postalCode: '991234',
-//			countryCodeAlpha2: 'US'
 		},
 		options: {
 			paypal: {

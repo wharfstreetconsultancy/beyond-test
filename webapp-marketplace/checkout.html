@@ -184,11 +184,6 @@ $(document).ready(function() {
 										console.log("Payment gateway request actions: "+JSON.stringify(actions));
 										console.log("Payment gateway response: "+JSON.stringify(payload));
 										console.log("Just prove it to me...");
-										var dataParams = {
-											amount: totalCost,
-											nonce: payload.nonce,
-											shippingAddress: payload.details.shippingAddress
-										}
 										console.log("Next payment gateway request data: "+JSON.stringify(dataParams));
 
 										// Submit payload.nonce to server
@@ -197,13 +192,11 @@ $(document).ready(function() {
 											type: 'post',
 											dataType: 'json',
 											data: dataParams,
-											// data: {
-//												firstName: customer.given_name,
-//												lastName: customer.family_name,
-												// amount: totalAmount,
-												// nonce: payload.nonce,
-												// shippingAddress: payload.nonce
-											// },
+											data: {
+												amount: totalCost,
+												nonce: payload.nonce,
+												shippingAddress: payload.details.shippingAddress
+											},
 											error: function (xhr) {
 
 												console.log('Payment transaction failed: '+xhr.responseJSON.error);
