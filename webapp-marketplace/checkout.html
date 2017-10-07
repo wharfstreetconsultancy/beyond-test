@@ -219,7 +219,7 @@ $(document).ready(function() {
 								},
 								onError: function (error) {
 
-									if(error) {error = JSON.stringify(error);} else {error = 'Unexpected error.';}
+									if(error && error != {}) {error = JSON.stringify(error);} else {error = 'Unexpected error.';}
 									console.log('Payment authorisation failed: '+error);
 									document.getElementById("cart_cost_summary").innerHTML = '';
 									document.getElementById("paypal_button").innerHTML = '';
