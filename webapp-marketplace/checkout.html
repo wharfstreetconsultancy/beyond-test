@@ -183,7 +183,7 @@ $(document).ready(function() {
 										console.log("Payment gateway request data: "+JSON.stringify(data));
 										console.log("Payment gateway request actions: "+JSON.stringify(actions));
 										console.log("Payment gateway response: "+JSON.stringify(payload));
-alert("Test");
+
 										// Submit payload.nonce to server
 										$.ajax({
 											url: '/transaction',
@@ -231,10 +231,10 @@ alert("Test");
 									document.getElementById("cart_inventory").innerHTML = error;
 								}
 							}, '#paypal-button').then(function () {
-								alert("Ready");
 							// The PayPal button will be rendered in an html element with the id
 							// `paypal-button`. This function will be called when the PayPal button
 							// is set up and ready to be used.
+								return true;
 							});
 						});
 					});
