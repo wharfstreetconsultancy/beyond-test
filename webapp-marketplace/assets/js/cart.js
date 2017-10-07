@@ -36,7 +36,7 @@ function reloadCustomerCart() {
 			document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
 			document.getElementById("cart_preview").innerHTML += '<button id="check_out_cart_btn" type="submit" value="check_out_cart" class="btn btn-primary btn-block">Checkout</button>';
 //			document.getElementById("cart_preview").innerHTML += '<a id="checkout" href="cart.html" class="btn btn-primary pull-left">Checkout</a>';
-			document.getElementById("cart_preview").innerHTML += '<button type="reset" id="clear" name="clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
+			document.getElementById("cart_preview").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
 			document.getElementById("cart_preview").innerHTML += '</div>';
 			document.getElementById("cart_preview").innerHTML += '</div>';
 		}
