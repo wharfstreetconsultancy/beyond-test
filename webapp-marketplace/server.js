@@ -990,9 +990,9 @@ app.post('/transaction', function (req, res) {
 	
 	console.log("Request body:\n"+JSON.stringify(req.body));
 
-	var parts = req.body.shippingAddress.recipientName.split(' ');
-	var firstName = parts[0];
-	var lastName = parts[1];
+//	var parts = req.body.shippingAddress.recipientName.split(' ');
+//	var firstName = parts[0];
+//	var lastName = parts[1];
 
 	var saleRequest = {
 		amount: req.body.amount,
