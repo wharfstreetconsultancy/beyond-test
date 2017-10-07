@@ -995,9 +995,11 @@ app.post('/transaction', function (req, res) {
 //	var lastName = parts[1];
 
 	var saleRequest = {
-		amount: req.body.amount,
+		amount: '2.99',
+//		amount: req.body.amount,
 		merchantAccountId: "USD",
-		paymentMethodNonce: req.body.nonce,
+		paymentMethodNonce: '3fcb2f65-e85b-0bab-5824-dff65bf89c5d',
+//		paymentMethodNonce: req.body.nonce,
 		orderId: "Mapped to PayPal Invoice Number",
 		descriptor: {
 			name: "Descriptor displayed in customer CC statements. 22 char max"
