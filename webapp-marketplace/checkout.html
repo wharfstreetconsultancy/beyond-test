@@ -190,13 +190,13 @@ alert("Test");
 											url: '/transaction',
 											type: 'post',
 											dataType: 'json',
-											data: {
+											//data: {
 //												firstName: customer.given_name
 //												lastName: customer.family_name,
-												amount: totalAmount,
-												nonce: payload.nonce,
-												shippingAddress: payload.details.shippingAddress
-											},
+												//amount: totalAmount,
+												//nonce: payload.nonce,
+												//shippingAddress: payload.details.shippingAddress
+											//},
 											error: function (xhr) {
 
 												console.log('Payment transaction failed: '+xhr.responseJSON.error);
@@ -225,13 +225,14 @@ alert("Test");
 
 									if(error) {error = JSON.stringify(error);}
 									if(!error || error.length == 0 || error == '{}') {error = 'Unexpected error.';}
-									console.log('Payment authorisation failed: '+error);
+									console.log("Payment authorisation failed: "+error);
 									document.getElementById("cart_cost_summary").innerHTML = '';
 									document.getElementById("paypal-button").innerHTML = '';
 									document.getElementById("cart_title").innerHTML = 'Order Status...';
 									document.getElementById("cart_inventory").innerHTML = error;
 								}
 							}, '#paypal-button').then(function () {
+								alert("Ready");
 							// The PayPal button will be rendered in an html element with the id
 							// `paypal-button`. This function will be called when the PayPal button
 							// is set up and ready to be used.
