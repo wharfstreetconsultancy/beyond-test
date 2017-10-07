@@ -994,6 +994,8 @@ app.post('/transaction', function (req, res) {
 	var firstName = parts[0];
 	var lastName = parts[1];
 	var orderId = '12345678901234';
+	var descriptor = 'Suroor#'+'*'+orderId;
+	console.log("Descriptor: "+descriptor);
 
 	var saleRequest = {
 		amount: req.body.amount,
@@ -1001,7 +1003,7 @@ app.post('/transaction', function (req, res) {
 		paymentMethodNonce: req.body.nonce,
 		orderId: orderId, // !!!!!!!!!!!!!
 		descriptor: {
-			name: 'Suroor#'+'*'+orderId
+			name: descriptor
 		},
 		shipping: {
 			firstName: firstName,
