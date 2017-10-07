@@ -197,7 +197,7 @@ $(document).ready(function() {
 
 												console.log('Payment transaction failed: '+xhr.responseJSON.error);
 												document.getElementById("cart_cost_summary").innerHTML = '';
-												document.getElementById("paypal_button").innerHTML = '';
+												document.getElementById("paypal-button").innerHTML = '';
 												document.getElementById("cart_title").innerHTML = 'Order Status...';
 												document.getElementById("cart_inventory").innerHTML = 'Payment transaction failed:';
 												document.getElementById("cart_inventory").innerHTML += '<ul>';
@@ -222,7 +222,7 @@ $(document).ready(function() {
 									if(error && error != {}) {error = JSON.stringify(error);} else {error = 'Unexpected error.';}
 									console.log('Payment authorisation failed: '+error);
 									document.getElementById("cart_cost_summary").innerHTML = '';
-									document.getElementById("paypal_button").innerHTML = '';
+									document.getElementById("paypal-button").innerHTML = '';
 									document.getElementById("cart_title").innerHTML = 'Order Status...';
 									document.getElementById("cart_inventory").innerHTML = error;
 								}
