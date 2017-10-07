@@ -994,7 +994,7 @@ app.post('/transaction', function (req, res) {
 	var firstName = parts[0];
 	var lastName = parts[1];
 	var orderId = '12345678901234';
-	var descriptor = 'Suroor#'+'*'+orderId;
+	var descriptor = 'SuroorF'+'*'+orderId;
 	console.log("Descriptor: "+descriptor);
 
 	var saleRequest = {
