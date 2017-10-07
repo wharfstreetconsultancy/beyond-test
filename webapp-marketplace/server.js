@@ -990,33 +990,27 @@ app.post('/transaction', function (req, res) {
 	
 	console.log("Request body:\n"+JSON.stringify(req.body));
 
+	var parts = req.body.shippingAddress.recipientName.split(' ');
+	var firstName = parts[0];
+	var lastName = parts[1];
 	var saleRequest = {
 		amount: req.body.amount,
 		merchantAccountId: "USD",
-		paymentMethodNonce: req.body.payload.nonce,
+		paymentMethodNonce: req.body.nonce,
 		orderId: "Mapped to PayPal Invoice Number",
 		descriptor: {
 			name: "Descriptor displayed in customer CC statements. 22 char max"
 		},
 		shipping: {
-//			firstName: "Jen",
-//			lastName: "Smith",
+			firstName: firstName,
+			lastName: lastName,
 //			company: "Braintree",
-//			streetAddress: "1 E 1st St",
-//			extendedAddress: "5th Floor",
-//			locality: "Bartlett",
-//			region: "IL",
-//			postalCode: "60103",
-//			countryCodeAlpha2: "US"
-			firstName: req.body.payload.details.firstName,
-			lastName: req.body.payload.details.lastName,
-//			company: "Braintree",
-			streetAddress: req.body.payload.details.shippingAddress.line1,
-			extendedAddress: req.body.payload.details.shippingAddress.line2,
-			locality: req.body.payload.details.shippingAddress.city,
-			region: req.body.payload.details.shippingAddress.state,
-			postalCode: req.body.payload.details.shippingAddress.postalCode,
-			countryCodeAlpha2: req.body.payload.details.shippingAddress.countryCode
+			streetAddress: req.body.shippingAddress.line1,
+			extendedAddress: req.body.shippingAddress.line2,
+			locality: req.body.shippingAddress.city,
+			region: req.body.shippingAddress.state,
+			postalCode: req.body.shippingAddress.postalCode,
+			countryCodeAlpha2: req.body.shippingAddress.countryCode
 		},
 		options: {
 			paypal: {
