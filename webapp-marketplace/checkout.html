@@ -183,13 +183,20 @@ $(document).ready(function() {
 										console.log("Payment gateway request data: "+JSON.stringify(data));
 										console.log("Payment gateway request actions: "+JSON.stringify(actions));
 										console.log("Payment gateway response: "+JSON.stringify(payload));
-
+/*
+										var dataParams = {
+											amount: totalCost,
+											nonce: payload.nonce,
+											shippingAddress: payload.details.shippingAddress
+										}
+										console.log("Payment transaction aparams: "+JSON.stringify(dataParams));
+*/
 										// Submit payload.nonce to server
 										$.ajax({
 											url: '/transaction',
 											type: 'post',
 											dataType: 'json',
-											data: dataParams,
+//											data: dataParams,
 											data: {
 												amount: totalCost,
 												nonce: payload.nonce,
