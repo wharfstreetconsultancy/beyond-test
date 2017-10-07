@@ -166,8 +166,6 @@ $(document).ready(function() {
 										shippingAddressEditable: false,
 										shippingAddressOverride: {
 											recipientName: customer.given_name+' '+customer.family_name,
-											firstName: customer.given_name,
-											lastName: customer.family_name,
 											line1: customer.address.line1,
 											line2: customer.address.line2,
 											city: customer.address.city,
@@ -192,7 +190,12 @@ $(document).ready(function() {
 											url: '/transaction',
 											type: 'post',
 											dataType: 'json',
-											data: {amount: totalAmount, payload: payload},
+											data: {
+												firstName: customer.given_name,
+												lastName: customer.family_name,
+												amount: totalAmount,
+												payload: payload
+											},
 											error: function (xhr) {
 
 												console.log('Payment transaction failed: '+xhr.responseJSON.error);
