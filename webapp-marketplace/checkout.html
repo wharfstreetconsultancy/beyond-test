@@ -190,13 +190,13 @@ alert("Test");
 											url: '/transaction',
 											type: 'post',
 											dataType: 'json',
-											//data: {
+											data: {
 //												firstName: customer.given_name
 //												lastName: customer.family_name,
-												//amount: totalAmount,
-												//nonce: payload.nonce,
-												//shippingAddress: payload.details.shippingAddress
-											//},
+												amount: totalAmount,
+												nonce: payload.nonce,
+												shippingAddress: JSON.stringify(payload.details.shippingAddress)
+											},
 											error: function (xhr) {
 
 												console.log('Payment transaction failed: '+xhr.responseJSON.error);

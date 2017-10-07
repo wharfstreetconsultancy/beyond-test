@@ -993,6 +993,7 @@ app.post('/transaction', function (req, res) {
 	var parts = req.body.shippingAddress.recipientName.split(' ');
 	var firstName = parts[0];
 	var lastName = parts[1];
+
 	var saleRequest = {
 		amount: req.body.amount,
 		merchantAccountId: "USD",
