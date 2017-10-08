@@ -22,7 +22,7 @@
   			</div>
   		</div>
     </div>
-  	<nav class="navbar navbar-default">
+  	<!-- nav class="navbar navbar-default">
   		  <div class="container-fluid nav-con">
   			<div class="navbar-header">
   				<div class="col-sm-1 header">
@@ -43,7 +43,8 @@
   			  </ul>
   			</div>
   		  </div>
-    </nav>
+    </nav -->
+	<span id="navbar"></span>
 
 	<div class="body">
 		<div class="container">
@@ -87,10 +88,10 @@
 		<script src="https://js.braintreegateway.com/web/3.22.2/js/paypal-checkout.min.js"></script>
 		<script>
 var latestCart = {latest.cart};
+
 $(document).ready(function() {
 
-	$("#customer_management").load("js/customer.js");
-	$("#cart_management").load("js/cart.js");
+	$("#navbar").load("js/navigation.js");
 	
 	if(latestCart) {
 		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>';
