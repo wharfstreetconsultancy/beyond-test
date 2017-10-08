@@ -114,7 +114,7 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-				document.getElementById("cust_preview").submit();
+				document.getElementById("cart_preview").submit();
 			},
 			error: function (xhr) {
 
