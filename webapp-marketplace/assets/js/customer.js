@@ -21,7 +21,7 @@ function reloadCustomerProfile(callback) {
 		document.getElementById("identity").innerHTML += '<hr>';
 		document.getElementById("identity").innerHTML += '<div class="row">';
 		document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-		document.getElementById("identity").innerHTML += '<p><span id="user_msg">'+((signup) ? 'Please provide account details...' :'Please provide youir credentials...')+'</span></p>';
+		document.getElementById("identity").innerHTML += '<p><span id="user_msg">'+((signup) ? 'Please provide account details...' :'Please provide your credentials...')+'</span></p>';
 		document.getElementById("identity").innerHTML += '<input id="email" name="email" type="text" placeholder="Email..."/><br>';
 		document.getElementById("identity").innerHTML += '<input id="password" name="password" type="password" placeholder="Password..."/><br>';
 		if(signup) {

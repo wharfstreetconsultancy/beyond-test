@@ -48,13 +48,27 @@
 
 	<div class="body">
 		<div class="container">
-			<div class="col-lg-8 col-lg-offset-2">
+			<div class="col-lg-6 col-lg-offset-3">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						<div id="cart_title" class="col-lg-8 col-lg-offset-1">Please Sign-in...</div>
 					</div>
 					<div class="panel-body">
-						<form id="identity" class="form-inline" method="post"></form>
+						<form id="signin_form" class="form-inline" method="post">
+							<div class="row">
+								<div class="col-lg-10 col-lg-offset-1">
+									<p><span id="user_msg">Please provide your customer credentials or sign-up if you have not yet registered...</span></p>
+									<input id="email" name="email" type="text" placeholder="Email..."/><br>
+									<input id="password" name="password" type="password" placeholder="Password..."/><br>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-lg-10 col-lg-offset-1">
+									<button id="signin_btn" type="submit" value="signin" class="btn btn-primary btn-block">Sign-in</button>
+								</div>
+							</div>
+						</form>
 					</div>
 					<div class="panel-footer">
 					</div>
@@ -88,6 +102,35 @@
 $(document).ready(function() {
 	$("#customer_management").load("js/customer.js");
 	$("#navbar").load("js/navigation.js");
+	$('#signin_form').on('click', '#signin_btn', function () {
+
+		$('#signin_form').ajaxSubmit({
+			
+			url: '/customer/session',
+			type: 'post',
+			dataType: 'json',
+			success: function (customer) {
+		
+				$('#status').empty().text('Sign-in success');
+				sessionStorage.setItem('customer', JSON.stringify(customer));
+				console.log("Sign-in success: "+JSON.stringify(customer));
+				document.location = ;
+			},
+			error: function (xhr) {
+
+				console.log("Failed to sign-in: "+xhr.responseJSON.error.code);
+				console.log("Error message returned: "+xhr.responseJSON.error.message);
+				var errorMessage = 'Failed to sign-in. Please retry...';
+				if(xhr.responseJSON.error.code == 'NotAuthorizedException') {
+					errorMessage = xhr.responseJSON.error.message+' Please retry...';
+				} else if(xhr.responseJSON.error.code == 'UserNotConfirmedException') {
+					errorMessage = xhr.responseJSON.error.message+' Please check your mail...';
+				}
+				document.getElementById("user_msg").innerHTML = errorMessage;
+			}
+		});
+		return false;
+	});
 });
 		</script>
 	</body>
