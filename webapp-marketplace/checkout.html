@@ -207,8 +207,8 @@ $(document).ready(function() {
 												for(var errorMessage of xhr.responseJSON.error.message) {
 													document.getElementById("cart_inventory").innerHTML += '<li>'+errorMessage+'</li>';
 												}
-												if(response.error.orderId) {document.getElementById("cart_inventory").innerHTML += 'Suroor Order Ref: '+response.error.orderId;}
-												if(response.error.paymentId) {document.getElementById("cart_inventory").innerHTML += 'Paypal Payment Ref: '+response.error.paymentId;}
+												if(xhr.responseJSON.error.orderId) {document.getElementById("cart_inventory").innerHTML += 'Suroor Order Ref: '+xhr.responseJSON.error.orderId;}
+												if(xhr.responseJSON.error.paymentId) {document.getElementById("cart_inventory").innerHTML += 'Paypal Payment Ref: '+xhr.responseJSON.error.paymentId;}
 												document.getElementById("cart_inventory").innerHTML += '</ul>';
 											},
 											success: function (response) {
