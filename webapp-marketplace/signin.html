@@ -114,7 +114,7 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-				document.location = ;
+				document.location = {signin.success.url};
 			},
 			error: function (xhr) {
 
