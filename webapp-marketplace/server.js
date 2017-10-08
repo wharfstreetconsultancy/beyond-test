@@ -1019,7 +1019,8 @@ app.post('/transaction', function (req, res) {
 		} else if (result.success) {
 
 			console.log("Payment transaction successful (id: "+result.transaction.id+")");
-			console.log("Response: "+JSON.stringify(result));
+			console.log("Request Body: "+JSON.stringify(req.body));
+			console.log("Request Session: "+JSON.stringify(req.session));
 
 			var order = {
 				id: orderId,
@@ -1028,7 +1029,8 @@ app.post('/transaction', function (req, res) {
 				nonce: req.body.nonce,
 				amount: req.body.amount,
 				shippingAddress: req.body.shippingAddress,
-				cart: req.session.cart
+				cart: req.session.cart,
+				customerId: req.session.customer.sub
 			}
 			
 			storeOrder(order, function (orderStoreError) {
