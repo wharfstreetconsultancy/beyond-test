@@ -24,7 +24,7 @@
   			</div>
   		</div>
     </div>
-  	<nav class="navbar navbar-default">
+  	<!-- nav class="navbar navbar-default">
   		  <div class="container-fluid nav-con">
   			<!--Brand and toggle get grouped for better mobile display-->
   			<div class="navbar-header">
@@ -47,7 +47,8 @@
   			  </ul>
   			</div>
   		  </div>
-    </nav>
+    </nav -->
+	<span id="navbar"></span>
     <!---------------------------Body ------------------------->
 	<div class="body">
 		<div class="container">
@@ -104,14 +105,13 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script>
-		
 /* #### START DYNAMIC DATA DECLARATIONS #### */
 var restDomain = {rest.domain};
 /* #### END DYNAMIC DATA DECLARATIONS #### */
 $(document).ready(function() {
-
-	$("#customer_management").load("js/customer.js");
-	$("#cart_management").load("js/cart.js");
+//	$("#customer_management").load("js/customer.js");
+//	$("#cart_management").load("js/cart.js");
+	$("#navbar").load("js/navigation.js");
 });
 		</script>
 	</body>

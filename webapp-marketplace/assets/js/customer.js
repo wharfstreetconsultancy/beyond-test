@@ -1,8 +1,7 @@
-<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div>
+<!-- a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
-<!-- script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script -->
 <script>
 function reloadCustomerProfile(callback) {
 

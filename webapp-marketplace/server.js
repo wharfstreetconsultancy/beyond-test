@@ -185,8 +185,9 @@ app.post('/checkout_confirmation', function (req, res) {
 		
 		console.log("No customer found - redirect to sign-in.");
 
-		// Return error to caller
-	    res.redirect('/signin');
+		// Prompt for customer credentials
+	    fs.createReadStream(__dirname+'/signin.html')
+	    	.pipe(res);
 	} else {
 		
 		console.log("Customer found and signed-in.");
