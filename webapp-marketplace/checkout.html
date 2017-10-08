@@ -196,7 +196,7 @@ $(document).ready(function() {
 											},
 											error: function (xhr) {
 
-												console.log('Payment transaction failed: '+xhr.responseJSON.error);
+												console.log('Payment transaction failed: '+JSON.stringify(xhr.responseJSON.error));
 
 												document.getElementById("cart_cost_summary").innerHTML = '';
 												document.getElementById("paypal-button").innerHTML = '';
