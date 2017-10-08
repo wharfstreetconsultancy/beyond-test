@@ -117,9 +117,14 @@ $(document).ready(function() {
 				});
 			},
 			error: function (xhr) {
-			
-				$('#status').empty().text('Failed to sign-up: '+xhr.status);
-				console.log("Failed to sign-up: "+JSON.stringify(xhr));
+
+				console.log("Failed to sign-up: "+xhr.responseJSON.error.code);
+				console.log("Error message returned: "+xhr.responseJSON.error.message);
+				var errorMessage = 'Failed to sign-up. Please retry...';
+				if(xhr.responseJSON.error.code == 'InvalidParameterException') {
+					errorMessage = xhr.responseJSON.error.message+' Please retry...';
+				}
+				document.getElementById("user_msg").innerHTML = errorMessage;
 			}
 		});
 		return false;
