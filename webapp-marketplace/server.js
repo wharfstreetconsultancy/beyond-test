@@ -187,7 +187,7 @@ app.post('/checkout_confirmation', function (req, res) {
 
 		// Prompt for customer credentials
 	    fs.createReadStream(__dirname+'/signin.html')
-			.pipe(replaceStream('{signin.success.url}', '/checkout_confirmation'))
+			.pipe(replaceStream('{signin.success.url}', '\'/checkout_confirmation\''))
 	    	.pipe(res);
 	} else {
 		
