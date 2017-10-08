@@ -56,7 +56,6 @@
 					</div>
 					<div class="panel-body">
 						<div id="cart_cost_summary" class="row"></div>
-						<!-- div id="paypal-button"></div -->
 						<div id="cart_inventory" class="row"></div>
 					</div>
 					<div class="panel-footer">
@@ -93,6 +92,7 @@ $(document).ready(function() {
 
 	$("#navbar").load("js/navigation.js");
 	
+	document.getElementById("cart_title").innerHTML = 'Your Cart Items...';
 	if(latestCart) {
 		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
@@ -104,7 +104,6 @@ $(document).ready(function() {
 			totalItems += cartItem.quantity;
 			totalCost += cartItem.cost;
 		}
-		document.getElementById("cart_title").innerHTML = 'Your Cart Items...';
 		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
 
 
