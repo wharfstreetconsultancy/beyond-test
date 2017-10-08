@@ -200,7 +200,7 @@ $(document).ready(function() {
 
 												document.getElementById("cart_cost_summary").innerHTML = '';
 												document.getElementById("paypal-button").innerHTML = '';
-												document.getElementById("cart_title").innerHTML = 'Order Status...';
+												document.getElementById("cart_title").innerHTML = 'Order Summary...';
 												document.getElementById("cart_inventory").innerHTML = 'Payment transaction failed:';
 												document.getElementById("cart_inventory").innerHTML += '<ul>';
 												for(var errorMessage of xhr.responseJSON.error) {
@@ -214,8 +214,10 @@ $(document).ready(function() {
 
 												document.getElementById("cart_cost_summary").innerHTML = '';
 												document.getElementById("paypal-button").innerHTML = '';
-												document.getElementById("cart_title").innerHTML = 'Order Status...';
-												document.getElementById("cart_inventory").innerHTML = 'Payment transaction success. Ref #:'+response.transactionId;
+												document.getElementById("cart_title").innerHTML = 'Order Summary...';
+												document.getElementById("cart_inventory").innerHTML = 'Status: '+response.transaction.message;
+												document.getElementById("cart_inventory").innerHTML += 'Suroor Order Ref: '+response.transaction.orderId;
+												document.getElementById("cart_inventory").innerHTML += 'Paypal Payment Ref: '+response.transaction.transactionId;
 												document.getElementById("cart_clear").click();
 											}
 										});

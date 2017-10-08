@@ -450,43 +450,39 @@ app.get('/customer', function (req, res) {
 		
 		console.log("Found customer.");
 		
-//		customer.getSession(function (sessionError, session) {
+        if(!(customer.signInUserSession)) {
+			
+    		console.log("Customer not signed-in.");
 
-//			if(sessionError || session.isValid()) {
-	        if(!(customer.signInUserSession)) {
-				
-	    		console.log("Customer not signed-in.");
+    		// Return error to caller
+    	    res.writeHead(404, {'Content-Type': 'application/json'});
+    	    res.write(JSON.stringify({customer: null}));
+    	    res.end();
+        } else {
+        	
+			console.log("Customer signed-in.");
 
-	    		// Return error to caller
-	    	    res.writeHead(404, {'Content-Type': 'application/json'});
-	    	    res.write(JSON.stringify({customer: null}));
-	    	    res.end();
-	        } else {
-	        	
-				console.log("Customer signed-in.");
+			profileCustomer(customer, function(customerProfileError, customerProfile) {
 
-				profileCustomer(customer, function(customerProfileError, customerProfile) {
+		        if(customerProfileError) {
+					
+					console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
+	
+					// Return error to caller
+		            res.writeHead(500, {'Content-Type': 'application/json'});
+		            res.write(JSON.stringify({error: customerProfileError}));
+		            res.end();
+		        } else {
+		        	
+					console.log("Customer profiled successfully.");
 
-			        if(customerProfileError) {
-						
-						console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
-		
-						// Return error to caller
-			            res.writeHead(500, {'Content-Type': 'application/json'});
-			            res.write(JSON.stringify({error: customerProfileError}));
-			            res.end();
-			        } else {
-			        	
-						console.log("Customer profiled successfully.");
-
-						// Return customer to caller
-					    res.writeHead(200, {'Content-Type': 'application/json'});
-					    res.write(JSON.stringify({customer: customerProfile}));
-					    res.end();
-			        }
-				});
-	        }
-//		});
+					// Return customer to caller
+				    res.writeHead(200, {'Content-Type': 'application/json'});
+				    res.write(JSON.stringify({customer: customerProfile}));
+				    res.end();
+		        }
+			});
+        }
 	} else {
 		console.log("No customer found.");
 
@@ -513,7 +509,6 @@ app.post('/customer', function (req, res) {
 	var attributeList = [];
 	attributeList.push({Name: 'phone_number', Value: req.body.phone_number});
 	attributeList.push({Name: 'address', Value: JSON.stringify(req.body.address)});
-//	attributeList.push({Name: 'address', Value: replaceall('"','', JSON.stringify(req.body.address))});
 	attributeList.push({Name: 'given_name', Value: req.body.given_name});
 	attributeList.push({Name: 'family_name', Value: req.body.family_name});
 
@@ -901,21 +896,9 @@ function deleteCart(cartId, callback) {
 				// Log loaded  cart
 				console.log("Deleted cart data: "+JSON.stringify(cartData));
 	
-//				// Check only one cart loaded.
-//				if(cartData.Items.length == 0) {
-//					
-//					callback(null, null);
-//					return;
-//				} else if(cartData.Items.length > 1) {
-//
-//					callback('More than one cart found for: '+cartId, null);
-//					return;
-//				} else {
-
-					// Return  cart to caller
-					callback(null);
-					return;
-//				}
+				// Return  cart to caller
+				callback(null);
+				return;
 			}
 		});
 	}
@@ -987,13 +970,10 @@ app.post('/transaction', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: POST /transaction" );
-	
-	console.log("Request body:\n"+JSON.stringify(req.body));
 
 	var parts = req.body.shippingAddress.recipientName.split(' ');
 	var firstName = parts[0];
 	var lastName = parts[1];
-//	var orderId = '12345678901234';
 	var orderId = new Date().getTime().toString().split('').reverse().join('').substring(0,14);
 	var descriptor = 'SuroorF'+'*'+orderId;
 	console.log("Descriptor: "+descriptor);
@@ -1033,7 +1013,7 @@ app.post('/transaction', function (req, res) {
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: JSON.stringify([err])}));
+			res.write(JSON.stringify({error: {message: [err]}}));
 			res.end();
 			return;
 		} else if (result.success) {
@@ -1041,11 +1021,34 @@ app.post('/transaction', function (req, res) {
 			console.log("Payment transaction successful (id: "+result.transaction.id+")");
 			console.log("Response: "+JSON.stringify(result));
 
-			// Return new cart item to caller
-			res.writeHead(200, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({transactionId: result.transaction.id}));
-			res.end();
-			return;
+			var order = {
+				id: orderId,
+				status: 'PENDING',
+				paymentId: result.transaction.id,
+				nonce: req.body.nonce,
+				amount: req.body.amount,
+				shippingAddress: req.body.shippingAddress,
+				cart: req.session.cart
+			}
+			
+			storeOrder(order, function (orderStoreError) {
+				
+				if(orderStoreError) {
+
+					// Return error to caller
+					res.writeHead(500, {'Content-Type': 'application/json'});
+					res.write(JSON.stringify({error: {message: ['Failed to store order: '+orderStoreError], orderId: order.id, paymentId: result.transaction.id}}));
+					res.end();
+					return;
+				} else {
+
+					// Return new order item to caller
+					res.writeHead(200, {'Content-Type': 'application/json'});
+					res.write(JSON.stringify({transaction: {message: 'Payment success! Your order will be dispatched.', orderId: order.id, paymentId: result.transaction.id}}));
+					res.end();
+					return;
+				}
+			});
 		} else {
 			
 			console.log("Payment transaction failed ("+result.message+")");
@@ -1053,10 +1056,39 @@ app.post('/transaction', function (req, res) {
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: result.message.split('\n')}));
+			res.write(JSON.stringify({error: {message: result.message.split('\n')}}));
 			res.end();
 			return;
 		}
 	});
 });
 
+//
+// Store order into the data source
+function storeOrder(order, callback) {
+
+	// Create params for cart 'store' operation
+	var storeOrderParams = {
+		TableName: 'SuroorFashionsOrders',
+		Item: order
+	};
+
+	// Log contents of dynamo db store operation
+	console.log("Uploading order with: "+ JSON.stringify(storeOrderParams));
+
+	// Perform order store operation
+	dddc.put(storeOrderParams, function (err, data) {
+		if (err) {
+
+			console.log("Failed to store order id '"+order.id+"'. "+err);
+			callback('Failed to store order id "'+order.id+'. '+err, null);
+			return;
+		} else {
+
+			// Log output from data store
+			console.log("Data returned from data store: "+JSON.stringify(data));
+
+			callback(null);
+		}
+	});
+}
