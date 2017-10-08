@@ -1035,9 +1035,11 @@ app.post('/transaction', function (req, res) {
 				
 				if(orderStoreError) {
 
+					console.log("!ERROR! - Failed to store order record after successful payment ("+result.transaction.id+"): "+orderStoreError);
+
 					// Return error to caller
 					res.writeHead(500, {'Content-Type': 'application/json'});
-					res.write(JSON.stringify({error: {message: ['Failed to store order: '+orderStoreError], orderId: order.id, paymentId: result.transaction.id}}));
+					res.write(JSON.stringify({error: {message: ['Failed to store order record after successful payment: '+orderStoreError], paymentId: result.transaction.id}}));
 					res.end();
 					return;
 				} else {
@@ -1050,7 +1052,7 @@ app.post('/transaction', function (req, res) {
 				}
 			});
 		} else {
-			
+
 			console.log("Payment transaction failed ("+result.message+")");
 			console.log("Response: "+JSON.stringify(result));
 
@@ -1080,8 +1082,8 @@ function storeOrder(order, callback) {
 	dddc.put(storeOrderParams, function (err, data) {
 		if (err) {
 
-			console.log("Failed to store order id '"+order.id+"'. "+err);
-			callback('Failed to store order id "'+order.id+'. '+err, null);
+			console.log("!ERROR! - "+err);
+			callback(err);
 			return;
 		} else {
 
