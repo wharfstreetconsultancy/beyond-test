@@ -201,9 +201,10 @@ $(document).ready(function() {
 												document.getElementById("cart_cost_summary").innerHTML = '';
 												document.getElementById("paypal-button").innerHTML = '';
 												document.getElementById("cart_title").innerHTML = 'Order Summary...';
-												document.getElementById("cart_inventory").innerHTML = 'Payment transaction failed:';
+												document.getElementById("cart_inventory").innerHTML = 'Status: Failed<br>';
+												document.getElementById("cart_inventory").innerHTML += 'Error message(s):';
 												document.getElementById("cart_inventory").innerHTML += '<ul>';
-												for(var errorMessage of xhr.responseJSON.error) {
+												for(var errorMessage of xhr.responseJSON.error.message) {
 													document.getElementById("cart_inventory").innerHTML += '<li>'+errorMessage+'</li>';
 												}
 												document.getElementById("cart_inventory").innerHTML += '</ul>';
