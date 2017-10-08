@@ -16,14 +16,16 @@
         	<li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
 			<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
 			<li><a href="contact.html">Contact</a></li>
-			<a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div>
-			<li><span id="cart_management"></span></li>
+			<li><a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div></li>
+			<li><a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
+			<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout_confirmation" method="post" class="form-inline"></form></div></li>
 		  </ul>
 		</div>
 	  </div>
 </nav>
 <span id="customer_management"></span>
+<span id="cart_management"></span>
 <script>
 $(document).ready(function() {
 	$("#customer_management").load("js/customer.js");
