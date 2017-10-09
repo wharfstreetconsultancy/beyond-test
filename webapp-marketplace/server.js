@@ -978,7 +978,7 @@ app.get('/client_token', function (req, res) {
 			
 			// Return new cart item to caller
 			res.writeHead(200, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({environment: environment, clientToken: response.clientToken}));
+			res.write(JSON.stringify({environment: environment.toLowerCase(), clientToken: response.clientToken}));
 			res.end();
 			return;
     	}
