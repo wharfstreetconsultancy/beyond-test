@@ -166,11 +166,27 @@ app.get('/product', function (req, res) {
 });
 
 //
-// POST '/signin' - View cart checkout page
-app.post('/signin', function (req, res) {
+// GET '/about' - View 'about' page
+app.get('/about', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: POST /signin" );
+	console.log( "Received request: GET /about" );
+
+	// Return 'about' page
+    fs.createReadStream(__dirname+'/about.html')
+    	.pipe(res);
+});
+
+//
+// GET '/contact' - View 'contact' page
+app.get('/about', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: GET /contact" );
+
+	// Return 'contact' page
+    fs.createReadStream(__dirname+'/contact.html')
+    	.pipe(res);
 });
 
 //
@@ -187,7 +203,6 @@ app.post('/checkout_confirmation', function (req, res) {
 
 		// Prompt for customer credentials
 	    fs.createReadStream(__dirname+'/signin.html')
-//			.pipe(replaceStream('{signin.success.url}', '\'/checkout_confirmation\''))
 	    	.pipe(res);
 	} else {
 		
