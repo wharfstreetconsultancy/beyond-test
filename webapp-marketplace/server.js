@@ -29,8 +29,8 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 });
 console.log("PAYMENT_GATEWAY="+process.env.PAYMENT_GATEWAY);
 var gateway = braintree.connect({
-//	accessToken: process.env.PAYMENT_GATEWAY
-	accessToken: 'access_token$sandbox$vbv95xvqd975334w$3d4f9a155ac65d3340d295c3feeac65c'
+	accessToken: process.env.PAYMENT_GATEWAY
+//	accessToken: 'access_token$sandbox$vbv95xvqd975334w$3d4f9a155ac65d3340d295c3feeac65c'
 });
 var gatewayParts = process.env.PAYMENT_GATEWAY.split('$');
 var deployment = gatewayParts[1].toUpperCase();
