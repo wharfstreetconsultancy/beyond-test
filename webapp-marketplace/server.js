@@ -409,7 +409,7 @@ function formatProductViewHtml(product,callback) {
 
 		}
 		// If the product has images
-		if(product.images.length > 0) {
+		if(product.images && product.images.length > 0) {
 
 			// Initialise indicator item HTML buffer
 			var itemIndicatorHtml = '';
