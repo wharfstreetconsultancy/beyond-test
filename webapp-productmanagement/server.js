@@ -33,7 +33,7 @@ app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: process.env.SESSION_SECRET,
-	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessionsAdmins_'+deployment}),
+	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessionsAdmins_'+environment}),
 	resave: false,
 	saveUninitialized: true,
 	cookie: {secure: true}
@@ -758,7 +758,7 @@ function storeProduct(product, callback) {
 		
         // Create params for product 'store' operation
 	var storeProductParams = {
-			TableName: 'SuroorFashionsProducts_'+deployment,
+			TableName: 'SuroorFashionsProducts_'+environment,
 			Item: product
 	};
 
@@ -889,14 +889,14 @@ function loadProduct(productId, callback) {
 	// Create load params
 	if(productId) {
 		params = {
-			TableName: 'SuroorFashionsProducts_'+deployment,
+			TableName: 'SuroorFashionsProducts_'+environment,
 			Limit: 10,
 			ExpressionAttributeValues: {':p': productId},
 			FilterExpression: 'id = :p'
 		};
 	} else {
         params = {
-	        TableName: 'SuroorFashionsProducts_'+deployment,
+	        TableName: 'SuroorFashionsProducts_'+environment,
 	        Limit: 10
         };
 	}
