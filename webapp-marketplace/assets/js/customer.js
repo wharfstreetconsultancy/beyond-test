@@ -119,12 +119,15 @@ $(document).ready(function() {
 
 				console.log("Failed to sign-up: "+xhr.responseJSON.error.code);
 				console.log("Error message returned: "+xhr.responseJSON.error.message);
+				var errorMessage = xhr.responseJSON.error.message+' Please retry...';
+/*
 				var errorMessage = 'Failed to sign-up. Please retry...';
 				if(xhr.responseJSON.error.code == 'InvalidParameterException') {
 					errorMessage = xhr.responseJSON.error.message+' Please retry...';
 				} else if(xhr.responseJSON.error.code == 'UsernameExistsException') {
 					errorMessage = xhr.responseJSON.error.message+' Please retry...';
 				} 
+*/
 				document.getElementById("user_msg").innerHTML = errorMessage;
 			}
 		});
