@@ -43,9 +43,8 @@ app.use(express.static('assets'));
 app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
-	// secret: 'keyboard cat named leon',
 	secret: process.env.SESSION_SECRET,
-	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessions'}),
+	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsUserSessions_'+deployment}),
 	resave: false,
 	saveUninitialized: true,
 	cookie: {secure: true}
@@ -847,7 +846,7 @@ function loadCart(cartId, callback) {
 
 		// Cart id specified, create params
 		var params = {
-			TableName: 'SuroorFashionsCarts',
+			TableName: 'SuroorFashionsCarts_'+deployment,
             ExpressionAttributeValues: {':c': cartId},
 			FilterExpression: 'id = :c'
 		};
@@ -898,7 +897,7 @@ function deleteCart(cartId, callback) {
 
 		// Cart id specified, create params
 		var params = {
-			TableName: 'SuroorFashionsCarts',
+			TableName: 'SuroorFashionsCarts_'+deployment,
             Key: {id: cartId}
 		};
 
@@ -930,7 +929,7 @@ function storeCart(cart, callback) {
 
 	// Create params for cart 'store' operation
 	var storeCartParams = {
-		TableName: 'SuroorFashionsCarts',
+		TableName: 'SuroorFashionsCarts_'+deployment,
 		Item: cart
 	};
 
@@ -1093,7 +1092,7 @@ function storeOrder(order, callback) {
 
 	// Create params for cart 'store' operation
 	var storeOrderParams = {
-		TableName: 'SuroorFashionsOrders',
+		TableName: 'SuroorFashionsOrders_'+deployment,
 		Item: order
 	};
 

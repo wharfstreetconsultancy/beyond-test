@@ -21,6 +21,10 @@ var events = require('events');
 var AWS = require('aws-sdk');
 var sha256 = require('sha256');
 
+var gatewayParts = process.env.PAYMENT_GATEWAY.split('$');
+var deployment = gatewayParts[1].toUpperCase();
+console.log("DEPLOYMENT="+deployment);
+
 //
 // Manage HTTP server container
 var app = express();
@@ -28,7 +32,8 @@ app.use(express.static('assets'));
 app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
-	secret: 'keyboard cat named leon',
+	secret: process.env.SESSION_SECRET,
+	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsAdminSessions_'+deployment}),
 	resave: false,
 	saveUninitialized: true,
 	cookie: {secure: true}
@@ -46,7 +51,6 @@ var restPort = process.env.REST_PORT;
 var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
 var restDomain = restHost+':'+restPort;
 var allowedOriginDomain = restHost+((allowedOriginPort && allowedOriginPort.length > 0) ? ':'+allowedOriginPort : '');
-var cartCookieName = 'suroor-cart-id';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
@@ -754,7 +758,7 @@ function storeProduct(product, callback) {
 		
         // Create params for product 'store' operation
 	var storeProductParams = {
-			TableName: 'SuroorFashionsProducts',
+			TableName: 'SuroorFashionsProducts_'+deployment,
 			Item: product
 	};
 
@@ -885,14 +889,14 @@ function loadProduct(productId, callback) {
 	// Create load params
 	if(productId) {
 		params = {
-			TableName: 'SuroorFashionsProducts',
+			TableName: 'SuroorFashionsProducts_'+deployment,
 			Limit: 10,
 			ExpressionAttributeValues: {':p': productId},
 			FilterExpression: 'id = :p'
 		};
 	} else {
         params = {
-	        TableName: 'SuroorFashionsProducts',
+	        TableName: 'SuroorFashionsProducts_'+deployment,
 	        Limit: 10
         };
 	}
