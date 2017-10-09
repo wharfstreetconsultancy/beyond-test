@@ -13,7 +13,7 @@
 		<!--Collect the nav links, forms, and other content for toggling-->
 		<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
 		  <ul class="myNav nav navbar-nav">
-        	<li><a href="shop.html">Shop<span class="sr-only">(current)</span></a></li>
+        	<li><a href="/">Shop<span class="sr-only">(current)</span></a></li>
 			<li><a href="about.html">About Us<span class="sr-only">(current)</span></a></li>
 			<li><a href="contact.html">Contact</a></li>
 			<li><a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
