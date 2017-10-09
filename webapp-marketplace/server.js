@@ -152,7 +152,7 @@ app.get('/product', function (req, res) {
 		} else {
 			
 			// Something went wrong - multiple products found - determine cause
-			var errorMessage = ((product.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
+			var errorMessage = ((!product || product.length == 0) ? 'No' : 'Multiple')+' products found for id "'+req.query.id+'"';
 	        // Format products into appropriate HTML
 	        formatProductsCarouselsHtml(product, function(productsListClothingHtml, productsListJewelleryHtml) {
 

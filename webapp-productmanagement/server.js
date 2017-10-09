@@ -819,10 +819,10 @@ function storeImages(productId, imageFiles, callback) {
 				}
                         });
                 }
-	} else if(imageFile.length == 1) {
+	} else if(imageFiles.length == 1) {
 
 		// Upload image
-		storeImage(productId, imageFile, function (imageStoreError, uploadedImage) {
+		storeImage(productId, imageFiles[0], function (imageStoreError, uploadedImage) {
 
 			if(imageStoreError) {
 
