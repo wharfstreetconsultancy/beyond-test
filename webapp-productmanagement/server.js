@@ -7,9 +7,10 @@
 //
 // Manage environment
 var express = require('express');
+var session = require('express-session');
+var DynamoDBStore = require('connect-dynamodb')({session: session});
 var http = require('http');
 var https = require('https');
-var session = require('express-session');
 var request = require('request');
 var fs = require('fs');
 var multer = require('multer');
