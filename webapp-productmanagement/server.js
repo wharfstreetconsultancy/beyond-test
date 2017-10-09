@@ -33,7 +33,7 @@ app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: process.env.SESSION_SECRET,
-	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsAdminSessions_'+deployment}),
+	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessionsAdmins_'+deployment}),
 	resave: false,
 	saveUninitialized: true,
 	cookie: {secure: true}

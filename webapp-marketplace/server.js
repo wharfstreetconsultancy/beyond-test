@@ -28,6 +28,7 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	// ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
 });
 //var accessToken = 'access_token$'+process.env.DEPLOYMENT.toLowerCase()+'$'+process.env.PAYMENT_GATEWAY;
+//var accessToken = 'access_token$'+process.env.DEPLOYMENT.toLowerCase()+'$2f8hkkzcsk4k9ptk$3a16a4a5e682ee85ee4358802c1f008f';
 var accessToken = 'access_token$'+process.env.DEPLOYMENT.toLowerCase()+'$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46';
 console.log("PAYMENT_GATEWAY="+accessToken);
 var gateway = braintree.connect({
@@ -45,7 +46,7 @@ app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: process.env.SESSION_SECRET,
-	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsUserSessions_'+deployment}),
+	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessionsUsers_'+deployment}),
 	resave: false,
 	saveUninitialized: true,
 	cookie: {secure: true}
