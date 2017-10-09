@@ -179,7 +179,7 @@ app.get('/about', function (req, res) {
 
 //
 // GET '/contact' - View 'contact' page
-app.get('/about', function (req, res) {
+app.get('/contact', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: GET /contact" );
