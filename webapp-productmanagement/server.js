@@ -22,8 +22,7 @@ var events = require('events');
 var AWS = require('aws-sdk');
 var sha256 = require('sha256');
 
-var gatewayParts = process.env.PAYMENT_GATEWAY.split('$');
-var deployment = gatewayParts[1].toUpperCase();
+var deployment = process.env.DEPLOYMENT.toUpperCase();
 console.log("DEPLOYMENT="+deployment);
 
 //
