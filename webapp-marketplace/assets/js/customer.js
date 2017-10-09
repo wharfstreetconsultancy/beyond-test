@@ -122,7 +122,9 @@ $(document).ready(function() {
 				var errorMessage = 'Failed to sign-up. Please retry...';
 				if(xhr.responseJSON.error.code == 'InvalidParameterException') {
 					errorMessage = xhr.responseJSON.error.message+' Please retry...';
-				}
+				} else if(xhr.responseJSON.error.code == 'UsernameExistsException') {
+					errorMessage = xhr.responseJSON.error.message+' Please retry...';
+				} 
 				document.getElementById("user_msg").innerHTML = errorMessage;
 			}
 		});
