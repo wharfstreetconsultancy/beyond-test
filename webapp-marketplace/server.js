@@ -961,14 +961,25 @@ app.get('/client_token', function (req, res) {
     console.log( "Received request: GET /client_token" );
 
     gateway.clientToken.generate({}, function (err, response) {
+    	if(err) {
 
-		console.log("Got payment gateway client token.");
-		
-		// Return new cart item to caller
-		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.write(JSON.stringify({clientToken: response.clientToken}));
-		res.end();
-		return;
+    		console.log("Got payment gateway client token error: "+err);
+    		
+    		// Return new cart item to caller
+    		res.writeHead(500, {'Content-Type': 'application/json'});
+    		res.write(JSON.stringify({error: err}));
+    		res.end();
+    		return;
+    	} else {
+
+			console.log("Got payment gateway client token.");
+			
+			// Return new cart item to caller
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({clientToken: response.clientToken}));
+			res.end();
+			return;
+    	}
     });
 });
 
