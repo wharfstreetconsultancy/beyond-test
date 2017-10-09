@@ -29,9 +29,12 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 });
 console.log("PAYMENT_GATEWAY="+process.env.PAYMENT_GATEWAY);
 var gateway = braintree.connect({
-	// accessToken: process.env.PAYMENT_GATEWAY
-	accessToken: 'access_token$sandbox$vbv95xvqd975334w$3d4f9a155ac65d3340d295c3feeac65c'
+	 accessToken: process.env.PAYMENT_GATEWAY
+//	accessToken: 'access_token$sandbox$vbv95xvqd975334w$3d4f9a155ac65d3340d295c3feeac65c'
 });
+var gatewayParts = gateway.accessToken.split('$');
+var deployment = gatewayParts[1].toUpperCase();
+console.log("DEPLOYMENT="+deployment);
 
 //
 // Manage HTTP server container
@@ -988,9 +991,9 @@ app.post('/transaction', function (req, res) {
 	// Log request received
 	console.log( "Received request: POST /transaction" );
 
-	var parts = req.body.shippingAddress.recipientName.split(' ');
-	var firstName = parts[0];
-	var lastName = parts[1];
+	var recipientNameParts = req.body.shippingAddress.recipientName.split(' ');
+	var firstName = recipientNameParts[0];
+	var lastName = recipientNameParts[1];
 	var orderId = new Date().getTime().toString().split('').reverse().join('').substring(0,14);
 	var descriptor = 'SuroorF'+'*'+orderId;
 	console.log("Descriptor: "+descriptor);
