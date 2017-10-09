@@ -22,8 +22,8 @@ var events = require('events');
 var AWS = require('aws-sdk');
 var sha256 = require('sha256');
 
-var deployment = process.env.DEPLOYMENT.toUpperCase();
-console.log("DEPLOYMENT="+deployment);
+var environment = process.env.ENVIRONMENT.toUpperCase();
+console.log("ENVIRONMENT="+environment);
 
 //
 // Manage HTTP server container
