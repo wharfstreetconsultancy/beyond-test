@@ -38,7 +38,7 @@ function reloadCustomerProfile(callback) {
 			document.getElementById("identity").innerHTML += '<hr>';
 			document.getElementById("identity").innerHTML += '<div class="row">';
 			document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-			document.getElementById("identity").innerHTML += '<input id="tel_part_3" name="tel_part_1" type="number" placeholder="012"/>-<input id="tel_part_2" name="tel_part_2" type="number" placeholder="345"/>-<input id="tel_part_3" name="tel_part_3" type="number" placeholder="6789"/><br>';
+			document.getElementById("identity").innerHTML += '<input id="tel1" name="tel[part1]" type="number" min="3" max="3" size="3" placeholder="012"/>-<input id="tel2" name="tel[part2]" type="number" min="3" max="3" size="3" placeholder="345"/>-<input id="tel3" name="tel[part3]" type="number" min="4" max="4" size="4" placeholder="6789"/><br>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '<hr>';
@@ -47,7 +47,7 @@ function reloadCustomerProfile(callback) {
 			document.getElementById("identity").innerHTML += '<input id="address1" name="address[line1]" type="text" placeholder="Address line 1..."/><br>';
 			document.getElementById("identity").innerHTML += '<input id="address2" name="address[line2]" type="text" placeholder="Address line 2..."/><br>';
 			document.getElementById("identity").innerHTML += '<input id="city" name="address[city]" type="text" placeholder="City..."/><br>';
-			document.getElementById("identity").innerHTML += '<input id="state" name="address[state]" type="text" placeholder="State..."/><input id="zip" name="address[zip]" type="text" placeholder="Zip..."/><br>';
+			document.getElementById("identity").innerHTML += '<input id="state" name="address[state]" type="text" min="2" max="2" size="2" placeholder="--"/><input id="zip" name="address[zip]" type="number" min="5" max="5" size="5" placeholder="Zip..."/><br>';
 		}
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
