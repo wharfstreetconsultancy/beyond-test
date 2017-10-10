@@ -38,7 +38,7 @@ function reloadCustomerProfile(callback) {
 			document.getElementById("identity").innerHTML += '<hr>';
 			document.getElementById("identity").innerHTML += '<div class="row">';
 			document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-			document.getElementById("identity").innerHTML += '<input id="phone_number" name="phone_number" type="text" placeholder="Phone number..."/><br>';
+			document.getElementById("identity").innerHTML += '<input id="tel_part_3" name="tel_part_1" type="number" placeholder="012"/>-<input id="tel_part_2" name="tel_part_2" type="number" placeholder="345"/>-<input id="tel_part_3" name="tel_part_3" type="number" placeholder="6789"/><br>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '<hr>';
