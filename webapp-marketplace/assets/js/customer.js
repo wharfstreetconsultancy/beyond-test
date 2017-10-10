@@ -47,7 +47,7 @@ function reloadCustomerProfile(callback) {
 			document.getElementById("identity").innerHTML += '<input id="address1" name="address[line1]" type="text" placeholder="Address line 1..."/><br>';
 			document.getElementById("identity").innerHTML += '<input id="address2" name="address[line2]" type="text" placeholder="Address line 2..."/><br>';
 			document.getElementById("identity").innerHTML += '<input id="city" name="address[city]" type="text" placeholder="City..."/><br>';
-			document.getElementById("identity").innerHTML += '<input id="state" name="address[state]" type="text" min="2" max="2" size="2" placeholder="--"/><input id="zip" name="address[zip]" type="number" min="5" max="5" size="5" placeholder="Zip..."/><br>';
+			document.getElementById("identity").innerHTML += '<input id="state" name="address[state]" type="text" min="2" max="2" size="2" placeholder="--"/><input id="zip" name="address[zip]" type="text" min="5" max="5" size="5" placeholder="Zip..."/><br>';
 		}
 		document.getElementById("identity").innerHTML += '</div>';
 		document.getElementById("identity").innerHTML += '</div>';
