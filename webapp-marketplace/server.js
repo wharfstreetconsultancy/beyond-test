@@ -526,12 +526,13 @@ app.post('/customer', function (req, res) {
 	console.log("Tel 1: "+req.body.tel.part1);
 	console.log("Tel 2: "+req.body.tel.part2);
 	console.log("Tel 3: "+req.body.tel.part3);
-	console.log("Parsed tel: "+"+1("+req.body.tel.part1+")"+req.body.tel.part2+"-"+req.body.tel.part3);
+	var phoneNumber = "+1"+req.body.tel.part1+req.body.tel.part2+req.body.tel.part3;
+	console.log("Parsed tel: "+phoneNumber);
 	console.log("Address: "+JSON.stringify(req.body.address));
 	console.log("Parsed address: "+req.body.address.line1+", "+req.body.address.line2+", "+req.body.address.city+", "+req.body.address.state+" "+req.body.address.zip);
 
 	var attributeList = [];
-	attributeList.push({Name: 'phone_number', Value: JSON.stringify(req.body.tel)});
+	attributeList.push({Name: 'phone_number', Value: req.body.phoneNumber});
 	attributeList.push({Name: 'address', Value: JSON.stringify(req.body.address)});
 	attributeList.push({Name: 'given_name', Value: req.body.given_name});
 	attributeList.push({Name: 'family_name', Value: req.body.family_name});
