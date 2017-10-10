@@ -91,12 +91,17 @@ $(document).ready(function() {
 		console.log("Customer profile loaded.");
 	});
 	$('#identity').on('click', 'input[name=signup_signin_choice]', function () {
+
 		reloadCustomerProfile(function () {
 			console.log("User loading done.");
 			document.getElementById("user_nav").click();
 		});
 		return true;
 	});
+	$('#user_nav').on('click', function () {
+
+		document.getElementById("user_nav").aria-expanded = true;
+	}
 	$('#identity').on('click', '#signup_btn', function () {
 
 		$('#identity').ajaxSubmit({
