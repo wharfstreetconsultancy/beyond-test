@@ -101,7 +101,7 @@ $(document).ready(function() {
 	$('#user_nav').on('click', function () {
 
 		document.getElementById("user_nav").aria-expanded = true;
-	}
+	});
 	$('#identity').on('click', '#signup_btn', function () {
 
 		$('#identity').ajaxSubmit({
