@@ -38,7 +38,7 @@ function reloadCustomerProfile(callback) {
 			document.getElementById("identity").innerHTML += '<hr>';
 			document.getElementById("identity").innerHTML += '<div class="row">';
 			document.getElementById("identity").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-			document.getElementById("identity").innerHTML += '<input id="tel1" name="tel[part1]" type="number" min="3" max="3" size="3" placeholder="012"/>-<input id="tel2" name="tel[part2]" type="number" min="3" max="3" size="3" placeholder="345"/>-<input id="tel3" name="tel[part3]" type="number" min="4" max="4" size="4" placeholder="6789"/><br>';
+			document.getElementById("identity").innerHTML += '(<input id="tel1" name="tel[part1]" type="text" min="3" max="3" size="3" placeholder="012"/>)-<input id="tel2" name="tel[part2]" type="text" min="3" max="3" size="3" placeholder="345"/>-<input id="tel3" name="tel[part3]" type="text" min="4" max="4" size="4" placeholder="6789"/><br>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '</div>';
 			document.getElementById("identity").innerHTML += '<hr>';
