@@ -28,8 +28,8 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	// ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
 });
 //var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$'+process.env.PAYMENT_GATEWAY;
-var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$2f8hkkzcsk4k9ptk$3a16a4a5e682ee85ee4358802c1f008f';
-//var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46';
+//var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$2f8hkkzcsk4k9ptk$3a16a4a5e682ee85ee4358802c1f008f';
+var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46';
 console.log("PAYMENT_GATEWAY="+accessToken);
 var gateway = braintree.connect({
 	accessToken: accessToken
@@ -1045,7 +1045,7 @@ app.post('/transaction', function (req, res) {
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: {message: [err]}}));
+			res.write(JSON.stringify({error: {message: [err.toString()]}}));
 			res.end();
 			return;
 		} else if (result.success) {
