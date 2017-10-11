@@ -29,21 +29,44 @@
 			<div class="col-lg-6 col-lg-offset-3">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<div id="cart_title" class="col-lg-8 col-lg-offset-1">Please Sign-in...</div>
+						<div id="cart_title" class="col-lg-8 col-lg-offset-1">Please Sign-up...</div>
 					</div>
 					<div class="panel-body">
-						<form id="signin_form" class="form-inline" method="post">
+						<form id="signup_form" class="form-inline" method="post">
 							<div class="row">
 								<div class="col-lg-10 col-lg-offset-1">
-									<p><span id="cust_msg">Please provide your customer credentials or sign-up if you have not yet registered...</span></p>
+									<p><span id="cust_msg">Please provide your customer credentials and check your inbox to confirm your email...</span></p>
 									<input id="email" name="email" type="text" placeholder="Email..."/><br>
 									<input id="password" name="password" type="password" placeholder="Password..."/><br>
+									<input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm password..."/>
 								</div>
 							</div>
 							<hr>
 							<div class="row">
 								<div class="col-lg-10 col-lg-offset-1">
-									<button id="signin_btn" type="submit" value="signin" class="btn btn-primary btn-block">Sign-in</button>
+									<input id="given_name" name="given_name" type="text" placeholder="First name..."/><br>
+									<input id="family_name" name="family_name" type="text" placeholder="Family name..."/><br>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-lg-10 col-lg-offset-1">
+									(<input id="tel1" name="tel[part1]" type="text" min="3" max="3" size="3" placeholder="012"/>)-<input id="tel2" name="tel[part2]" type="text" min="3" max="3" size="3" placeholder="345"/>-<input id="tel3" name="tel[part3]" type="text" min="4" max="4" size="4" placeholder="6789"/><br>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-lg-10 col-lg-offset-1">
+									<input id="address1" name="address[line1]" type="text" placeholder="Address line 1..."/><br>
+									<input id="address2" name="address[line2]" type="text" placeholder="Address line 2..."/><br>
+									<input id="city" name="address[city]" type="text" placeholder="City..."/><br>
+									<input id="state" name="address[state]" type="text" min="2" max="2" size="2" placeholder="--"/><input id="zip" name="address[zip]" type="text" min="5" max="5" size="5" placeholder="Zip..."/><br>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-lg-10 col-lg-offset-1">
+									<button id="signup_btn" type="submit" value="signup" class="btn btn-primary btn-block">Sign-up</button>
 								</div>
 							</div>
 						</form>
@@ -80,10 +103,41 @@
 var nextResource = {next.resource};
 $(document).ready(function() {
 	$("#navbar").load("js/navigation.js");
-	$('#signin_form').on('click', '#signin_btn', function () {
+	$('#signup_form').on('click', '#signup_btn', function () {
 
+
+		$('#signup_form').ajaxSubmit({
+
+			url: '/customer',
+			type: 'post',
+			dataType: 'json',
+			success: function (response) {
+		
+				$('#status').empty().text('Sign-up success');
+				console.log("Sign-up success: "+JSON.stringify(response));
+				document.getElementById("signin").checked = true;
+				document.location.href = (nextResource) ? nextResource : '/';
+/*
+				reloadCustomerProfile(function () {
+
+					console.log("User profile loaded: "+JSON.stringify(response));
+					document.getElementById("user_nav").click();
+				});
+*/
+			},
+			error: function (xhr) {
+
+				console.log("Failed to sign-up: "+xhr.responseJSON.error.code);
+				console.log("Error message returned: "+xhr.responseJSON.error.message);
+				var errorMessage = xhr.responseJSON.error.message+' Please retry...';
+				document.getElementById("user_msg").innerHTML = errorMessage;
+			}
+		});
+		return false;
+/*
 		$('#signin_form').ajaxSubmit({
-			
+
+
 			url: '/customer/session',
 			type: 'post',
 			dataType: 'json',
@@ -92,8 +146,7 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-				document.location.href = (nextResource) ? nextResource : '/';
-//				document.getElementById("cart_preview").submit();
+				document.getElementById("cart_preview").submit();
 			},
 			error: function (xhr) {
 
@@ -109,6 +162,7 @@ $(document).ready(function() {
 			}
 		});
 		return false;
+*/
 	});
 });
 		</script>

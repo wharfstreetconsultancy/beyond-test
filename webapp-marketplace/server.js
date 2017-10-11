@@ -194,6 +194,28 @@ app.get('/contact', function (req, res) {
 });
 
 //
+// POST '/signin' - View cart checkout page
+app.post('/signin', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /signin" );
+
+	// Prompt for signin
+	promptForSignupOrSignin(res, '/signin', null);
+});
+
+//
+// POST '/signup' - View cart checkout page
+app.post('/signup', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /signup" );
+
+	// Prompt for signup
+	promptForSignupOrSignin(res, '/signup', '/signin');
+});
+
+//
 // POST '/checkout_confirmation' - View cart checkout page
 app.post('/checkout_confirmation', function (req, res) {
 
@@ -205,9 +227,8 @@ app.post('/checkout_confirmation', function (req, res) {
 		
 		console.log("No customer found - redirect to sign-in.");
 
-		// Prompt for customer credentials
-	    fs.createReadStream(__dirname+'/signin.html')
-	    	.pipe(res);
+		// Prompt for signin
+		promptForSignupOrSignin(res, '/signin', '/checkout_confirmation');
 	} else {
 		
 		console.log("Customer found and signed-in.");
@@ -225,6 +246,15 @@ app.post('/checkout_confirmation', function (req, res) {
 	    	.pipe(res);
 	}
 });
+
+function promptForSignupOrSignin(res, thisResource, nextResource) {
+
+
+	// Prompt for signup or signin, as specified by caller
+    return fs.createReadStream(__dirname+'/'+thisResource+'.html')
+		.pipe(replaceStream('{next.resource}', (nextResource) ? nextResource : 'null'))
+    	.pipe(res);
+}
 
 //
 // Load existing product from data source
