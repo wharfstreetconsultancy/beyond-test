@@ -22,8 +22,14 @@ var events = require('events');
 var AWS = require('aws-sdk');
 var sha256 = require('sha256');
 
+console.log("ENVIRONMENT="+process.env.ENVIRONMENT);
+console.log("SESSION_SECRET="+process.env.SESSION_SECRET);
+console.log("AWS_REGION="+process.env.AWS_REGION);
+console.log("SECURE_PORT="+process.env.SECURE_PORT);
+console.log("ALLOWED_ORIGIN_PORT="+process.env.ALLOWED_ORIGIN_PORT);
+console.log("REST_PORT="+process.env.REST_PORT);
+
 var environment = process.env.ENVIRONMENT.toUpperCase();
-console.log("ENVIRONMENT="+environment);
 
 //
 // Manage HTTP server container
@@ -48,7 +54,7 @@ var options = {
 var securePort = process.env.SECURE_PORT;
 var allowedOriginPort = process.env.ALLOWED_ORIGIN_PORT;
 var restPort = process.env.REST_PORT;
-var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
+var restHost = 'localhost';
 var restDomain = restHost+':'+restPort;
 var allowedOriginDomain = restHost+((allowedOriginPort && allowedOriginPort.length > 0) ? ':'+allowedOriginPort : '');
 
