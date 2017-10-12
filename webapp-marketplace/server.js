@@ -222,11 +222,11 @@ app.post('/signup', function (req, res) {
 });
 
 //
-// GET '/checkout' - View cart checkout confirmation page
-app.get('/checkout', function (req, res) {
+// POST '/cart' - View cart checkout confirmation page
+app.post('/cart', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: GET /checkout_confirmation" );
+	console.log( "Received request: POST /cart" );
 
 	var customer = req.session.customer; 
 	if(!customer || !customer.signInUserSession) {
@@ -239,17 +239,22 @@ app.get('/checkout', function (req, res) {
 		
 		console.log("Customer found and signed-in.");
 
-		var cart = req.body.cart;
-		console.log("Customer cart: "+cart);
-
-		if(cart) {
+		var localCart = req.body.cart;
+		console.log("Local cart: "+localCart);
+		if(localCart) {
+			
+		}
+		var storedCart = req.session.cart;
+		console.log("Stored cart: "+storedCart);
+		if(storedCart) {
 			
 		}
 
 		// Add dynamic elements to response page
 	    fs.createReadStream(__dirname+'/checkout.html')
-			.pipe(replaceStream('{latest.cart}', (cart) ? cart : 'null'))
+			.pipe(replaceStream('{local.cart}', (localCart) ? localCart : 'null'))
 	    	.pipe(res);
+	    return;
 	}
 });
 
@@ -258,7 +263,7 @@ function promptForSignupOrSignin(res, thisResource, nextResource) {
 
 	// Prompt for signup or signin, as specified by caller
     fs.createReadStream(__dirname+'/'+thisResource+'.html')
-		.pipe(replaceStream('{next.resource}', (nextResource) ? nextResource : '/'))
+//		.pipe(replaceStream('{next.resource}', (nextResource) ? nextResource : '/'))
     	.pipe(res);
     return;
 }

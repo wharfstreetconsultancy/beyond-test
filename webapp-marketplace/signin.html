@@ -77,7 +77,6 @@
 	<script src="https://js.braintreegateway.com/web/3.22.2/js/client.min.js"></script>
 	<script src="https://js.braintreegateway.com/web/3.22.2/js/paypal-checkout.min.js"></script>
 	<script>
-var nextResource = '{next.resource}';
 $(document).ready(function() {
 	$("#navbar").load("js/navigation.js");
 	$('#signin_form').on('click', '#signin_btn', function () {
@@ -92,8 +91,30 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-				document.location.href = nextResource;
-//				document.getElementById("cart_preview").submit();
+
+				var localCart = localStorage.getItem('cart');
+				$.ajaxForm({
+					url: '/cart',
+					type: 'post',
+					dataType: 'json',
+					data: {localCart: localCart}
+/*
+					success: function (uploadedCartItem) {
+
+						$('#status').empty().text('Cart update success');
+						console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
+			    		reloadCustomerCart();
+			    		document.getElementById("cart_preview_nav").click();
+					},
+					error: function (xhr) {
+						
+						$('#status').empty().text('Cart update error: '+xhr.status);
+						console.log("Cart update error: "+xhr.status);
+			    		reloadCustomerCart();
+			    		document.getElementById("cart_preview_nav").click();
+					}
+*/
+				});
 			},
 			error: function (xhr) {
 
