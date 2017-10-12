@@ -93,7 +93,7 @@ $(document).ready(function() {
 	});
 
 //	$('#cart_preview').on('click', '#check_out_cart_btn', function () {
-	$('#cart_preview').submit(function () {
+	$('#cart_manager').submit(function () {
 
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
@@ -109,7 +109,7 @@ $(document).ready(function() {
 			$('#cart_preview').submit();
 			alert("2");
 */
-			document.getElementById("cart_preview").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
+			document.getElementById("cart_manager").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
 		}
  		return true;
 	});

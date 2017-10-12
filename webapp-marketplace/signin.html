@@ -91,14 +91,13 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-
+/*
 				var localCart = localStorage.getItem('cart');
-				$.ajaxForm({
+				$('#cart_manager').ajaxForm({
 					url: '/cart',
 					type: 'get',
 					dataType: 'json',
-					data: {localCart: localCart}
-/*
+					data: {localCart: localCart},
 					success: function (uploadedCartItem) {
 
 						$('#status').empty().text('Cart update success');
@@ -113,8 +112,8 @@ $(document).ready(function() {
 			    		reloadCustomerCart();
 			    		document.getElementById("cart_preview_nav").click();
 					}
-*/
 				});
+*/
 			},
 			error: function (xhr) {
 
