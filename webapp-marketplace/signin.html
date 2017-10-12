@@ -77,7 +77,7 @@
 	<script src="https://js.braintreegateway.com/web/3.22.2/js/client.min.js"></script>
 	<script src="https://js.braintreegateway.com/web/3.22.2/js/paypal-checkout.min.js"></script>
 	<script>
-var nextResource = {next.resource};
+var nextResource = '{next.resource}';
 $(document).ready(function() {
 	$("#navbar").load("js/navigation.js");
 	$('#signin_form').on('click', '#signin_btn', function () {
@@ -92,7 +92,7 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-				document.location.href = (nextResource) ? nextResource : '/';
+				document.location.href = nextResource;
 //				document.getElementById("cart_preview").submit();
 			},
 			error: function (xhr) {

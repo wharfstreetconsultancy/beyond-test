@@ -258,7 +258,7 @@ function promptForSignupOrSignin(res, thisResource, nextResource) {
 
 	// Prompt for signup or signin, as specified by caller
     fs.createReadStream(__dirname+'/'+thisResource+'.html')
-		.pipe(replaceStream('{next.resource}', (nextResource) ? nextResource : 'null'))
+		.pipe(replaceStream('{next.resource}', (nextResource) ? nextResource : '/'))
     	.pipe(res);
     return;
 }
