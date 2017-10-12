@@ -115,7 +115,7 @@ $(document).ready(function() {
  		return true;
 	});
 
-
+/*
 	$('#cart_control').on('click', '#add_to_cart_btn', function () {
 
 		//
@@ -198,5 +198,6 @@ $(document).ready(function() {
 		}
 		return false;		
 	});
+*/
 });
 </script>
