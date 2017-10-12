@@ -93,8 +93,7 @@ $(document).ready(function() {
 		}
 	});
 
-//	$('#cart_preview').on('click', '#check_out_cart_btn', function () {
-	$('#cart_manager').submit(function () {
+	$('#cart_preview_nav').on('click', function () {
 
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
