@@ -42,12 +42,12 @@ function reloadCustomerCart() {
 }
 */
 $(document).ready(function() {
-
+/*
 	reloadCustomerCart(function () {
 		
 		console.log("Customer cart loaded.");
 	});
-
+*/
 	$('#cart_preview').on('reset', function () {
 
 		//
