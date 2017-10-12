@@ -234,7 +234,7 @@ app.get('/checkout', function (req, res) {
 		console.log("No customer found - redirect to sign-in.");
 
 		// Prompt for signin
-		promptForSignupOrSignin(res, '/signin', '/checkout_confirmation');
+		promptForSignupOrSignin(res, '/signin', '/checkout');
 	} else {
 		
 		console.log("Customer found and signed-in.");
