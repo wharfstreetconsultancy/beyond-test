@@ -223,7 +223,7 @@ app.post('/signup', function (req, res) {
 
 //
 // POST '/cart' - View cart checkout confirmation page
-app.post('/cart', function (req, res) {
+app.get('/cart', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: POST /cart" );
