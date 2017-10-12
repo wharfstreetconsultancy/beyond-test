@@ -16,12 +16,20 @@ var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
+
+console.log("ENVIRONMENT="+process.env.ENVIRONMENT);
+console.log("SESSION_SECRET="+process.env.SESSION_SECRET);
+console.log("AWS_REGION="+process.env.AWS_REGION);
+console.log("AUTH_CLIENT="+process.env.AUTH_CLIENT);
+console.log("SECURE_PORT="+process.env.SECURE_PORT);
+console.log("REST_HOST="+process.env.REST_HOST);
+console.log("REST_PORT="+process.env.REST_PORT);
+
 AWS.config.update({region: process.env.AWS_REGION});
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
 AWS.CognitoIdentityServiceProvider.AuthenticationDetails = CognitoSDK.AuthenticationDetails;
 AWS.CognitoIdentityServiceProvider.CognitoUserAttribute = CognitoSDK.CognitoUserAttribute;
 AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
-console.log("AUTH_CLIENT="+process.env.AUTH_CLIENT);
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	UserPoolId: 'us-west-2_jnmkbOGZY',
 	ClientId: process.env.AUTH_CLIENT
@@ -35,9 +43,8 @@ var gateway = braintree.connect({
 	accessToken: accessToken
 //	accessToken: 'access_token$sandbox$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46'
 });
-var environment = process.env.ENVIRONMENT.toUpperCase();
-console.log("ENVIRONMENT="+environment);
 
+var environment = process.env.ENVIRONMENT.toUpperCase();
 //
 // Manage HTTP server container
 var app = express();
@@ -60,8 +67,7 @@ var options = {
 };
 
 var securePort = process.env.SECURE_PORT;
-var restHost = 'ec2-52-10-1-150.us-west-2.compute.amazonaws.com';
-// var restHost = process.env.REST_HOST;
+var restHost = process.env.REST_HOST;
 var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
 
