@@ -222,11 +222,11 @@ app.post('/signup', function (req, res) {
 });
 
 //
-// POST '/checkout_confirmation' - View cart checkout page
-app.post('/checkout_confirmation', function (req, res) {
+// GET '/checkout' - View cart checkout confirmation page
+app.get('/checkout', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: POST /checkout_confirmation" );
+	console.log( "Received request: GET /checkout_confirmation" );
 
 	var customer = req.session.customer; 
 	if(!customer || !customer.signInUserSession) {
