@@ -95,7 +95,7 @@ $(document).ready(function() {
 				var localCart = localStorage.getItem('cart');
 				$.ajaxForm({
 					url: '/cart',
-					type: 'post',
+					type: 'get',
 					dataType: 'json',
 					data: {localCart: localCart}
 /*
