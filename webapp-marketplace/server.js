@@ -200,11 +200,11 @@ app.get('/contact', function (req, res) {
 });
 
 //
-// POST '/signin' - View cart checkout page
-app.post('/signin', function (req, res) {
+// GET '/signin' - View cart checkout page
+app.get('/signin', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: POST /signin" );
+	console.log( "Received request: GET /signin" );
 
 	// Prompt for signin
     fs.createReadStream(__dirname+'/signin.html')
@@ -214,11 +214,11 @@ app.post('/signin', function (req, res) {
 });
 
 //
-// POST '/signup' - View cart checkout page
-app.post('/signup', function (req, res) {
+// GET '/signup' - View cart checkout page
+app.get('/signup', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: POST /signup" );
+	console.log( "Received request: GET /signup" );
 
 	// Prompt for signup
     fs.createReadStream(__dirname+'/signup.html')
