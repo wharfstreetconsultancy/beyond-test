@@ -32,7 +32,7 @@
 						<div id="cart_title" class="col-lg-8 col-lg-offset-1">Please Sign-in...</div>
 					</div>
 					<div class="panel-body">
-						<form id="signin_form" class="form-inline" action="/customer/session" method="post">
+						<form id="signin_form" class="form-inline">
 							<div class="row">
 								<div class="col-lg-10 col-lg-offset-1">
 									<p><span id="cust_msg">Please provide your customer credentials or sign-up if you have not yet registered...</span></p>
@@ -79,7 +79,7 @@
 	<script>
 $(document).ready(function() {
 	$("#navbar").load("js/navigation.js");
-/*
+
 	$('#signin_form').on('click', '#signin_btn', function () {
 
 		$('#signin_form').ajaxSubmit({
@@ -87,13 +87,14 @@ $(document).ready(function() {
 			url: '/customer/session',
 			type: 'post',
 			dataType: 'json',
-			success: function (customer) {
+			success: function (customer, status, xhr) {
 		
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-*/
-				
+				console.log("Headers: "+JSON.stringify(xhr.getAllHeaders()));
+
+				document.location.href = '/cart';
 				
 				
 				
@@ -132,7 +133,7 @@ $(document).ready(function() {
 			
 			
 			
-/*			
+
 			},
 			error: function (xhr) {
 
@@ -147,9 +148,8 @@ $(document).ready(function() {
 				document.getElementById("cust_msg").innerHTML = errorMessage;
 			}
 		});
-		return true;
+		return false;
 	});
-*/
 });
 		</script>
 	</body>
