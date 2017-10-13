@@ -36,8 +36,7 @@ $(document).ready(function() {
 //	$("#customer_management").load("js/customer.js");
 //	$("#cart_management").load("js/cart.js");
 
-//	$('#cart_checkout').on('click', function () {
-	$('#cart_manager').submit(function () {
+	$('#cart_checkout').on('click', function () {
 alert("Hello!");
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
