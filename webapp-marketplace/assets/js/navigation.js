@@ -38,7 +38,8 @@ $(document).ready(function() {
 
 	$('#cart_checkout').on('click', function () {
 		var localCart = localStorage.getItem('cart');
-			document.getElementById("cart_manager").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
+		if(localCart) {
+			document.getElementById("cart_manager").innerHTML = '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
 		}
 		$('#cart_manager').submit();
  		return true;
