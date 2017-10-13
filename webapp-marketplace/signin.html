@@ -32,7 +32,7 @@
 						<div id="cart_title" class="col-lg-8 col-lg-offset-1">Please Sign-in...</div>
 					</div>
 					<div class="panel-body">
-						<form id="signin_form" class="form-inline" method="post">
+						<form id="signin_form" class="form-inline" action="/customer/session" method="post">
 							<div class="row">
 								<div class="col-lg-10 col-lg-offset-1">
 									<p><span id="cust_msg">Please provide your customer credentials or sign-up if you have not yet registered...</span></p>
@@ -79,6 +79,7 @@
 	<script>
 $(document).ready(function() {
 	$("#navbar").load("js/navigation.js");
+/*
 	$('#signin_form').on('click', '#signin_btn', function () {
 
 		$('#signin_form').ajaxSubmit({
@@ -91,6 +92,17 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
+*/
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 /*
 				var localCart = localStorage.getItem('cart');
 				$('#cart_manager').ajaxForm({
@@ -114,6 +126,13 @@ $(document).ready(function() {
 					}
 				});
 */
+
+
+			
+			
+			
+			
+/*			
 			},
 			error: function (xhr) {
 
@@ -128,8 +147,9 @@ $(document).ready(function() {
 				document.getElementById("cust_msg").innerHTML = errorMessage;
 			}
 		});
-		return false;
+		return true;
 	});
+*/
 });
 		</script>
 	</body>
