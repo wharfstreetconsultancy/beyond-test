@@ -94,46 +94,13 @@ $(document).ready(function() {
 				console.log("Sign-in success: "+JSON.stringify(customer));
 				alert(xhr.getResponseHeader("Content-Type"));
 
-				document.getElementById("cart_checkout").click();
-				
-				
-				
-				
-				
-				
-				
-				
-				
-/*
-				var localCart = localStorage.getItem('cart');
-				$('#cart_manager').ajaxForm({
-					url: '/cart',
-					type: 'get',
-					dataType: 'json',
-					data: {localCart: localCart},
-					success: function (uploadedCartItem) {
-
-						$('#status').empty().text('Cart update success');
-						console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
-			    		reloadCustomerCart();
-			    		document.getElementById("cart_preview_nav").click();
-					},
-					error: function (xhr) {
-						
-						$('#status').empty().text('Cart update error: '+xhr.status);
-						console.log("Cart update error: "+xhr.status);
-			    		reloadCustomerCart();
-			    		document.getElementById("cart_preview_nav").click();
-					}
-				});
-*/
-
-
-			
-			
-			
-			
-
+				if({check.cart}) {
+					
+					document.getElementById("cart_checkout").click();
+				} else {
+					
+					document.location.href='/';
+				}
 			},
 			error: function (xhr) {
 
@@ -141,8 +108,10 @@ $(document).ready(function() {
 				console.log("Error message returned: "+xhr.responseJSON.error.message);
 				var errorMessage = 'Failed to sign-in. Please retry...';
 				if(xhr.responseJSON.error.code == 'NotAuthorizedException') {
+
 					errorMessage = xhr.responseJSON.error.message+' Please retry...';
 				} else if(xhr.responseJSON.error.code == 'UserNotConfirmedException') {
+
 					errorMessage = xhr.responseJSON.error.message+' Please check your mail...';
 				}
 				document.getElementById("cust_msg").innerHTML = errorMessage;
