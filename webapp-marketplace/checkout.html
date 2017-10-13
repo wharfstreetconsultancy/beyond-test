@@ -82,7 +82,7 @@ $(document).ready(function() {
 			totalItems += cartItem.quantity;
 			totalCost += cartItem.cost;
 		}
-		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s) @ ($'+totalCost.toFixed(2)+')';
+		document.getElementById("cart_cost_summary").innerHTML = totalItems+' item(s), Total = $'+totalCost.toFixed(2);
 
 
 		var customer = sessionStorage.getItem('customer');
