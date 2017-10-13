@@ -1087,6 +1087,7 @@ app.post('/transaction', function (req, res) {
 			console.log("Payment transaction returned an error ("+err.type+")");
 			console.log("Payment transaction returned an error ("+err.name+")");
 			console.log("Payment transaction returned an error ("+err.message+")");
+			console.log("Payment transaction returned an error ("+result.transaction+")");
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
