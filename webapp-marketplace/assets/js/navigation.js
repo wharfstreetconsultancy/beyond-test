@@ -21,11 +21,10 @@
 			<!-- li><a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
 			<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout_confirmation" method="post" class="form-inline"></form></div></li -->
 			<li>
-			  <a id="cust_manager" href="/signin" class="dropdown-toggle fa fa-user"> My Account</a>
+			  <a id="cust_link" class="dropdown-toggle fa fa-user"/>
 			<li>
+			  <a id="cart_link" class="fa fa-shopping-cart"> My Cart</a>
 			  <form id="cart_manager" action="/cart" method="post"/>
-				<a id="cart_checkout" class="fa fa-shopping-cart"> My Cart</a>
-			  </form>
 			</li>
 		  </ul>
 		</div>
@@ -37,8 +36,29 @@
 $(document).ready(function() {
 //	$("#customer_management").load("js/customer.js");
 //	$("#cart_management").load("js/cart.js");
+	var customer = sessionStorage.getItem('customer');
+	if(customer) {
 
-	$('#cart_checkout').on('click', function () {
+		document.getElementById("cust_link").innerHTML = ' My Account';
+	} else {
+
+		document.getElementById("cust_link").innerHTML = ' Sign-In';
+	}
+
+	$('#cust_link').on('click', function () {
+		
+		var customer = sessionStorage.getItem('customer');
+		if(customer) {
+
+			document.location.href = '/accounnt';
+		} else {
+
+			document.location.href = '/signin';
+		}
+	}
+	
+	$('#cart_link').on('click', function () {
+
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
 			document.getElementById("cart_manager").innerHTML = '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
