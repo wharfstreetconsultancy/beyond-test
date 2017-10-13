@@ -94,7 +94,7 @@ $(document).ready(function() {
 	});
 
 	$('#cart_manager').on('click', '#cart_checkout', function () {
-
+alert("Hello!");
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
 /*

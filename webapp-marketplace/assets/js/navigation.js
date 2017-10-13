@@ -30,10 +30,10 @@
 	  </div>
 </nav>
 <!-- span id="customer_management"></span -->
-<span id="cart_management"></span>
+<span id="cart_manager"></span>
 <script>
 $(document).ready(function() {
 //	$("#customer_management").load("js/customer.js");
-	$("#cart_management").load("js/cart.js");
+	$("#cart_manager").load("js/cart.js");
 });
 </script>
