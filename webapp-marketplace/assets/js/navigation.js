@@ -55,7 +55,7 @@ $(document).ready(function() {
 
 			document.location.href = '/signin';
 		}
-	}
+	});
 	
 	$('#cart_link').on('click', function () {
 
