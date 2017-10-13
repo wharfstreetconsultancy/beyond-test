@@ -30,7 +30,7 @@
 	  </div>
 </nav>
 <!-- span id="customer_management"></span -->
-<span id="cart_management"></span>
+<!-- span id="cart_management"></span -->
 <script>
 $(document).ready(function() {
 //	$("#customer_management").load("js/customer.js");
@@ -54,6 +54,7 @@ alert("Hello!");
 */
 			document.getElementById("cart_manager").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
 		}
+		$('#cart_manager').submit();
  		return true;
 	});
 
