@@ -21,9 +21,9 @@
 			<!-- li><a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
 			<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout_confirmation" method="post" class="form-inline"></form></div></li -->
 			<li>
-			  <a id="cust_link" class="dropdown-toggle fa fa-user"/>
+			  <a id="cust_link" class="dropdown-toggle fa fa-user" href="#"/>
 			<li>
-			  <a id="cart_link" class="fa fa-shopping-cart"> My Cart</a>
+			  <a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
 			  <form id="cart_manager" action="/cart" method="post"/>
 			</li>
 		  </ul>
@@ -55,6 +55,7 @@ $(document).ready(function() {
 
 			document.location.href = '/signin';
 		}
+ 		return false;
 	});
 	
 	$('#cart_link').on('click', function () {
@@ -64,7 +65,7 @@ $(document).ready(function() {
 			document.getElementById("cart_manager").innerHTML = '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
 		}
 		$('#cart_manager').submit();
- 		return true;
+ 		return false;
 	});
 
 });
