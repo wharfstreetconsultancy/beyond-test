@@ -1083,12 +1083,14 @@ app.post('/transaction', function (req, res) {
 	gateway.transaction.sale(saleRequest, function (err, result) {
 		
 		if (err) {
-			
-			console.log("Payment transaction returned an error ("+err+")");
+
+			console.log("Payment transaction returned an error ("+err.type+")");
+			console.log("Payment transaction returned an error ("+err.name+")");
+			console.log("Payment transaction returned an error ("+err.message+")");
 
 			// Return new cart item to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: {message: [err.toString()]}}));
+			res.write(JSON.stringify({error: {message: [err.message]}}));
 			res.end();
 			return;
 		} else if (result.success) {
