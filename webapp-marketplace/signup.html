@@ -123,7 +123,7 @@ $(document).ready(function() {
 				console.log("Failed to sign-up: "+xhr.responseJSON.error.code);
 				console.log("Error message returned: "+xhr.responseJSON.error.message);
 				var errorMessage = xhr.responseJSON.error.message+' Please retry...';
-				document.getElementById("user_msg").innerHTML = errorMessage;
+				document.getElementById("cust_msg").innerHTML = errorMessage;
 			}
 		});
 		return false;
