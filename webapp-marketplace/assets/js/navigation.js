@@ -16,10 +16,12 @@
         	<li><a href="/">Shop<span class="sr-only">(current)</span></a></li>
 			<li><a href="/about">About Us<span class="sr-only">(current)</span></a></li>
 			<li><a href="/contact">Contact</a></li>
-			<li><a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div></li>
+			<!-- li><a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+			<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div></li -->
 			<!-- li><a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
 			<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout_confirmation" method="post" class="form-inline"></form></div></li -->
+			<li>
+			  <a id="cust_manager" href="/signin" class="dropdown-toggle fa fa-user"> My Account</a>
 			<li>
 			  <form id="cart_manager" action="/cart" method="post"/>
 				<a id="cart_checkout" class="fa fa-shopping-cart"> My Cart</a>
