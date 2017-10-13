@@ -39,6 +39,7 @@
 							<div id="paypal-button" class="col-lg-3"></div>
 							<div id="clear_button" class="col-lg-3"></div>
 						</div>
+						<hr>
 						<div id="cart_inventory" class="row"></div>
 					</div>
 					<div class="panel-footer">
@@ -78,13 +79,17 @@ $(document).ready(function() {
 	document.getElementById("cart_title").innerHTML = 'Your Cart Items...';
 	if(latestCart) {
 		document.getElementById("clear_button").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
-		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>';
+		document.getElementById("cart_inventory").innerHTML += '<div class="row">';
+		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2"><b>Quantity</b></div><div class="col-lg-2"><b>Product</b></div><div class="col-lg-2"><b>Size</b></div><div class="col-lg-2"><b>Color</b></div><div class="col-lg-2"><b>Item Cost</b></div><div class="col-lg-2"><b>Line Cost</b></div>';
+		document.getElementById("cart_inventory").innerHTML += '</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
 		var totalItems = 0;
 		var totalCost = 0.00;
 		for(var cartItem of latestCart.items) {
 			
+			document.getElementById("cart_inventory").innerHTML += '<div class="row">';
 			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">'+cartItem.quantity+'</div><div class="col-lg-2">'+cartItem.productName+'</div><div class="col-lg-2">'+cartItem.size+'</div><div class="col-lg-2">'+cartItem.color+'</div><div class="col-lg-2">'+cartItem.cost+'</div><div class="col-lg-2">'+cartItem.cost+'</div>';
+			document.getElementById("cart_inventory").innerHTML += '</div>';
 			totalItems += cartItem.quantity;
 			totalCost += cartItem.cost;
 		}
