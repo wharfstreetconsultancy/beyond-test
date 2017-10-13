@@ -92,9 +92,9 @@ $(document).ready(function() {
 				$('#status').empty().text('Sign-in success');
 				sessionStorage.setItem('customer', JSON.stringify(customer));
 				console.log("Sign-in success: "+JSON.stringify(customer));
-				console.log("Headers: "+JSON.stringify(xhr.getResponseHeader("Content-Type")));
+				alert(xhr.getResponseHeader("Content-Type"));
 
-				document.location.href = '/cart';
+				document.getElementById("cart_checkout").click();
 				
 				
 				
