@@ -252,7 +252,7 @@ app.post('/cart', function (req, res) {
 
 		// Add dynamic elements to response page
 	    fs.createReadStream(__dirname+'/checkout.html')
-			.pipe(replaceStream('{local.cart}', (localCart) ? localCart : 'null'))
+			.pipe(replaceStream('{latest.cart}', (localCart) ? localCart : 'null'))
 	    	.pipe(res);
 	    return;
 	}
