@@ -29,11 +29,11 @@
 			<div class="col-lg-8 col-lg-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<div id="cart_title" class="col-lg-8 col-lg-offset-2"></div>
+						<div id="cart_title" class="col-lg-4"></div>
 					</div>
 					<div class="panel-body">
 						<div id="row">
-							<div id="clear-button" class="col-lg-2 col-lg-offset-2"></div>
+							<div id="clear_button" class="col-lg-2"></div>
 							<div id="cart_cost_summary" class="col-lg-4"></div>
 							<div id="paypal-button" class="col-lg-2"></div>
 						</div>
@@ -75,6 +75,7 @@ $(document).ready(function() {
 	
 	document.getElementById("cart_title").innerHTML = 'Your Cart Items...';
 	if(latestCart) {
+		document.getElementById("clear_button").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
 		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">Quantity</div><div class="col-lg-2">Product</div><div class="col-lg-2">Size</div><div class="col-lg-2">Color</div><div class="col-lg-2">Per-Item Cost</div><div class="col-lg-2">Total Cost</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
 		var totalItems = 0;
