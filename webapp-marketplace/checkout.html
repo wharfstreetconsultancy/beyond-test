@@ -80,7 +80,7 @@ $(document).ready(function() {
 	if(latestCart) {
 		document.getElementById("clear_button").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
 		document.getElementById("cart_inventory").innerHTML += '<div class="row">';
-		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2"><b>Qty</b></div><div class="col-lg-2"><b>Product</b></div><div class="col-lg-2"><b>Size</b></div><div class="col-lg-2"><b>Color</b></div><div class="col-lg-2"><b>Item Cost</b></div><div class="col-lg-2"><b>Line Cost</b></div>';
+		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1"><b>Qty</b></div><div class="col-lg-3"><b>Product</b></div><div class="col-lg-2"><b>Size</b></div><div class="col-lg-2"><b>Color</b></div><div class="col-lg-2"><b>Item Cost</b></div><div class="col-lg-2"><b>Line Cost</b></div>';
 		document.getElementById("cart_inventory").innerHTML += '</div>';
 		console.log("Latest cart: "+JSON.stringify(latestCart));
 		var totalItems = 0;
@@ -88,7 +88,7 @@ $(document).ready(function() {
 		for(var cartItem of latestCart.items) {
 			
 			document.getElementById("cart_inventory").innerHTML += '<div class="row">';
-			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-2">'+cartItem.quantity+'</div><div class="col-lg-2">'+cartItem.productName+'</div><div class="col-lg-2">'+cartItem.size+'</div><div class="col-lg-2">'+cartItem.color+'</div><div class="col-lg-2">'+cartItem.cost+'</div><div class="col-lg-2">'+cartItem.cost+'</div>';
+			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">'+cartItem.quantity+'</div><div class="col-lg-3">'+cartItem.productName+'</div><div class="col-lg-2">'+cartItem.size+'</div><div class="col-lg-2">'+cartItem.color+'</div><div class="col-lg-2">'+cartItem.cost+'</div><div class="col-lg-2">'+cartItem.cost+'</div>';
 			document.getElementById("cart_inventory").innerHTML += '</div>';
 			totalItems += cartItem.quantity;
 			totalCost += cartItem.cost;
