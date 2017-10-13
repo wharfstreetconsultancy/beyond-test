@@ -34,6 +34,28 @@
 <script>
 $(document).ready(function() {
 //	$("#customer_management").load("js/customer.js");
-	$("#cart_management").load("js/cart.js");
+//	$("#cart_management").load("js/cart.js");
+
+	$('#cart_checkout').on('click', function () {
+alert("Hello!");
+		var localCart = localStorage.getItem('cart');
+		if(localCart) {
+/*
+			alert("1");
+			$('#cart_preview').ajaxForm({
+	
+				//url: '/checkout',
+				//type: 'post',
+				dataType: 'json',
+				data: {cart: localCart}
+			});
+			$('#cart_preview').submit();
+			alert("2");
+*/
+			document.getElementById("cart_manager").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
+		}
+ 		return true;
+	});
+
 });
 </script>
