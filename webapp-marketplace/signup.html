@@ -91,7 +91,7 @@
       </div>
     </footer>
 
-	<span id="customer_management"></span>
+	<!-- span id="customer_management"></span -->
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
@@ -100,30 +100,23 @@
 	<script src="https://js.braintreegateway.com/web/3.22.2/js/client.min.js"></script>
 	<script src="https://js.braintreegateway.com/web/3.22.2/js/paypal-checkout.min.js"></script>
 	<script>
-var nextResource = {next.resource};
 $(document).ready(function() {
-	$("#navbar").load("js/navigation.js");
-	$('#signup_form').on('click', '#signup_btn', function () {
 
+	$("#navbar").load("js/navigation.js");
+
+	$('#signup_form').on('click', '#signup_btn', function () {
 
 		$('#signup_form').ajaxSubmit({
 
 			url: '/customer',
 			type: 'post',
 			dataType: 'json',
-			success: function (response) {
+			success: function (response, status, xhr) {
 		
 				$('#status').empty().text('Sign-up success');
 				console.log("Sign-up success: "+JSON.stringify(response));
-				document.getElementById("signin").checked = true;
-				document.location.href = (nextResource) ? nextResource : '/';
-/*
-				reloadCustomerProfile(function () {
 
-					console.log("User profile loaded: "+JSON.stringify(response));
-					document.getElementById("user_nav").click();
-				});
-*/
+				document.location.href='/signin';
 			},
 			error: function (xhr) {
 
@@ -134,35 +127,6 @@ $(document).ready(function() {
 			}
 		});
 		return false;
-/*
-		$('#signin_form').ajaxSubmit({
-
-
-			url: '/customer/session',
-			type: 'post',
-			dataType: 'json',
-			success: function (customer) {
-		
-				$('#status').empty().text('Sign-in success');
-				sessionStorage.setItem('customer', JSON.stringify(customer));
-				console.log("Sign-in success: "+JSON.stringify(customer));
-				document.getElementById("cart_preview").submit();
-			},
-			error: function (xhr) {
-
-				console.log("Failed to sign-in: "+xhr.responseJSON.error.code);
-				console.log("Error message returned: "+xhr.responseJSON.error.message);
-				var errorMessage = 'Failed to sign-in. Please retry...';
-				if(xhr.responseJSON.error.code == 'NotAuthorizedException') {
-					errorMessage = xhr.responseJSON.error.message+' Please retry...';
-				} else if(xhr.responseJSON.error.code == 'UserNotConfirmedException') {
-					errorMessage = xhr.responseJSON.error.message+' Please check your mail...';
-				}
-				document.getElementById("cust_msg").innerHTML = errorMessage;
-			}
-		});
-		return false;
-*/
 	});
 });
 		</script>
