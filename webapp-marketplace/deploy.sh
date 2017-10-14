@@ -7,9 +7,11 @@ read newVersion
 echo target environment?:
 read environment
 
-if [ "$env" == "sandbox" ]; then
+if [ "$environment" == "sandbox" ]; then
 	export desired_port = '1'
 fi
+
+echo Test Port = $desired_port443
 
 sudo docker stop webapp_marketplace-$oldVersion
 sudo docker rm webapp_marketplace-$oldVersion
