@@ -124,7 +124,8 @@ app.get('/', function (req, res) {
             // Add dynamic elements to response page
             fs.createReadStream(__dirname+'/index.html')
 				.pipe(replaceStream('{error.message}', '&nbsp;'))
-				.pipe(replaceStream('{products.list}', JSON.stringify(productsList)))
+//				.pipe(replaceStream('{products.list}', JSON.stringify(productsList)))
+				.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
 				.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
 				.pipe(res);
         });
