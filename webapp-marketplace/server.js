@@ -37,11 +37,11 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 });
 //var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$'+process.env.PAYMENT_GATEWAY;
 // sf production
-var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$9z5zcbzdw7jz8wgh$5e70b4b5235cd976300bb8dcd1355bc8';
+// var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$9z5zcbzdw7jz8wgh$5e70b4b5235cd976300bb8dcd1355bc8';
 // my production
 // var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$2f8hkkzcsk4k9ptk$3a16a4a5e682ee85ee4358802c1f008f';
 // my sandbox
-// var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46';
+var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46';
 console.log("PAYMENT_GATEWAY="+accessToken);
 var gateway = braintree.connect({
 	accessToken: accessToken
