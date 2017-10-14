@@ -89,7 +89,7 @@ http.createServer(app).listen(8080);
 https.createServer(options, app).listen(8443);
 
 //
-//ALL '*' - Redirect all http traffic to https
+// ALL '*' - Redirect all http traffic to https
 app.all('*', function (req, res, next) {
 
 	// Determine if request was https
@@ -204,7 +204,19 @@ app.get('/contact', function (req, res) {
 });
 
 //
-// GET '/signin' - View cart checkout page
+// GET '/shop' - View 'shop' page
+app.get('/shop', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: GET /shop" );
+
+	// Return 'shop' page
+    fs.createReadStream(__dirname+'/shop.html')
+    	.pipe(res);
+});
+
+//
+//GET '/signin' - View 'signin' page
 app.get('/signin', function (req, res) {
 
 	// Log request received
