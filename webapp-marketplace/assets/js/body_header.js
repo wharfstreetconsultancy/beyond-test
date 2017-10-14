@@ -45,7 +45,7 @@ $(document).ready(function() {
 	var customer = sessionStorage.getItem('customer');
 	if(customer) {
 
-		document.getElementById("cust_link").innerHTML = ' My Account';
+		document.getElementById("cust_link").innerHTML = ' Sign-out';
 	} else {
 
 		document.getElementById("cust_link").innerHTML = ' Sign-In';
@@ -56,7 +56,22 @@ $(document).ready(function() {
 		var customer = sessionStorage.getItem('customer');
 		if(customer) {
 
-			document.location.href = '/account';
+			$.ajax({
+				url: '/customer/session',
+				type: 'delete',
+				dataType: 'json',
+				crossDomain: true,
+				success: function (response) {
+
+					sessionStorage.removeItem('customer');
+					console.log("Sign-out success: "+response);
+					document.getElementById("cust_link").innerHTML = ' Sign-In';
+				},
+				error: function (xhr) {
+
+					console.log("Failed to sign-out: "+JSON.stringify(xhr));
+				}
+			});
 		} else {
 
 			document.location.href = '/signin';
@@ -75,5 +90,32 @@ $(document).ready(function() {
  		return false;
 	});
 
+	$('#identity').on('click', '#signout_btn', function () {
+
+		$.ajax({
+			url: '/customer/session',
+			type: 'delete',
+			dataType: 'json',
+			crossDomain: true,
+			success: function (response) {
+
+				$('#status').empty().text('Sign-out success.');
+				sessionStorage.removeItem('customer');
+				console.log("Sign-out success: "+response);
+				reloadCustomerProfile(function () {
+					
+					console.log("Customer profile unloaded.");
+					document.getElementById("signin").checked = true;
+					document.getElementById("user_nav").click();
+				});
+			},
+			error: function (xhr) {
+
+				$('#status').empty().text('Failed to sign-out: '+xhr.status);
+				console.log("Failed to sign-out: "+JSON.stringify(xhr));
+			}
+		});
+		return false;
+	});
 });
 </script>
