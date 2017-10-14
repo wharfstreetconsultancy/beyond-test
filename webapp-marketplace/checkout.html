@@ -263,7 +263,7 @@ $(document).ready(function() {
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
 					localStorage.removeItem('cart');
-		    		document.getElementById("cart_inventory").innerHTML = '';
+					document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
 		    		return false;		
 				},
 				error: function (xhr) {
@@ -276,7 +276,7 @@ $(document).ready(function() {
 		} else {
 			
 			localStorage.removeItem('cart');
-    		document.getElementById("cart_inventory").innerHTML = '';
+			document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
     		return false;		
 		}
 	});
