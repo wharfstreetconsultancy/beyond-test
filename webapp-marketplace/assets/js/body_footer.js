@@ -1,3 +1,8 @@
+<style>
+	footer {
+	    position: fixed;
+	}
+</style>
 <footer>
 	<div class="container-fluid">
 		<div class="footer">
