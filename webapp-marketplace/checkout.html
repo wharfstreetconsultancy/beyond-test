@@ -78,7 +78,7 @@ $(document).ready(function() {
 	
 	document.getElementById("cart_title").innerHTML = 'Your Cart Items...';
 	if(latestCart) {
-		document.getElementById("clear_button").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
+		document.getElementById("clear_button").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" class="btn btn-primary pull-right">Clear</button>';
 		document.getElementById("cart_inventory").innerHTML += '<div class="row">';
 		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1"><b>Qty</b></div><div class="col-lg-3"><b>Product</b></div><div class="col-lg-2"><b>Size</b></div><div class="col-lg-2"><b>Color</b></div><div class="col-lg-2"><b>Item Cost</b></div><div class="col-lg-2"><b>Line Cost</b></div>';
 		document.getElementById("cart_inventory").innerHTML += '</div>';
@@ -244,6 +244,43 @@ $(document).ready(function() {
 
 		document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
 	}
+	
+	$('#cart_clear').on('click', function () {
+
+		var customer = sessionStorage.getItem('customer');
+		console.log("Current customer: "+customer);
+		if(customer) {
+
+			customer = JSON.parse(customer);
+			console.log("Cart is clearing");
+			
+			$.ajax({
+				url: '/cart/'+customer.sub,
+				type: 'delete',
+				dataType: 'json',
+				success: function (uploadedCartItem) {
+					
+					$('#status').empty().text('Cart update success');
+					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
+					localStorage.removeItem('cart');
+		    		document.getElementById("cart_inventory").innerHTML = '';
+		    		return false;		
+				},
+				error: function (xhr) {
+					
+					$('#status').empty().text('Cart update error: '+xhr.status);
+					console.log("Cart update error: "+xhr.status);
+		    		return false;		
+				}
+			});
+		} else {
+			
+			localStorage.removeItem('cart');
+    		document.getElementById("cart_inventory").innerHTML = '';
+    		return false;		
+		}
+	});
+
 });
 		</script>
 	</body>
