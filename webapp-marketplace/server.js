@@ -124,7 +124,7 @@ app.get('/', function (req, res) {
             // Add dynamic elements to response page
             fs.createReadStream(__dirname+'/index.html')
 				.pipe(replaceStream('{error.message}', '&nbsp;'))
-				.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+				.pipe(replaceStream('{products.list}', productsList))
 				.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
 				.pipe(res);
         });
@@ -171,7 +171,7 @@ app.get('/product', function (req, res) {
 	            // Add dynamic elements to response page
 	            fs.createReadStream(__dirname+'/index.html')
 					.pipe(replaceStream('{error.message}', errorMessage))
-					.pipe(replaceStream('{showcase.clothing.carousel}', productsListClothingHtml))
+					.pipe(replaceStream('{products.list}', productsList))
 					.pipe(replaceStream('{showcase.jewellery.carousel}', productsListJewelleryHtml))
 					.pipe(res);
 	        });
@@ -375,7 +375,7 @@ function formatProductsCarouselsHtml(productsList,callback) {
 				currentBuffer += '<div class=\'caption\'>';
 				currentBuffer += '<h3>'+product.name+'</h3>';
 				currentBuffer += '<p/>';
-				currentBuffer += '<p><a href=\'/product?id='+product.id+'\' class=\'btn btn-primary\'>View Product</a></p>';
+				currentBuffer += '<p><a href=\'/product?id='+product.id+'\' class=\'btn btn-primary\'>View</a></p>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';
 				currentBuffer += '</div>';

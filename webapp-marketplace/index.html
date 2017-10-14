@@ -21,28 +21,27 @@
 				<div class="has-error">
 					<p class="help-group">{error.message}</p>
 				</div>
-				<!-- div id="myCarousel" class="carousel slide" data-ride="carousel">
-					<ol class="carousel-indicators">
-						<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+				<div id="myCarousel" class="carousel slide" data-ride="carousel">
+					<ol id="showcased_clothing_indicators" class="carousel-indicators">
 					</ol>
 		
 					<div class="carousel-inner">
-						<div class="item active">
-							<img src="img/SVGlogo.svg" alt="Los Angeles">
+						<div id="showcased_clothing_images" class="item active">
 						</div>
 					</div>
 		
 					<a class="left carousel-control" href="#myCarousel" data-slide="prev">
 						<span class="glyphicon glyphicon-chevron-left"></span> <span
 						class="sr-only">Previous</span>
-					</a> <a class="right carousel-control" href="#myCarousel"
+					</a>
+					<a class="right carousel-control" href="#myCarousel"
 						data-slide="next"> <span
 						class="glyphicon glyphicon-chevron-right"></span> <span
 						class="sr-only">Next</span>
 					</a>
-				</div -->
+				</div>
 		
-				<div class="border panel">
+				<!-- div class="border panel">
 					<div class="row">
 						<div class="col-lg-12">
 							<h1>Featured Clothing</h1>
@@ -57,7 +56,7 @@
 						</div>
 					</div>
 					<div class="row text-center">{showcase.jewellery.carousel}</div>
-				</div>
+				</div -->
 			</div>
 		</div>
 
@@ -66,5 +65,21 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script>$(document).ready(function() {$("#body_header").load("js/body_header.js");});</script>
 		<script>$(document).ready(function() {$("#body_footer").load("js/body_footer.js");});</script>
+		<script>
+var restDomain = {rest.domain};
+$(document).ready(function() {
+
+	var productCounter = 0;
+	for(var product of products) {
+		document.getElementById("showcased_clothing_indicators").innerHTML += '<li data-target="#myCarousel" data-slide-to="'+productCounter+'" class="active"></li>'
+		for(var image of product.images) {
+			if(image.isDefault) {
+				document.getElementById("showcased_clothing_images").innerHTML += '<img src="'+image.location+'" alt="'+product.name+'">';
+			}
+		}
+		productCounter++;
+	}
+});
+		</script>
 	</body>
 </html>
