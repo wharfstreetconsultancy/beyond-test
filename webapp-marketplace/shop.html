@@ -54,11 +54,11 @@ $(document).ready(function() {
 			for(var image of product.images) {
 				if(image.isDefault) {
 
-					document.getElementById("product_list").innerHTML += '<img src="'+image.location+'" width="150" alt="'+product.name+'">';
+					document.getElementById("product_list").innerHTML += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>';
 				}
 			}
 		}
-		document.getElementById("product_list").innerHTML += '<p><a href="/product/'+product.id+'" class="btn btn-primary">View</a></p>';
+		document.getElementById("product_list").innerHTML += '<p><a href="/product?id='+product.id+'" class="btn btn-primary">View</a></p>';
 		document.getElementById("product_list").innerHTML += '</div>';
 		document.getElementById("product_list").innerHTML += '</div>';
 		document.getElementById("product_list").innerHTML += '</div>';
