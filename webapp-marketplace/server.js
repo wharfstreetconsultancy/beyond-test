@@ -214,14 +214,11 @@ app.get('/shop', function (req, res) {
 	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
 
         // Add dynamic elements to response page
-        fs.createReadStream(__dirname+'/index.html')
+        fs.createReadStream(__dirname+'/shop.html')
 			.pipe(replaceStream('{products.list}', JSON.stringify(productsList)))
 			.pipe(res);
+        return;
 	});
-
-	// Return 'shop' page
-    fs.createReadStream(__dirname+'/shop.html')
-    	.pipe(res);
 });
 
 //
