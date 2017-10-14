@@ -36,7 +36,18 @@ $(document).ready(function() {
 
 	for(var product of products) {
 
-		document.getElementById("product_list").innerHTML += '<div class="col-lg-4">';
+		document.getElementById("product_list").innerHTML += '<div class="col-lg-3">';
+		document.getElementById("product_list").innerHTML += '<div class="panel panel-primary">';
+		document.getElementById("product_list").innerHTML += '<div class="panel-heading">';
+		document.getElementById("product_list").innerHTML += '<div class="row">';
+		document.getElementById("product_list").innerHTML += '<div id="cart_title" class="col-lg-12">'+product.name+'</div>';
+		document.getElementById("product_list").innerHTML += '</div>';
+		document.getElementById("product_list").innerHTML += '</div>';
+		document.getElementById("product_list").innerHTML += '<div class="panel-body">';
+		document.getElementById("product_list").innerHTML += '<div class="row">';
+		document.getElementById("product_list").innerHTML += '<div class="col-lg-12">';
+
+//		document.getElementById("product_list").innerHTML += '<div class="col-lg-4">';
 //		document.getElementById("product_list").innerHTML += '<div class="thumbnail">';
 		if(product.images) {
 
@@ -47,12 +58,17 @@ $(document).ready(function() {
 				}
 			}
 		}
-		document.getElementById("product_list").innerHTML += '<div class="caption">';
-		document.getElementById("product_list").innerHTML += '<h3>'+product.name+'</h3>';
 		document.getElementById("product_list").innerHTML += '<p><a href="/product/'+product.id+'" class="btn btn-primary">View</a></p>';
 		document.getElementById("product_list").innerHTML += '</div>';
-//		document.getElementById("product_list").innerHTML += '</div>';
 		document.getElementById("product_list").innerHTML += '</div>';
+		document.getElementById("product_list").innerHTML += '</div>';
+		document.getElementById("product_list").innerHTML += '<div class="panel-footer">';
+		document.getElementById("product_list").innerHTML += '</div>';
+//		document.getElementById("product_list").innerHTML += '<div class="caption">';
+//		document.getElementById("product_list").innerHTML += '<h3>'+product.name+'</h3>';
+//		document.getElementById("product_list").innerHTML += '<p><a href="/product/'+product.id+'" class="btn btn-primary">View</a></p>';
+//		document.getElementById("product_list").innerHTML += '</div>';
+//		document.getElementById("product_list").innerHTML += '</div>';
 	}
 });
 		</script>
