@@ -216,13 +216,13 @@ app.get('/shop', function (req, res) {
 });
 
 //
-//GET '/signin' - View 'signin' page
+// GET '/signin' - View 'signin' page
 app.get('/signin', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: GET /signin" );
 
-	// Prompt for signin
+	// Return 'signin' page
     fs.createReadStream(__dirname+'/signin.html')
 		.pipe(replaceStream('{check.cart}', false))
     	.pipe(res);
@@ -230,13 +230,13 @@ app.get('/signin', function (req, res) {
 });
 
 //
-// GET '/signup' - View cart checkout page
+// GET '/signup' - View 'signup' page
 app.get('/signup', function (req, res) {
 
 	// Log request received
 	console.log( "Received request: GET /signup" );
 
-	// Prompt for signup
+	// Return 'signup' page
     fs.createReadStream(__dirname+'/signup.html')
 		.pipe(replaceStream('{check.cart}', false))
     	.pipe(res);
@@ -244,7 +244,7 @@ app.get('/signup', function (req, res) {
 });
 
 //
-// POST '/cart' - View cart checkout confirmation page
+// POST '/cart' - View 'cart' page
 app.post('/cart', function (req, res) {
 
 	// Log request received
@@ -255,7 +255,7 @@ app.post('/cart', function (req, res) {
 		
 		console.log("No customer found - redirect to sign-in.");
 
-		// Prompt for signin
+		// Return 'signin' page
 	    fs.createReadStream(__dirname+'/signin.html')
 			.pipe(replaceStream('{check.cart}', true))
 	    	.pipe(res);
@@ -275,8 +275,8 @@ app.post('/cart', function (req, res) {
 			
 		}
 
-		// Add dynamic elements to response page
-	    fs.createReadStream(__dirname+'/checkout.html')
+		// Return 'cart' page
+	    fs.createReadStream(__dirname+'/cart.html')
 			.pipe(replaceStream('{latest.cart}', (localCart) ? localCart : 'null'))
 	    	.pipe(res);
 	    return;
