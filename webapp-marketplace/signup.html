@@ -1,82 +1,74 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Suroor Fashions - Marketplace</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
-  </head>
-  <body>
-  	<div class="container-fluid">
-  		<div class="row">
-  			<div class="col-sm-1 header">
-  				<div class="col-xs-1 col-md-1 col-lg-1 text-center">
-  					<a href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Marketplace"></a>
-  				</div>
-  			</div>
-  		</div>
-    </div>
-	<span id="navbar"></span>
-
-	<div class="body">
-		<div class="container">
-			<div class="col-lg-6 col-lg-offset-3">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div id="cart_title" class="col-lg-8 col-lg-offset-1">Please Sign-up...</div>
-					</div>
-					<div class="panel-body">
-						<form id="signup_form" class="form-inline" method="post">
-							<div class="row">
-								<div class="col-lg-10 col-lg-offset-1">
-									<p><span id="cust_msg">Please provide your customer credentials and check your inbox to confirm your email...</span></p>
-									<input id="email" name="email" type="text" placeholder="Email..."/><br>
-									<input id="password" name="password" type="password" placeholder="Password..."/><br>
-									<input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm password..."/>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Suroor Fashions - Marketplace</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<link rel="stylesheet" href="css/bootstrap.css"/>
+		<link rel="stylesheet" href="css/header.css"/>
+		<link rel="stylesheet" href="css/footer.css"/>
+		<link rel="stylesheet" href="css/main.css"/>
+		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"/>
+		<link rel="stylesheet" href="css/font-awesome.min.css"/>
+		<link rel='shortcut icon' type='image/x-icon' href='img/favicon.jpg'/>
+	</head>
+	<body>
+		<!------------------------------ Header --------------------------->
+		<span id="body_header"></span>
+		<!---------------------------Body ------------------------->
+		<div class="body">
+	      <div class="container-fluid">
+				<div class="col-lg-6 col-lg-offset-3">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<div id="cart_title" class="col-lg-8 col-lg-offset-1">Please Sign-up...</div>
+						</div>
+						<div class="panel-body">
+							<form id="signup_form" class="form-inline" method="post">
+								<div class="row">
+									<div class="col-lg-10 col-lg-offset-1">
+										<p><span id="cust_msg">Please provide your customer credentials and check your inbox to confirm your email...</span></p>
+										<input id="email" name="email" type="text" placeholder="Email..."/><br>
+										<input id="password" name="password" type="password" placeholder="Password..."/><br>
+										<input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm password..."/>
+									</div>
 								</div>
-							</div>
-							<hr>
-							<div class="row">
-								<div class="col-lg-10 col-lg-offset-1">
-									<input id="given_name" name="given_name" type="text" placeholder="First name..."/><br>
-									<input id="family_name" name="family_name" type="text" placeholder="Last name..."/><br>
+								<hr>
+								<div class="row">
+									<div class="col-lg-10 col-lg-offset-1">
+										<input id="given_name" name="given_name" type="text" placeholder="First name..."/><br>
+										<input id="family_name" name="family_name" type="text" placeholder="Last name..."/><br>
+									</div>
 								</div>
-							</div>
-							<hr>
-							<div class="row">
-								<div class="col-lg-10 col-lg-offset-1">
-									+1(<input id="tel1" name="tel[part1]" type="text" min="3" max="3" size="3" placeholder="012"/>)-<input id="tel2" name="tel[part2]" type="text" min="3" max="3" size="3" placeholder="345"/>-<input id="tel3" name="tel[part3]" type="text" min="4" max="4" size="4" placeholder="6789"/><br>
+								<hr>
+								<div class="row">
+									<div class="col-lg-10 col-lg-offset-1">
+										+1(<input id="tel1" name="tel[part1]" type="text" min="3" max="3" size="3" placeholder="012"/>)-<input id="tel2" name="tel[part2]" type="text" min="3" max="3" size="3" placeholder="345"/>-<input id="tel3" name="tel[part3]" type="text" min="4" max="4" size="4" placeholder="6789"/><br>
+									</div>
 								</div>
-							</div>
-							<hr>
-							<div class="row">
-								<div class="col-lg-10 col-lg-offset-1">
-									<input id="address1" name="address[line1]" type="text" placeholder="Address line 1..."/><br>
-									<input id="address2" name="address[line2]" type="text" placeholder="Address line 2..."/><br>
-									<input id="city" name="address[city]" type="text" placeholder="City..."/><br>
-									<input id="state" name="address[state]" type="text" min="2" max="2" size="2" placeholder="--"/><input id="zip" name="address[zip]" type="text" min="5" max="5" size="5" placeholder="Zip..."/><br>
+								<hr>
+								<div class="row">
+									<div class="col-lg-10 col-lg-offset-1">
+										<input id="address1" name="address[line1]" type="text" placeholder="Address line 1..."/><br>
+										<input id="address2" name="address[line2]" type="text" placeholder="Address line 2..."/><br>
+										<input id="city" name="address[city]" type="text" placeholder="City..."/><br>
+										<input id="state" name="address[state]" type="text" min="2" max="2" size="2" placeholder="--"/><input id="zip" name="address[zip]" type="text" min="5" max="5" size="5" placeholder="Zip..."/><br>
+									</div>
 								</div>
-							</div>
-							<hr>
-							<div class="row">
-								<div class="col-lg-10 col-lg-offset-1">
-									<button id="signup_btn" type="submit" value="signup" class="btn btn-primary btn-block">Sign-up</button>
+								<hr>
+								<div class="row">
+									<div class="col-lg-10 col-lg-offset-1">
+										<button id="signup_btn" type="submit" value="signup" class="btn btn-primary btn-block">Sign-up</button>
+									</div>
 								</div>
-							</div>
-						</form>
-					</div>
-					<div class="panel-footer">
+							</form>
+						</div>
+						<div class="panel-footer">
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
     <footer>
       <div class="container-fluid">

@@ -318,16 +318,6 @@ function loadExistingProducts(req, res, callback) {
 // Load existing cart from data source
 function loadExistingCart(req, res, callback) {
 
-	// Get cart id
-//	var cartId = 0;
-//	req.headers.cookie && req.headers.cookie.split(';').forEach(function (cookie) {
-//		var parts = cookie.split('=');
-//		if(parts[0] == 'connect.sid') {
-//			cartId = parts[1];
-//		}
-//	});
-//	console.log("Derived cart id: "+cartId);
-
 	request.get({url:'https://'+restDomain+'/cart/'+cartId, agent: agent}, function (cartLoadError, cartLoadResponse, cartLoadBody) {
 		
 		if (cartLoadError) {
@@ -378,7 +368,7 @@ function formatProductsCarouselsHtml(productsList,callback) {
 					for(var image of product.images) {
 						if(image.isDefault) {
 							console.log("Product ID: "+product.id);
-							currentBuffer += '<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' width=\'150\' alt=\''+product.name+'\'></a>';
+							currentBuffer += '<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' alt=\''+product.name+'\'></a>';
 						}
 					}
 				}
@@ -487,7 +477,7 @@ function formatProductViewHtml(product,callback) {
 
 				// Construct image item reference for current image
 				itemImageHtml += '<div class=\'item'+((image.isDefault) ? ' active' : '')+'\'>';
-				itemImageHtml += '<img src=\''+image.location+'\' width=\'150\' alt=\''+product.name+'\'>';
+				itemImageHtml += '<img src=\''+image.location+'\' alt=\''+product.name+'\'>';
 				itemImageHtml += '</div>';
 
 			}
