@@ -87,11 +87,12 @@ $(document).ready(function() {
 		var totalCost = 0.00;
 		for(var cartItem of latestCart.items) {
 			
-			document.getElementById("cart_inventory").innerHTML += '<div class="row">';
-			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">'+cartItem.quantity+'</div><div class="col-lg-3">'+cartItem.productName+'</div><div class="col-lg-2">'+cartItem.size+'</div><div class="col-lg-2">'+cartItem.color+'</div><div class="col-lg-2">'+cartItem.cost+'</div><div class="col-lg-2">'+cartItem.cost+'</div>';
-			document.getElementById("cart_inventory").innerHTML += '</div>';
 			totalItems += cartItem.quantity;
-			totalCost += (cartItem.cost * cartItem.quantity);
+			var lineCost = (cartItem.cost * cartItem.quantity);
+			totalCost += lineCost;
+			document.getElementById("cart_inventory").innerHTML += '<div class="row">';
+			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">'+cartItem.quantity+'</div><div class="col-lg-3">'+cartItem.productName+'</div><div class="col-lg-2">'+cartItem.size+'</div><div class="col-lg-2">'+cartItem.color+'</div><div class="col-lg-2">'+cartItem.cost.toFixed(2)+'</div><div class="col-lg-2">'+lineCost.toFixed(2)+'</div>';
+			document.getElementById("cart_inventory").innerHTML += '</div>';
 		}
 		document.getElementById("cart_cost_summary").innerHTML = '<span class="pull-right">'+totalItems+' item(s), Total = $'+totalCost.toFixed(2)+'</span>';
 
