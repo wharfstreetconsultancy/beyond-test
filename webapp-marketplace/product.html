@@ -31,7 +31,10 @@
 			<div class="col-lg-8 col-lg-offset-2">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						{product.name}
+						<div class="row">
+							<div class="col-lg-8">{product.name}</div>
+							<div id="cust_msg" class="col-lg-4"></div>
+						</div>
 					</div>
 					<div class="panel-body">
 						<div class="row">
@@ -88,6 +91,86 @@ $(document).ready(function() {
 //	$("#customer_management").load("js/customer.js");
 //	$("#cart_management").load("js/cart.js");
 	$("#navbar").load("js/navigation.js");
+
+	$('#cart_control').on('click', '#add_to_cart_btn', function () {
+
+		//
+		// Local cart management
+		var localCart = JSON.parse(localStorage.getItem('cart'));
+		var timestamp = new Date().getTime().toString();
+		if(!localCart || !localCart.items || localCart.items.length == 0) {
+			localCart = {id: timestamp.split("").reverse().join(""), items: []};
+		}
+	    var newCartItem = {
+			id: timestamp.split("").reverse().join(""),
+			productId: document.getElementById('productId').value,
+			productName: document.getElementById('productName').value,
+			quantity: parseInt(document.getElementById('productQuantity').value),
+			color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
+			size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
+			cost: parseFloat(document.getElementById('productPrice').value) * parseInt(document.getElementById('productQuantity').value),
+			created: timestamp,
+			lastUpdated: timestamp
+	    }
+    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
+	    var existingCartItem = localCart.items.filter(function (currentCartItem) {
+
+	    	console.log("Current:\t"+JSON.stringify(currentCartItem));
+	    	console.log("New:\t\t"+JSON.stringify(newCartItem));
+	    	var sameItem = (
+	    		(currentCartItem.productId === newCartItem.productId) &&
+	    		(currentCartItem.color === newCartItem.color) &&
+	    		(currentCartItem.size === newCartItem.size)
+	    	);
+	    	console.log(sameItem);
+	    	return sameItem;
+	    });
+    	console.log("Existing cart item:\t"+JSON.stringify(existingCartItem));
+	    if(existingCartItem.length > 0) {
+
+	    	existingCartItem[0].quantity += newCartItem.quantity;
+	    	existingCartItem[0].cost += newCartItem.cost;
+	    } else {
+
+	    	localCart.items.push(newCartItem);
+	    }
+		localStorage.setItem('cart', JSON.stringify(localCart));
+		console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
+
+		//
+		// Remote cart management
+		var customer = sessionStorage.getItem('customer');
+		console.log("Current customer: "+customer);
+		if(customer) {
+
+			customer = JSON.parse(customer);
+			$('#status').empty().text('Cart is updating...');
+			console.log("Cart is updating: ");
+			
+			$.ajax({
+				url: '/cart/'+customer.sub+'/item',
+				type: 'post',
+				dataType: 'json',
+				data: {newCartItem: newCartItem},
+				success: function (uploadedCartItem) {
+
+					$('#status').empty().text('Cart update success');
+					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
+					document.getElementById('cust_msg').innerHTML = '<span class="pull-right">Product added to cart!</span>';
+				},
+				error: function (xhr) {
+					
+					$('#status').empty().text('Cart update error: '+xhr.status);
+					console.log("Cart update error: "+xhr.status);
+					document.getElementById('cust_msg').innerHTML = '<span class="pull-right">Product added to cart!</span>';
+				}
+			});
+		} else {
+
+			document.getElementById('cust_msg').innerHTML = '<span class="pull-right">Product added to cart!</span>';
+		}
+		return false;		
+	});
 });
 		</script>
 	</body>
