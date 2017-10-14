@@ -210,6 +210,15 @@ app.get('/shop', function (req, res) {
 	// Log request received
 	console.log( "Received request: GET /shop" );
 
+	// Load all existing products from REST API
+	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+
+        // Add dynamic elements to response page
+        fs.createReadStream(__dirname+'/index.html')
+			.pipe(replaceStream('{products.list}', JSON.stringify(productsList)))
+			.pipe(res);
+	});
+
 	// Return 'shop' page
     fs.createReadStream(__dirname+'/shop.html')
     	.pipe(res);

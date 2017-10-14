@@ -40,6 +40,13 @@
 						class="sr-only">Next</span>
 					</a>
 				</div>
+				
+				<div class="col-md-3 col-sm-6 hero-feature">
+					<div class="thumbnail">
+						<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' width=\'150\' alt=\''+product.name+'\'></a>
+						<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' width=\'150\' alt=\''+product.name+'\'></a>
+					</div>
+				</div>
 		
 				<!-- div class="border panel">
 					<div class="row">
@@ -72,9 +79,11 @@ $(document).ready(function() {
 	var productCounter = 0;
 	for(var product of products) {
 		document.getElementById("showcased_clothing_indicators").innerHTML += '<li data-target="#myCarousel" data-slide-to="'+productCounter+'" class="active"></li>'
-		for(var image of product.images) {
-			if(image.isDefault) {
-				document.getElementById("showcased_clothing_images").innerHTML += '<img src="'+image.location+'" alt="'+product.name+'">';
+		if(product.images) {
+			for(var image of product.images) {
+				if(image.isDefault) {
+					document.getElementById("showcased_clothing_images").innerHTML += '<img src="'+image.location+'" alt="'+product.name+'">';
+				}
 			}
 		}
 		productCounter++;
