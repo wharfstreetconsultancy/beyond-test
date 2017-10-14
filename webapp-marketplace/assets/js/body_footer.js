@@ -1,7 +1,7 @@
 <style>
-	footer {
-	    position: fixed;
-	}
+footer {
+    position: fixed;
+}
 </style>
 <footer>
 	<div class="container-fluid">
