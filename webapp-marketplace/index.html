@@ -21,66 +21,28 @@
 				<div class="has-error">
 					<p class="help-group">{error.message}</p>
 				</div>
-				<!-- div id="myCarousel" class="carousel slide" data-ride="carousel">
-					<ol id="showcased_clothing_indicators" class="carousel-indicators">
-					</ol>
-		
-					<div class="carousel-inner">
-						<div id="showcased_clothing_images" class="item active">
-						</div>
+
+				<div class="row">
+					<div class="col-lg-12">
+						<h1>Featured Clothing</h1>
 					</div>
-		
-					<a class="left carousel-control" href="#myCarousel" data-slide="prev">
-						<span class="glyphicon glyphicon-chevron-left"></span> <span
-						class="sr-only">Previous</span>
-					</a>
-					<a class="right carousel-control" href="#myCarousel"
-						data-slide="next"> <span
-						class="glyphicon glyphicon-chevron-right"></span> <span
-						class="sr-only">Next</span>
-					</a>
 				</div>
-				
-				<div class="col-md-3 col-sm-6 hero-feature">
-					<div class="thumbnail">
-						<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' width=\'150\' alt=\''+product.name+'\'></a>
-						<a href=\'/product?id='+product.id+'\'><img src=\''+image.location+'\' width=\'150\' alt=\''+product.name+'\'></a>
-					</div>
-				</div -->
 
-
-				<div id="productCarousel" class="carousel slide" data-ride="carousel">
+				<div id="product_carousel" class="carousel slide" data-ride="carousel">
 					<ol id="product_indicators" class="carousel-indicators">
 					</ol>
 					<div id="product_images" class="carousel-inner" role="listbox">
 					</div>
-					<a class="left carousel-control" href="#productCarousel" role="button" data-slide="prev">
+					<a class="left carousel-control" href="product_carousel" role="button" data-slide="prev">
 						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
 						<span class="sr-only">Prev</span>
 					</a>
-					<a class="right carousel-control" href="#productCarousel" role="button" data-slide="next">
+					<a class="right carousel-control" href="product_carousel" role="button" data-slide="next">
 						<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 						<span class="sr-only">Next</span>
 					</a>
 				</div>
 
-		
-				<!-- div class="border panel">
-					<div class="row">
-						<div class="col-lg-12">
-							<h1>Featured Clothing</h1>
-						</div>
-					</div>
-					<div class="row text-center">{showcase.clothing.carousel}</div>
-				</div>
-				<div class="border panel">
-					<div class="row">
-						<div class="col-lg-12">
-							<h1>Featured Jewellery</h1>
-						</div>
-					</div>
-					<div class="row text-center">{showcase.jewellery.carousel}</div>
-				</div -->
 			</div>
 		</div>
 
@@ -98,16 +60,17 @@ $(document).ready(function() {
 	var imagesHtmlBuffer = '';
 	
 	for(var product of products) {
-		indicatorsHtmlBuffer += '<li data-target="#productCarousel" data-slide-to="'+(productCounter++)+'"'+((productCounter == 1) ? ' class="active"' : '')+'></li>';
+		indicatorsHtmlBuffer += '<li data-target="#product_carousel" data-slide-to="'+(productCounter)+'"'+((productCounter == 0) ? ' class="active"' : '')+'></li>';
 		if(product.images) {
 			for(var image of product.images) {
 				if(image.isDefault) {
-					imagesHtmlBuffer += '<div class="item'+((productCounter == 1) ? ' active' : '')+'">';
-					imagesHtmlBuffer += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"/></a>';
+					imagesHtmlBuffer += '<div class="item'+((productCounter == 0) ? ' active' : '')+'">';
+					imagesHtmlBuffer += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="250" alt="'+product.name+'"/></a>';
 					imagesHtmlBuffer += '</div>';
 				}
 			}
 		}
+		productCounter++;
 	}
 	document.getElementById("product_indicators").innerHTML = indicatorsHtmlBuffer; 
 	document.getElementById("product_images").innerHTML = imagesHtmlBuffer; 
