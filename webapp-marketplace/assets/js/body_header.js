@@ -1,7 +1,7 @@
 <style>
 /* The navigation bar */
 //.navbar {
-#suroor_banner, #suroor_navbar {
+#suroor_navbar {
 //    overflow: hidden;
     background-color: #000;
     position: fixed; /* Set the navbar to fixed position */
