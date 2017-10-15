@@ -95,7 +95,7 @@ $(document).ready(function() {
 
 	var productCounter = 0;
 	for(var product of products) {
-		document.getElementById("product_indicators").innerHTML += '<li data-target="#productCarousel" data-slide-to="'+(productCounter++)+'"'+((productCounter == 0) ? ' class="active"' : '')+'></li>';
+		document.getElementById("product_indicators").innerHTML += '<li data-target="#productCarousel" data-slide-to="'+productCounter+'"'+((productCounter == 0) ? ' class="active"' : '')+'></li>';
 		if(product.images) {
 			for(var image of product.images) {
 				if(image.isDefault) {
@@ -103,6 +103,7 @@ $(document).ready(function() {
 				}
 			}
 		}
+		productCounter++;
 	}
 });
 		</script>
