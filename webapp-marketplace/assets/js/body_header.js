@@ -1,8 +1,9 @@
 <style>
 /* The navigation bar */
-.navbar {
+//.navbar {
+#suroor_header {
 //    overflow: hidden;
-//    background-color: #333;
+    background-color: #000;
     position: fixed; /* Set the navbar to fixed position */
 //    top: 0; /* Position the navbar at the top of the page */
     width: 100%; /* Full width */
@@ -13,48 +14,50 @@
     margin-top: 30px; /* Add a top margin to avoid content overlay */
 }
 </style>
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-1 header">
-			<div class="col-xs-1 col-md-1 col-lg-1 text-center">
-				<a href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Marketplace"></a>
-			</div>
-		</div>
-	</div>
-</div>
-<nav class="navbar navbar-default">
-	<div class="container-fluid nav-con">
-		<!--Brand and toggle get grouped for better mobile display-->
-		<div class="navbar-header">
+<span id="suroor_header">
+	<div class="container-fluid">
+		<div class="row">
 			<div class="col-sm-1 header">
-				<button type="button" class="navbar-toggle x collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar second-bar"></span>
-				</button>
+				<div class="col-xs-1 col-md-1 col-lg-1 text-center">
+					<a href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Marketplace"></a>
+				</div>
 			</div>
 		</div>
-		<!--Collect the nav links, forms, and other content for toggling-->
-		<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
-			<ul class="myNav nav navbar-nav">
-				<li><a href="/shop">Shop<span class="sr-only">(current)</span></a></li>
-				<li><a href="/about">About Us<span class="sr-only">(current)</span></a></li>
-				<li><a href="/contact">Contact</a></li>
-				<!-- li><a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-				<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div></li -->
-				<!-- li><a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
-				<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout_confirmation" method="post" class="form-inline"></form></div></li -->
-				<li>
-					<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
-					<form id="cart_manager" action="/cart" method="post"/>
-				</li>
-				<li>
-					<a id="cust_link" class="dropdown-toggle fa fa-user" href="#"/>
-				</li>
-			</ul>
-		</div>
 	</div>
-</nav>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid nav-con">
+			<!--Brand and toggle get grouped for better mobile display-->
+			<div class="navbar-header">
+				<div class="col-sm-1 header">
+					<button type="button" class="navbar-toggle x collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar second-bar"></span>
+					</button>
+				</div>
+			</div>
+			<!--Collect the nav links, forms, and other content for toggling-->
+			<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
+				<ul class="myNav nav navbar-nav">
+					<li><a href="/shop">Shop<span class="sr-only">(current)</span></a></li>
+					<li><a href="/about">About Us<span class="sr-only">(current)</span></a></li>
+					<li><a href="/contact">Contact</a></li>
+					<!-- li><a id="user_nav" class="dropdown-toggle fa fa-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+					<div class="dropdown-menu pull-right" aria-labelledby="user_nav"><form id="identity" class="form-inline" method="post"></form></div></li -->
+					<!-- li><a id="cart_preview_nav" class="dropdown-toggle fa fa-shopping-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> My Cart</a>
+					<div class="dropdown-menu pull-right" aria-labelledby="cart_preview_nav"><form id="cart_preview" action="/checkout_confirmation" method="post" class="form-inline"></form></div></li -->
+					<li>
+						<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
+						<form id="cart_manager" action="/cart" method="post"/>
+					</li>
+					<li>
+						<a id="cust_link" class="dropdown-toggle fa fa-user" href="#"/>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</span>
 <script>
 $(document).ready(function() {
 	var customer = sessionStorage.getItem('customer');
