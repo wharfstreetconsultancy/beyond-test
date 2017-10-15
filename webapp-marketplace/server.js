@@ -486,7 +486,6 @@ function formatProductViewHtml(product,callback) {
 				itemImageHtml += '<div class=\'item'+((image.isDefault) ? ' active' : '')+'\'>';
 				itemImageHtml += '<img src=\''+image.location+'\' width=\'150\' alt=\''+product.name+'\'>';
 				itemImageHtml += '</div>';
-
 			}
 			
 			// Load carousel template and replace item indicators and references

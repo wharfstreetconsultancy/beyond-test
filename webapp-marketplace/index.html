@@ -103,7 +103,7 @@ $(document).ready(function() {
 			for(var image of product.images) {
 				if(image.isDefault) {
 					imagesHtmlBuffer += '<div class="item'+((productCounter == 1) ? ' active' : '')+'">';
-					imagesHtmlBuffer += '<img src="'+image.location+'" width="150" alt="'+product.name+'"/>';
+					imagesHtmlBuffer += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"/></a>';
 					imagesHtmlBuffer += '</div>';
 				}
 			}
