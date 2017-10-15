@@ -17,12 +17,25 @@
 		<span id="body_header"></span>
 	    <!--------------------------------Body ------------------------->
 	    <div class="body">
-	      	<div class="container-fluid">
-	        	<!-- div class="shopHeader">
-	          		<h1>Clothing</h1>
-	        	</div -->
-	        	<div id="product_list" class="row">
-	        	</div>
+			<div class="container-fluid">
+				<div class="border panel">
+					<div class="row">
+						<div class="col-lg-12">
+							<h1>All Clothing</h1>
+						</div>
+					</div>
+					<div class="row text-center">
+						<div class="col-md-3 hero-feature">
+							<div class="thumbnail">
+								<a href="/product?id="><img src="img/FullSizeRender_6.jpg" width="150" alt="name"></a>
+								<div class="caption">
+									<h3>Hello</h3>
+									<p><a href=\'/product?id='+product.id+'\' class=\'btn btn-primary\'>View</a></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!------------------------------- Footer --------------------->
@@ -33,9 +46,10 @@
 		<script>
 var products = {products.list};
 $(document).ready(function() {
-
+/*
 	for(var product of products) {
 
+		
 		document.getElementById("product_list").innerHTML += '<div class="col-lg-3">';
 		document.getElementById("product_list").innerHTML += '<div class="panel panel-primary">';
 		document.getElementById("product_list").innerHTML += '<div class="panel-heading">';
@@ -70,6 +84,7 @@ $(document).ready(function() {
 //		document.getElementById("product_list").innerHTML += '</div>';
 		document.getElementById("product_list").innerHTML += '</div>';
 	}
+*/
 });
 		</script>
 	</body>
