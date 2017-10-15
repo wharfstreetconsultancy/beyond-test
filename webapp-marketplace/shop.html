@@ -25,7 +25,7 @@
 						</div>
 					</div>
 					<div id="products_list" class="row text-center">
- 
+<!--  
 						<div class="col-md-3 hero-feature">
 							<div class="thumbnail">
 								<a href="/product?id="><img src="img/FullSizeRender_6.jpg" width="150" alt="name"></a>
@@ -53,6 +53,7 @@
 								</div>
 							</div>
 						</div>
+-->
 					</div>
 				</div>
 			</div>
@@ -65,27 +66,36 @@
 		<script>
 var products = {products.list};
 $(document).ready(function() {
-/*
+
 	for(var product of products) {
 
 		document.getElementById("products_list").innerHTML += '<div class="col-md-3 hero-feature">';
+		console.log('<div class="col-md-3 hero-feature">');
 		document.getElementById("products_list").innerHTML += '<div class="thumbnail">';
+		console.log('<div class="thumbnail">');
 		
 		if(product.images) {
 
 			for(var image of product.images) {
 				if(image.isDefault) {
 
-					document.getElementById("products_list").innerHTML += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>';
+//					document.getElementById("products_list").innerHTML += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>';
+					console.log('<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>');
 				}
 			}
 		}
 		document.getElementById("products_list").innerHTML += '<div class="caption">';
+		console.log('<div class="caption">');
 		document.getElementById("products_list").innerHTML += '<h3>'+product.name+'</h3>';
+		console.log('<h3>'+product.name+'</h3>');
 		document.getElementById("products_list").innerHTML += '<p><a href="/product?id='+product.id+'" class="btn btn-primary">View</a></p>';
+		console.log('<p><a href="/product?id='+product.id+'" class="btn btn-primary">View</a></p>');
 		document.getElementById("products_list").innerHTML += '</div>';
+		console.log('</div>');
 		document.getElementById("products_list").innerHTML += '</div>';
+		console.log('</div>');
 		document.getElementById("products_list").innerHTML += '</div>';
+		console.log('</div>');
 	}
 */
 });
