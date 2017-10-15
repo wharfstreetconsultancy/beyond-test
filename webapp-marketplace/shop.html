@@ -67,35 +67,35 @@
 var products = {products.list};
 $(document).ready(function() {
 
-	for(var product of products) {
+	if(!products) {
 
-		document.getElementById("products_list").innerHTML += '<div class="col-md-3 hero-feature">';
-		console.log('<div class="col-md-3 hero-feature">');
-		document.getElementById("products_list").innerHTML += '<div class="thumbnail">';
-		console.log('<div class="thumbnail">');
-		
-		if(product.images) {
+		document.getElementById("products_list").innerHTML = 'No products available in store...';
+	}
+	else {
 
-			for(var image of product.images) {
-				if(image.isDefault) {
-
-					document.getElementById("products_list").innerHTML += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>';
-					console.log('<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>');
+		var htmlBuffer = '';
+		for(var product of products) {
+	
+			htmlBuffer += '<div class="col-md-3 hero-feature">';
+			htmlBuffer += '<div class="thumbnail">';
+			
+			if(product.images) {
+	
+				for(var image of product.images) {
+					if(image.isDefault) {
+	
+						htmlBuffer += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>';
+					}
 				}
 			}
+			htmlBuffer += '<div class="caption">';
+			htmlBuffer += '<h3>'+product.name+'</h3>';
+			htmlBuffer += '<p><a href="/product?id='+product.id+'" class="btn btn-primary">View</a></p>';
+			htmlBuffer += '</div>';
+			htmlBuffer += '</div>';
+			htmlBuffer += '</div>';
 		}
-		document.getElementById("products_list").innerHTML += '<div class="caption">';
-		console.log('<div class="caption">');
-		document.getElementById("products_list").innerHTML += '<h3>'+product.name+'</h3>';
-		console.log('<h3>'+product.name+'</h3>');
-		document.getElementById("products_list").innerHTML += '<p><a href="/product?id='+product.id+'" class="btn btn-primary">View</a></p>';
-		console.log('<p><a href="/product?id='+product.id+'" class="btn btn-primary">View</a></p>');
-		document.getElementById("products_list").innerHTML += '</div>';
-		console.log('</div>');
-		document.getElementById("products_list").innerHTML += '</div>';
-		console.log('</div>');
-		document.getElementById("products_list").innerHTML += '</div>';
-		console.log('</div>');
+		document.getElementById("products_list").innerHTML = htmlBuffer; 
 	}
 });
 		</script>
