@@ -79,7 +79,7 @@ $(document).ready(function() {
 			for(var image of product.images) {
 				if(image.isDefault) {
 
-//					document.getElementById("products_list").innerHTML += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>';
+					document.getElementById("products_list").innerHTML += '<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>';
 					console.log('<a href="/product?id='+product.id+'"><img src="'+image.location+'" width="150" alt="'+product.name+'"></a>');
 				}
 			}
