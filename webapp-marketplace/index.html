@@ -98,7 +98,7 @@ $(document).ready(function() {
 	var imagesHtmlBuffer = '';
 	
 	for(var product of products) {
-		indicatorsHtmlBuffer += '<li data-target="#productCarousel" data-slide-to="'+productCounter+'"'+((productCounter == 0) ? ' class="active"' : '')+'></li>';
+		indicatorsHtmlBuffer += '<li data-target="#productCarousel" data-slide-to="'+(productCounter++)+'"'+((productCounter == 1) ? ' class="active"' : '')+'></li>';
 		if(product.images) {
 			for(var image of product.images) {
 				if(image.isDefault) {
@@ -108,7 +108,6 @@ $(document).ready(function() {
 				}
 			}
 		}
-		productCounter++;
 	}
 	document.getElementById("product_indicators").innerHTML = indicatorsHtmlBuffer; 
 	document.getElementById("product_images").innerHTML = imagesHtmlBuffer; 
