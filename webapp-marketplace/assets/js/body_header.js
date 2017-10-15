@@ -1,5 +1,5 @@
 <style>
-header {
+.navbar {
     position: fixed;
 }
 </style>
