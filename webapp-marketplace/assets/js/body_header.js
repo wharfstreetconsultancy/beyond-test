@@ -1,8 +1,8 @@
 <style>
 /* The navigation bar */
 .navbar {
-    overflow: hidden;
-    background-color: #333;
+//    overflow: hidden;
+//    background-color: #333;
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     width: 100%; /* Full width */
