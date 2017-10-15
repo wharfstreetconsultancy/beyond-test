@@ -99,7 +99,9 @@ $(document).ready(function() {
 		if(product.images) {
 			for(var image of product.images) {
 				if(image.isDefault) {
-					document.getElementById("product_images").innerHTML += '<img src="'+image.location+'" width="150" alt="'+product.name+'">';
+					document.getElementById("product_images").innerHTML += '<div class="item'+((productCounter == 0) ? ' active' : '')+'">';
+					document.getElementById("product_images").innerHTML += '<img src="'+image.location+'" width="150" alt="'+product.name+'"/>';
+					document.getElementById("product_images").innerHTML += '</div>';
 				}
 			}
 		}
