@@ -1,5 +1,5 @@
 <style>
-footer {
+header {
     position: fixed;
 }
 </style>
