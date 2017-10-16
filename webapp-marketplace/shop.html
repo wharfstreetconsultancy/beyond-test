@@ -64,7 +64,6 @@ $(document).ready(function() {
 		var htmlBuffer = '';
 		for(var product of products) {
 
-			console.log(product);
 			htmlBuffer += '<div class="col-lg-3">';
 			htmlBuffer += '<div class="panel panel-primary">';
 			htmlBuffer += '<div class="panel-heading">';
@@ -76,7 +75,7 @@ $(document).ready(function() {
 			htmlBuffer += '<div class="row">';
 			htmlBuffer += '<div class="col-md-12 hero-feature">';
 			htmlBuffer += '<div>';
-			htmlBuffer += '$'+product.cost.toFixed(2);
+			htmlBuffer += '$'+product.price.toFixed(2);
 			htmlBuffer += '</div>';
 			
 			if(product.images) {
