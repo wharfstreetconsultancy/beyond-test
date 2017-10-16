@@ -75,7 +75,7 @@ $(document).ready(function() {
 			htmlBuffer += '<div class="row">';
 			htmlBuffer += '<div class="col-md-12 hero-feature">';
 			htmlBuffer += '<div>';
-			htmlBuffer += '$'+product.price.toFixed(2);
+			htmlBuffer += '$'+parseFloat(product.price).toFixed(2);
 			htmlBuffer += '</div>';
 			
 			if(product.images) {
