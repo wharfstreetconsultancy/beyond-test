@@ -89,6 +89,7 @@ $(document).ready(function() {
 
 			customer = JSON.parse(customer);
 			console.log("Customer about to checkout: "+JSON.stringify(customer));
+/*
 			$.ajax({
 
 				url: '/client_token',
@@ -123,14 +124,33 @@ $(document).ready(function() {
 								console.error('Error creating PayPal Checkout:', paypalCheckoutErr);
 								return;
 							}
-	
+*/
 							// Set up PayPal with the checkout.js library
 							paypal.Button.render({
 	
-								env: response.environment, // or 'sandbox'
-								commit: true, // This will add the transaction amount to the PayPal button
+//								env: response.environment, // or 'sandbox'
+								env: 'sandbox',
+								commit: true,
 								payment: function () {
 
+									// Set up a url on your server to create the payment
+									var CREATE_URL = 'https://35.167.169.252:1443/create-payment';
+
+									// Make a call to your server to set up the payment
+									return paypal.request.post(CREATE_URL).then(function(res) {
+										return res.paymentID;
+									});
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+/*
 									console.log("CUSTOMER: "+JSON.stringify(customer));
 									console.log("ADDRESS: "+JSON.stringify(customer.address));
 
@@ -151,9 +171,29 @@ $(document).ready(function() {
 											phone: customer.address.phone_number
 										}
 									});
+*/
 								},
 								onAuthorize: function (data, actions) {
 
+									// Set up a url on your server to execute the payment
+									var EXECUTE_URL = 'https://35.167.169.252:1443/execute-payment';
+
+									// Set up the data you need to pass to your server
+									var data = {
+										paymentID: data.paymentID,
+										payerID: data.payerID
+									};
+
+									// Make a call to your server to execute the payment
+									return paypal.request.post(EXECUTE_URL, data).then(function (res) {
+										window.alert('Payment Complete!');
+									);
+
+									
+									
+									
+									
+/*									
 									return paypalCheckoutInstance.tokenizePayment(data).then(function (payload) {
 
 										console.log("Payment gateway request data: "+JSON.stringify(data));
@@ -201,10 +241,11 @@ $(document).ready(function() {
 											}
 										});
 									});
+*/
 								},
 								onCancel: function (data) {
 
-									console.log('checkout.js payment cancelled', JSON.stringify(data, 0, 2));
+									console.log('Checkout payment cancelled.', JSON.stringify(data, 0, 2));
 								},
 								onError: function (error) {
 
@@ -220,6 +261,7 @@ $(document).ready(function() {
 							// The PayPal button will be rendered in an html element with the id
 							// `paypal-button`. This function will be called when the PayPal button
 							// is set up and ready to be used.
+								alert("Done!");
 								return true;
 							});
 						});
@@ -269,76 +311,6 @@ $(document).ready(function() {
 	});
 
 });
-		</script>
-		<script>
-    var CREATE_PAYMENT_URL  = 'https://'+document.location.host+'/create-payment';
-    var EXECUTE_PAYMENT_URL = 'https://'+document.location.host+'/execute-payment';
-
-    paypal.Button.render({
-
-        env: 'sandbox', // Or 'sandbox'
-
-        commit: true, // Show a 'Pay Now' button
-
-        payment: function() {
-            return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
-
-				// Submit payload.nonce to server
-				$.ajax({
-					url: '/transaction',
-					type: 'post',
-					dataType: 'json',
-					data: {
-						amount: totalCost,
-						nonce: payload.nonce,
-						shippingAddress: shippingAddress
-					},
-					error: function (xhr) {
-
-						console.log('Payment transaction failed: '+JSON.stringify(xhr.responseJSON.error));
-
-						document.getElementById("cart_cost_summary").innerHTML = '';
-						document.getElementById("paypal-button").innerHTML = '';
-						document.getElementById("cart_title").innerHTML = 'Order Summary...';
-						document.getElementById("cart_inventory").innerHTML = 'Status: Failed<br>';
-						document.getElementById("cart_inventory").innerHTML += 'Error message(s):<br>';
-						document.getElementById("cart_inventory").innerHTML += '<ul>';
-						for(var errorMessage of xhr.responseJSON.error.message) {
-							document.getElementById("cart_inventory").innerHTML += '<li>'+errorMessage+'</li>';
-						}
-						if(xhr.responseJSON.error.orderId) {document.getElementById("cart_inventory").innerHTML += 'Suroor Order Ref: '+xhr.responseJSON.error.orderId;}
-						if(xhr.responseJSON.error.paymentId) {document.getElementById("cart_inventory").innerHTML += 'Paypal Payment Ref: '+xhr.responseJSON.error.paymentId;}
-						document.getElementById("cart_inventory").innerHTML += '</ul>';
-					},
-					success: function (response) {
-		
-						console.log("Created payment transaction: "+JSON.stringify(response));
-
-						document.getElementById("cart_cost_summary").innerHTML = '';
-						document.getElementById("paypal-button").innerHTML = '';
-						document.getElementById("cart_title").innerHTML = 'Order Summary...';
-						document.getElementById("cart_inventory").innerHTML = 'Status: '+response.transaction.message+'<br>';
-						document.getElementById("cart_inventory").innerHTML += 'Suroor Order Ref: '+response.transaction.orderId+'<br>';
-						document.getElementById("cart_inventory").innerHTML += 'Paypal Payment Ref: '+response.transaction.paymentId+'<br>';
-						document.getElementById("cart_clear").click();
-					}
-				});
-                return data.id;
-            });
-        },
-
-        onAuthorize: function(data) {
-            return paypal.request.post(EXECUTE_PAYMENT_URL, {
-                paymentID: data.paymentID,
-                payerID:   data.payerID
-            }).then(function() {
-
-                // The payment is complete!
-                // You can now show a confirmation message to the customer
-            });
-        }
-
-    }, '#paypal-button');
 		</script>
 	</body>
 </html>
