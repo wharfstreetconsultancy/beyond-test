@@ -522,7 +522,7 @@ app.get('/customer', function (req, res) {
 	var customer = req.session.customer; 
 	if(customer) {
 		
-		console.log("Found customer.");
+		console.log("Found customer: "+customer.sub);
 		
         if(!(customer.signInUserSession)) {
 			
@@ -1041,31 +1041,83 @@ app.get('/client_token', function (req, res) {
 });
 
 //
-// POST '/checkout' - Record a payment authorisation
-app.post("/checkout", function (req, res) {
+// POST '/create-payment' - Create a payment transaction
+app.post('/create-payment', function (req, res) {
 
 	// Log request received
-	console.log( "Received request: POST /checkout" );
-	
-	var nonce = req.body.payment_method_nonce;
-	// Use payment method nonce here
+	console.log( "Received request: POST /create-payment" );
+
+
+	var customer = req.session.customer; 
+	if(customer) {
+		
+		console.log("Found customer: "+customer.sub);
+
+	}
 });
-
-//
-// POST '/transaction' - Create a payment transaction
-app.post('/transaction', function (req, res) {
-
-	// Log request received
-	console.log( "Received request: POST /transaction" );
-
-	var recipientNameParts = req.body.shippingAddress.recipientName.split(' ');
-	var firstName = recipientNameParts[0];
-	var lastName = recipientNameParts[1];
+/*
 	var orderId = new Date().getTime().toString().split('').reverse().join('').substring(0,14);
 	var descriptor = 'SuroorF'+'*'+orderId;
-	console.log("Descriptor: "+descriptor);
+	
+	var cartId = req.session.customer.sub;
 
-	var saleRequest = {
+	// Payment object
+	var newPayment = {
+		intent: 'sale',
+		'payer': {
+			payment_method: 'paypal'	  
+		},
+		transactions: [{
+			amount: {
+				total: req.body.amount,
+				currency: "USD",
+				details: {
+					subtotal: (req.body.amount * 0.8).toString(),
+					tax: (req.body.amount * 0.2).toString(),
+					shipping: '0.00',
+					handling_fee: '0.00',
+					shipping_discount: '0.00',
+					insurance: '0.00'
+				}
+			},
+			description: req.body.description,
+			custom: null,
+			invoice_number: orderId,
+			payment_options: {
+				allowed_payment_method: "INSTANT_FUNDING_SOURCE"
+			},
+			soft_descriptor: null,
+			item_list: {
+				items: [{
+					name: "hat",
+					description: "Brown hat.",
+					quantity: "5",
+					price: "3",
+					tax: "0.01",
+					sku: "1",
+					currency: "USD"
+				}],
+				shipping_address: {
+					recipient_name: "Brian Robinson",
+					line1: "4th Floor",
+					line2: "Unit #34",
+					city: "San Jose",
+					country_code: "US",
+					postal_code: "95131",
+					phone: "011862212345678",
+					state: "CA"
+				}
+			}
+		}],
+		note_to_payer: "Contact us for any questions on your order.",
+		redirect_urls: {
+			return_url: "https://www.paypal.com/return",
+			cancel_url: "https://www.paypal.com/cancel"
+		}
+	}
+			
+			
+			
 		amount: req.body.amount,
 		merchantAccountId: "USD",
 		paymentMethodNonce: req.body.nonce,
@@ -1092,23 +1144,18 @@ app.post('/transaction', function (req, res) {
 		}
 	};
 
-	gateway.transaction.sale(saleRequest, function (err, result) {
+	request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment'}, function (paymentError, paymentResponse, paymentBody) {
 		
-		if (err) {
+		if (paymentError) {
 
-			console.log("Error details:");
-			console.log("\t-Type ("+err.type+")");
-			console.log("\t-Name: ("+err.name+")");
-			console.log("\t-Message: ("+err.message+")");
-			console.log("\t-Status: ("+err.status+")");
-			console.log("\t-Result: ("+result+")");
+			console.log("Error details: "+paymentError);
 
-			// Return new cart item to caller
+			// Return error to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: {message: [err.message]}}));
+			res.write(JSON.stringify({error: {message: paymentError}}));
 			res.end();
 			return;
-		} else if (result.success) {
+		} else {
 
 			console.log("Payment transaction successful (id: "+result.transaction.id+")");
 			console.log("Request Body: "+JSON.stringify(req.body));
@@ -1145,20 +1192,10 @@ app.post('/transaction', function (req, res) {
 					return;
 				}
 			});
-		} else {
-
-			console.log("Payment transaction failed ("+result.message+")");
-			console.log("Response: "+JSON.stringify(result));
-
-			// Return new cart item to caller
-			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: {message: result.message.split('\n')}}));
-			res.end();
-			return;
 		}
 	});
 });
-
+*/
 //
 // Store order into the data source
 function storeOrder(order, callback) {
