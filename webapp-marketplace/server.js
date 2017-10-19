@@ -1062,7 +1062,7 @@ app.post('/create-payment', function (req, res) {
 		console.log("Customer specified: "+customerId);
 
 		// Load cart using customer id
-        loadCart(customerId, function (cartError, existingCart) {
+        loadCart(customerId, function (cartError, cart) {
 
         	// Handle error
         	if(cartError) {
