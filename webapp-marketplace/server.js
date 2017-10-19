@@ -1047,6 +1047,7 @@ app.post('/create-payment', function (req, res) {
 	// Log request received
 	console.log( "Received request: POST /create-payment" );
 
+	console.log("Request: "+JSON.stringify(req.body));
 	var customerId = req.body.customerId; 
 	if(!customerId) {
 
