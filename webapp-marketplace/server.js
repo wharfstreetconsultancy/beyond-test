@@ -1094,11 +1094,11 @@ app.post('/create-payment', function (req, res) {
 					for(var item of cart.items) {
 
 						paypalItems.push({
-							name: "hat",
-							description: "Brown hat.",
-							quantity: "5",
-							price: "3",
-							tax: "0.01",
+							name: item.productName,
+							description: item.description,
+							quantity: item.quantity,
+							price: parseFloat((item.cost) * 0.2).toFixed(2),
+							tax: (parseFloat(item.cost) * 0.2).toFixed(2),
 							sku: "1",
 							currency: "USD"
 						});
