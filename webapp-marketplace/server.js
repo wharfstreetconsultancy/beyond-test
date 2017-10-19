@@ -1062,7 +1062,7 @@ app.post('/create-payment', function (req, res) {
 
 		console.log("Loading cart belonging to customer: "+customer);
 
-		customer = JSPON.parse(customer);
+		customer = JSON.parse(customer);
 		// Load cart using customer id
         loadCart(customer.sub, function (cartError, cart) {
 
