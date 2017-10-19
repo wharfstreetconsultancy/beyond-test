@@ -136,8 +136,13 @@ $(document).ready(function() {
 									// Set up a url on your server to create the payment
 									var CREATE_URL = 'https://35.167.169.252:1443/create-payment';
 
+									// Set up the data you need to pass to your server
+									var data = {
+										customerId: customer.id
+									};
+
 									// Make a call to your server to set up the payment
-									return paypal.request.post(CREATE_URL).then(function(res) {
+									return paypal.request.post(CREATE_URL, data).then(function(res) {
 										return res.paymentID;
 									});
 									

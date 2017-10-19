@@ -1047,42 +1047,43 @@ app.post('/create-payment', function (req, res) {
 	// Log request received
 	console.log( "Received request: POST /create-payment" );
 
+	var customerId = req.body.customerId; 
+	if(!customerId) {
 
-	var customer = req.session.customer; 
-	if(!customer) {
-
-		console.log("Customer not found.");
+		console.log("No customer specified: "+customerId);
 		// Return error to caller
-		res.writeHead(500, {'Content-Type': 'application/json'});
-		res.write(JSON.stringify({error: 'Customer not found'}));
+		res.writeHead(400, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify({error: 'No customer specified.'}));
 		res.end();
 		return;
 	} else {
 
-		console.log("Customer found: "+customer.sub);
-		if(!(customer.signInUserSession)) {
-			
-			console.log("Customer not signed-in.");
+		console.log("Customer specified: "+customerId);
 
 
-			// Return error to caller
-			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: 'Customer not signed-in'}));
-			res.end();
-			return;
-		} else {
+        loadCart(customerId, function (cartError, existingCart) {
 
-			console.log("Customer signed-in.");
+        	// Handle error
+        	if(cartError) {
+        		
+        		// Throw 'cart not found' response to caller
+				res.writeHead(404, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(cartError));
+				res.end();
+				return;
+        	} else {
 
-			// Get cart details for customer5
-
-			// Return error to caller
-			res.writeHead(201, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({id: 123454321}));
-			res.end();
-			return;
-
-		}
+				console.log("Customer signed-in.");
+	
+				// Get cart details for customer5
+	
+				// Return error to caller
+				res.writeHead(201, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify({id: 123454321}));
+				res.end();
+				return;
+        	}
+		});
 	}
 });
 /*
