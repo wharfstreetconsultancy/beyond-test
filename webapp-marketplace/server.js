@@ -24,7 +24,8 @@ console.log("AUTH_CLIENT="+process.env.AUTH_CLIENT);
 console.log("SECURE_PORT="+process.env.SECURE_PORT);
 console.log("REST_HOST="+process.env.REST_HOST);
 console.log("REST_PORT="+process.env.REST_PORT);
-console.log("PAYMENT_GATEWAY="+process.env.PAYMENT_GATEWAY);
+console.log("PGW_CLIENT="+process.env.PGW_CLIENT);
+console.log("PGW_SECRET="+process.env.PGW_SECRET);
 
 AWS.config.update({region: process.env.AWS_REGION});
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
@@ -1160,27 +1161,45 @@ app.post('/create-payment', function (req, res) {
 						}
 					}
 
-					request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+process.env.PAYMENT_GATEWAY}, formData: JSON.stringify(newPayment)}, function (paymentError, paymentResponse, paymentBody) {
+					request.post({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: {'Content-Type': 'application/json', 'Authorization': 'Basic '+new Buffer(PGW_CLIENT+":"+PGW_SECRET).toString("base64")}, formData: {'grant_type': 'client_credentials'}}, function (accessError, accessResponse, accessBody) {
 
-						if (paymentError) {
+						if (accessError) {
 
-							console.log("Error details: "+paymentError);
+							console.log("Error details: "+accessError);
 
 							// Return error to caller
 							res.writeHead(500, {'Content-Type': 'application/json'});
-							res.write(JSON.stringify({error: paymentError}));
+							res.write(JSON.stringify({error: accessError}));
 							res.end();
 							return;
 						} else {
 
-							console.log("Got payment response: "+JSON.stringify(paymentResponse));
-							console.log("Got payment body: "+JSON.stringify(paymentBody));
+							console.log("Got access response: "+JSON.stringify(accessResponse));
+							console.log("Got access body: "+JSON.stringify(accessBody));
 
-							// Return error to caller
-							res.writeHead(201, {'Content-Type': 'application/json'});
-							res.write(JSON.stringify({id: paymentBody.id}));
-							res.end();
-							return;
+							request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+process.env.PAYMENT_GATEWAY}, formData: JSON.stringify(newPayment)}, function (paymentError, paymentResponse, paymentBody) {
+		
+								if (paymentError) {
+		
+									console.log("Error details: "+paymentError);
+		
+									// Return error to caller
+									res.writeHead(500, {'Content-Type': 'application/json'});
+									res.write(JSON.stringify({error: paymentError}));
+									res.end();
+									return;
+								} else {
+		
+									console.log("Got payment response: "+JSON.stringify(paymentResponse));
+									console.log("Got payment body: "+JSON.stringify(paymentBody));
+		
+									// Return error to caller
+									res.writeHead(201, {'Content-Type': 'application/json'});
+									res.write(JSON.stringify({id: paymentBody.id}));
+									res.end();
+									return;
+								}
+							});
 						}
 					});
 				}
