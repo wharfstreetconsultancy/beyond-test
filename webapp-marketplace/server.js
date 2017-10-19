@@ -1049,10 +1049,40 @@ app.post('/create-payment', function (req, res) {
 
 
 	var customer = req.session.customer; 
-	if(customer) {
-		
-		console.log("Found customer: "+customer.sub);
+	if(!customer) {
 
+		console.log("Customer not found.");
+		// Return error to caller
+		res.writeHead(500, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify({error: 'Customer not found'}));
+		res.end();
+		return;
+	} else {
+
+		console.log("Customer found: "+customer.sub);
+		if(!(customer.signInUserSession)) {
+			
+			console.log("Customer not signed-in.");
+
+
+			// Return error to caller
+			res.writeHead(500, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({error: 'Customer not signed-in'}));
+			res.end();
+			return;
+		} else {
+
+			console.log("Customer signed-in.");
+
+			// Get cart details for customer5
+
+			// Return error to caller
+			res.writeHead(201, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({id: 123454321}));
+			res.end();
+			return;
+
+		}
 	}
 });
 /*
