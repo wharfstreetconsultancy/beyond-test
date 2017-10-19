@@ -1130,7 +1130,7 @@ app.post('/create-payment', function (req, res) {
 								currency: "USD",
 								details: {
 									subtotal: itemAmount.toString(),
-									tax: itemtax.toString(),
+									tax: itemTax.toString(),
 									shipping: '0.00',
 									handling_fee: '0.00',
 									shipping_discount: '0.00',
