@@ -1137,7 +1137,7 @@ app.post('/create-payment', function (req, res) {
 									insurance: '0.00'
 								}
 							},
-							description: totalItems+' item(s), Total = $'+totalCost,
+							description: totalItems+' item(s), Total = $'+totalAmount,
 							custom: null,
 							invoice_number: orderId,
 							payment_options: {
