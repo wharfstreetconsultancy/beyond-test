@@ -1052,6 +1052,7 @@ app.post('/create-payment', function (req, res) {
 	if(!customer) {
 
 		console.log("No customer specified: "+customer);
+		
 		// Return error to caller
 		res.writeHead(400, {'Content-Type': 'application/json'});
 		res.write(JSON.stringify({error: 'No customer specified.'}));
@@ -1059,8 +1060,9 @@ app.post('/create-payment', function (req, res) {
 		return;
 	} else {
 
-		console.log("Loading cart belonging to customer: "+JSON.stringify(customer));
+		console.log("Loading cart belonging to customer: "+customer);
 
+		customer = JSPON.parse(customer);
 		// Load cart using customer id
         loadCart(customer.sub, function (cartError, cart) {
 
