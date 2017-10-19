@@ -1048,10 +1048,10 @@ app.post('/create-payment', function (req, res) {
 	console.log( "Received request: POST /create-payment" );
 
 	console.log("Request: "+JSON.stringify(req.body));
-	var customerId = req.body.customerId; 
-	if(!customerId) {
+	var customer = req.body.customer; 
+	if(!customer) {
 
-		console.log("No customer specified: "+customerId);
+		console.log("No customer specified: "+customer);
 		// Return error to caller
 		res.writeHead(400, {'Content-Type': 'application/json'});
 		res.write(JSON.stringify({error: 'No customer specified.'}));
@@ -1059,13 +1059,13 @@ app.post('/create-payment', function (req, res) {
 		return;
 	} else {
 
-		console.log("Customer specified: "+customerId);
+		console.log("Customer specified: "+JSON.stringify(customer));
 
 		// Load cart using customer id
-        loadCart(customerId, function (cartError, cart) {
+        loadCart(customer.sub, function (cartError, cart) {
 
-        	// Handle error
-        	if(cartError) {
+			// Handle error
+			if(cartError) {
         		
 				console.log("Cart not found: "+cartError);
 
@@ -1089,27 +1089,103 @@ app.post('/create-payment', function (req, res) {
 					return;
 				} else {
 
-					var paypalItems = [];
+					var totalItems = 0;
+					var totalAmount = 0.00;
+					var totalTax = 0.00;
+					var orderItems = [];
 					// Get cart details for customer
 					for(var item of cart.items) {
 
-						paypalItems.push({
+						var itemAmount = (parseFloat(item.cost) * 0.8).toFixed(2);
+						var itemTax = (parseFloat(item.cost) * 0.2).toFixed(2);
+						totalAmount += itemAmount;
+						totalTax += itemTax;
+						totalItems += item.quantity;
+						
+						orderItems.push({
 							name: item.productName,
 							description: item.description,
 							quantity: item.quantity,
-							price: parseFloat((item.cost) * 0.2).toFixed(2),
-							tax: (parseFloat(item.cost) * 0.2).toFixed(2),
+							price: itemAmount,
+							tax: itemtax,
 							sku: "1",
 							currency: "USD"
 						});
 					}
-					console.log("Rready for payment: "+JSON.stringify(paypalItems));
-				
-					// Return error to caller
-					res.writeHead(201, {'Content-Type': 'application/json'});
-					res.write(JSON.stringify({id: 123454321}));
-					res.end();
-					return;
+
+					var orderId = new Date().getTime().toString().split('').reverse().join('').substring(0,14);
+					var descriptor = 'SuroorF'+'*'+orderId;
+					
+					// Payment object
+					var newPayment = {
+						intent: 'sale',
+						'payer': {
+							payment_method: 'paypal'	  
+						},
+						transactions: [{
+							amount: {
+								total: (totalAmount + totalTax).toString(),
+								currency: "USD",
+								details: {
+									subtotal: itemAmount.toString(),
+									tax: itemtax.toString(),
+									shipping: '0.00',
+									handling_fee: '0.00',
+									shipping_discount: '0.00',
+									insurance: '0.00'
+								}
+							},
+							description: totalItems+' item(s), Total = $'+totalCost,
+							custom: null,
+							invoice_number: orderId,
+							payment_options: {
+								allowed_payment_method: 'INSTANT_FUNDING_SOURCE'
+							},
+							soft_descriptor: null,
+							item_list: {
+								items: orderItems,
+								shipping_address: {
+									recipient_name: customer.given_name+' '+customer.family_name,
+									line1: customer.address.line1,
+									line2: customer.address.line2,
+									city: customer.address.city,
+									country_code: 'US',
+									postal_code: customer.address.zip,
+									phone: customer.address.phone_number,
+									state: customer.address.state
+								}
+							}
+						}],
+						note_to_payer: 'Contact us for any questions on your order.',
+						redirect_urls: {
+							return_url: 'https://'+restHost+'/return',
+							cancel_url: 'https://'+restHost+'/cancel'
+						}
+					}
+
+					request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', formData: newPayment}, function (paymentError, paymentResponse, paymentBody) {
+
+						if (paymentError) {
+
+							console.log("Error details: "+paymentError);
+
+							// Return error to caller
+							res.writeHead(500, {'Content-Type': 'application/json'});
+							res.write(JSON.stringify({error: paymentError}));
+							res.end();
+							return;
+						} else {
+
+							console.log("Got payment response: "+JSON.stringify(paymentResponse));
+							console.log("Got payment body: "+JSON.stringify(paymentBody));
+
+							// Return error to caller
+							res.writeHead(201, {'Content-Type': 'application/json'});
+							res.write(JSON.stringify({id: paymentBody.id}));
+							res.end();
+							return;
+						}
+					});
 				}
 			}
 		});
@@ -1119,8 +1195,6 @@ app.post('/create-payment', function (req, res) {
 	var orderId = new Date().getTime().toString().split('').reverse().join('').substring(0,14);
 	var descriptor = 'SuroorF'+'*'+orderId;
 	
-	var cartId = req.session.customer.sub;
-
 	// Payment object
 	var newPayment = {
 		intent: 'sale',
