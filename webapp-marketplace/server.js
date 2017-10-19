@@ -1101,7 +1101,7 @@ app.post('/create-payment', function (req, res) {
 							tax: "0.01",
 							sku: "1",
 							currency: "USD"
-						}};
+						});
 					}
 					console.log("Rready for payment: "+JSON.stringify(paypalItems));
 				
