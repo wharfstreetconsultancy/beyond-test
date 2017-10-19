@@ -1160,7 +1160,7 @@ app.post('/create-payment', function (req, res) {
 						}
 					}
 
-					request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+process.env.PAYMENT_GATEWAY}, formData: newPayment}, function (paymentError, paymentResponse, paymentBody) {
+					request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+process.env.PAYMENT_GATEWAY}, formData: JSON.stringify(newPayment)}, function (paymentError, paymentResponse, paymentBody) {
 
 						if (paymentError) {
 
