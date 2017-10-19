@@ -1061,29 +1061,57 @@ app.post('/create-payment', function (req, res) {
 
 		console.log("Customer specified: "+customerId);
 
-
+		// Load cart using customer id
         loadCart(customerId, function (cartError, existingCart) {
 
         	// Handle error
         	if(cartError) {
         		
-        		// Throw 'cart not found' response to caller
+				console.log("Cart not found: "+cartError);
+
+				// Throw 'cart not found' response to caller
 				res.writeHead(404, {'Content-Type': 'application/json'});
-				res.write(JSON.stringify(cartError));
+				res.write(JSON.stringify({error: cartError}));
 				res.end();
 				return;
         	} else {
 
-				console.log("Customer signed-in.");
+				console.log("Cart found");
 	
-				// Get cart details for customer5
-	
-				// Return error to caller
-				res.writeHead(201, {'Content-Type': 'application/json'});
-				res.write(JSON.stringify({id: 123454321}));
-				res.end();
-				return;
-        	}
+				if(!cart.items || cart.items.length == 0) {
+
+					console.log("Cart is empty");
+
+					// Throw 'cart not found' response to caller
+					res.writeHead(404, {'Content-Type': 'application/json'});
+					res.write(JSON.stringify({error: 'Cart is empty'}));
+					res.end();
+					return;
+				} else {
+
+					var paypalItems = [];
+					// Get cart details for customer
+					for(var item of cart.items) {
+
+						paypalItems.push({
+							name: "hat",
+							description: "Brown hat.",
+							quantity: "5",
+							price: "3",
+							tax: "0.01",
+							sku: "1",
+							currency: "USD"
+						}};
+					}
+					console.log("Rready for payment: "+JSON.stringify(paypalItems));
+				
+					// Return error to caller
+					res.writeHead(201, {'Content-Type': 'application/json'});
+					res.write(JSON.stringify({id: 123454321}));
+					res.end();
+					return;
+				}
+			}
 		});
 	}
 });
