@@ -24,6 +24,7 @@ console.log("AUTH_CLIENT="+process.env.AUTH_CLIENT);
 console.log("SECURE_PORT="+process.env.SECURE_PORT);
 console.log("REST_HOST="+process.env.REST_HOST);
 console.log("REST_PORT="+process.env.REST_PORT);
+console.log("PAYMENT_GATEWAY="+process.env.PAYMENT_GATEWAY);
 
 AWS.config.update({region: process.env.AWS_REGION});
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
@@ -33,20 +34,14 @@ AWS.CognitoIdentityServiceProvider.CognitoUser = CognitoSDK.CognitoUser;
 var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	UserPoolId: 'us-west-2_jnmkbOGZY',
 	ClientId: process.env.AUTH_CLIENT
-	// ClientId: 'm1f0r4q7uqgr9vd0qbqouspha'
 });
 //var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$'+process.env.PAYMENT_GATEWAY;
 // sf production
 // var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$9z5zcbzdw7jz8wgh$5e70b4b5235cd976300bb8dcd1355bc8';
 // my production
-var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$2f8hkkzcsk4k9ptk$3a16a4a5e682ee85ee4358802c1f008f';
+// var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$2f8hkkzcsk4k9ptk$3a16a4a5e682ee85ee4358802c1f008f';
 // my sandbox
 // var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46';
-console.log("PAYMENT_GATEWAY="+accessToken);
-var gateway = braintree.connect({
-	accessToken: accessToken
-//	accessToken: 'access_token$sandbox$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46'
-});
 
 var environment = process.env.ENVIRONMENT.toUpperCase();
 //
@@ -1165,7 +1160,7 @@ app.post('/create-payment', function (req, res) {
 						}
 					}
 
-					request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', formData: newPayment}, function (paymentError, paymentResponse, paymentBody) {
+					request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+paymentApiKey}, formData: newPayment}, function (paymentError, paymentResponse, paymentBody) {
 
 						if (paymentError) {
 
