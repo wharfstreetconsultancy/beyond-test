@@ -1059,7 +1059,7 @@ app.post('/create-payment', function (req, res) {
 		return;
 	} else {
 
-		console.log("Customer specified: "+JSON.stringify(customer));
+		console.log("Loading cart belonging to customer: "+JSON.stringify(customer));
 
 		// Load cart using customer id
         loadCart(customer.sub, function (cartError, cart) {
