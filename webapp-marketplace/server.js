@@ -1109,7 +1109,7 @@ app.post('/create-payment', function (req, res) {
 							description: item.description,
 							quantity: item.quantity,
 							price: itemAmount,
-							tax: itemtax,
+							tax: itemTax,
 							sku: "1",
 							currency: "USD"
 						});
