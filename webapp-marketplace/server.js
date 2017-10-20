@@ -1186,7 +1186,7 @@ app.post('/create-payment', function (req, res) {
 							return;
 						} else {
 
-							console.log("Got access response: "+accessResponse);
+							console.log("Got access response: "+JSON.stringify(accessResponse));
 							console.log("Got access body: "+accessBody);
 
 							request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, formData: JSON.stringify(newPayment)}, function (paymentError, paymentResponse, paymentBody) {
@@ -1202,7 +1202,7 @@ app.post('/create-payment', function (req, res) {
 									return;
 								} else {
 		
-									console.log("Got payment response: "+paymentResponse);
+									console.log("Got payment response: "+JSON.stringify(paymentResponse));
 									console.log("Got payment body: "+paymentBody);
 		
 									// Return error to caller
