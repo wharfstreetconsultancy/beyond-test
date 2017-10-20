@@ -1172,7 +1172,7 @@ app.post('/create-payment', function (req, res) {
 					}
 					console.log("headers: "+JSON.stringify(headers));
 					console.log("body: "+JSON.stringify(body));
-					request.post({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: headers, body: body}, function (accessError, accessResponse, accessBody) {
+					request.post({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: headers, body: JSON.stringify(body)}, function (accessError, accessResponse, accessBody) {
 //					request.get({url: 'https://'+process.env.PGW_CLIENT+':'+process.env.PGW_SECRET+'@api.sandbox.paypal.com/v1/oauth2/token', headers: {'Content-Type': 'application/json'}, formData: {'grant_type': 'client_credentials'}}, function (accessError, accessResponse, accessBody) {
 
 						if (accessError) {
