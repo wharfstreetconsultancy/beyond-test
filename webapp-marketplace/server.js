@@ -1165,7 +1165,8 @@ app.post('/create-payment', function (req, res) {
 					var authToken = process.env.PGW_CLIENT+':'+process.env.PGW_SECRET;
 					var headers = {
 						'Content-Type': 'application/json',
-						'Authorization': 'Basic '+authToken
+//						'Authorization': 'Basic '+authToken
+						'Authorization': authToken
 					}
 					var formData = {
 						'grant_type': 'client_credentials'
