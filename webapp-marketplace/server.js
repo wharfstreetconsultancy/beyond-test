@@ -1162,8 +1162,16 @@ app.post('/create-payment', function (req, res) {
 					}
 
 					var authToken = new Buffer(process.env.PGW_CLIENT+':'+process.env.PGW_SECRET).toString('base64');
-					console.log("Auth: "+authToken);
-					request.get({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: {'Content-Type': 'application/json', 'Authorization': 'Basic '+authToken}, formData: {'grant_type': 'client_credentials'}}, function (accessError, accessResponse, accessBody) {
+					var headers = {
+						'Content-Type': 'application/json',
+						'Authorization': 'Basic '+authToken
+					}
+					var formData = {
+						'grant_type': 'client_credentials'
+					}
+					console.log("headers: "+JSON.stringify(headers));
+					console.log("formData: "+JSON.stringify(formData));
+					request.get({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: headers, formData: formData}, function (accessError, accessResponse, accessBody) {
 //					request.get({url: 'https://'+process.env.PGW_CLIENT+':'+process.env.PGW_SECRET+'@api.sandbox.paypal.com/v1/oauth2/token', headers: {'Content-Type': 'application/json'}, formData: {'grant_type': 'client_credentials'}}, function (accessError, accessResponse, accessBody) {
 
 						if (accessError) {
