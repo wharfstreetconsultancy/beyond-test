@@ -1161,8 +1161,8 @@ app.post('/create-payment', function (req, res) {
 						}
 					}
 
-//					var authToken = new Buffer(process.env.PGW_CLIENT+':'+process.env.PGW_SECRET).toString('base64');
-					var authToken = process.env.PGW_CLIENT+':'+process.env.PGW_SECRET;
+					var authToken = new Buffer(process.env.PGW_CLIENT+':'+process.env.PGW_SECRET).toString('base64');
+//					var authToken = process.env.PGW_CLIENT+':'+process.env.PGW_SECRET;
 					var headers = {
 						'Content-Type': 'application/json',
 //						'Authorization': 'Basic '+authToken
