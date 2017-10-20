@@ -143,6 +143,7 @@ $(document).ready(function() {
 
 									// Make a call to your server to set up the payment
 									return paypal.request.post(CREATE_URL, data).then(function(res) {
+										alert("Response from Create: "+JSON.stringnify(res));
 										return res.paymentID;
 									});
 									
