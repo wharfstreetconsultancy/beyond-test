@@ -1094,8 +1094,8 @@ app.post('/create-payment', function (req, res) {
 					// Get cart details for customer
 					for(var item of cart.items) {
 
-						var itemAmount = (parseFloat(item.cost) * 0.8).toFixed(2);
-						var itemTax = (parseFloat(item.cost) * 0.2).toFixed(2);
+						var itemAmount = (parseFloat(item.cost) * 0.8);
+						var itemTax = (parseFloat(item.cost) * 0.2);
 						totalAmount += itemAmount;
 						totalTax += itemTax;
 						totalItems += item.quantity;
@@ -1104,8 +1104,8 @@ app.post('/create-payment', function (req, res) {
 							name: item.productName,
 							description: item.description,
 							quantity: item.quantity,
-							price: itemAmount,
-							tax: itemTax,
+							price: itemAmount.toFixed(2),
+							tax: itemTax.toFixed(2),
 							sku: "1",
 							currency: "USD"
 						});
@@ -1122,11 +1122,11 @@ app.post('/create-payment', function (req, res) {
 						},
 						transactions: [{
 							amount: {
-								total: (totalAmount + totalTax).toString(),
+								total: (totalAmount + totalTax).toFixed(2),
 								currency: "USD",
 								details: {
-									subtotal: itemAmount.toString(),
-									tax: itemTax.toString(),
+									subtotal: totalAmount.toFixed(2),
+									tax: totalTax.toFixed(2),
 									shipping: '0.00',
 									handling_fee: '0.00',
 									shipping_discount: '0.00',
