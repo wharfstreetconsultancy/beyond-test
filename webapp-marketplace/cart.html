@@ -183,6 +183,7 @@ $(document).ready(function() {
 									// Set up a url on your server to execute the payment
 									var EXECUTE_URL = 'https://35.167.169.252:1443/execute-payment';
 
+									alert(JSON.stringify(data));
 									// Set up the data you need to pass to your server
 									var data = {
 										paymentID: data.paymentID,
