@@ -1201,7 +1201,7 @@ app.post('/create-payment', function (req, res) {
 									console.log("Got payment response: "+JSON.stringify(paymentResponse));
 									console.log("Got payment body: "+paymentBody);
 
-									var response = {id: JSON.parse(paymentBody).id}
+									var response = {paymentID: JSON.parse(paymentBody).id}
 									console.log("Returning to caller: "+JSON.stringify(response));
 									// Return error to caller
 									res.writeHead(201, {'Content-Type': 'application/json'});
