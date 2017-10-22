@@ -143,7 +143,8 @@ $(document).ready(function() {
 
 									// Make a call to your server to set up the payment
 									return paypal.request.post(CREATE_URL, data).then(function(res) {
-										console.log("Response from Create: "+JSON.stringify(res));
+										alert("Payment created: "+res.paymentID);
+										console.log("Payment created: "+res.paymentID);
 										return res.paymentID;
 									});
 									
@@ -184,7 +185,7 @@ $(document).ready(function() {
 									// Set up a url on your server to execute the payment
 									var EXECUTE_URL = 'https://35.167.169.252:1443/execute-payment';
 
-									alert(JSON.stringify(data));
+									console.log("Received authorisation: "+JSON.stringify(data));
 									// Set up the data you need to pass to your server
 									var data = {
 										paymentID: data.paymentID,

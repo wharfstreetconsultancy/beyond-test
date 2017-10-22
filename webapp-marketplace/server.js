@@ -1217,145 +1217,84 @@ app.post('/create-payment', function (req, res) {
 		});
 	}
 });
-/*
-	var orderId = new Date().getTime().toString().split('').reverse().join('').substring(0,14);
-	var descriptor = 'SuroorF'+'*'+orderId;
-	
-	// Payment object
-	var newPayment = {
-		intent: 'sale',
-		'payer': {
-			payment_method: 'paypal'	  
-		},
-		transactions: [{
-			amount: {
-				total: req.body.amount,
-				currency: "USD",
-				details: {
-					subtotal: (req.body.amount * 0.8).toString(),
-					tax: (req.body.amount * 0.2).toString(),
-					shipping: '0.00',
-					handling_fee: '0.00',
-					shipping_discount: '0.00',
-					insurance: '0.00'
-				}
-			},
-			description: req.body.description,
-			custom: null,
-			invoice_number: orderId,
-			payment_options: {
-				allowed_payment_method: "INSTANT_FUNDING_SOURCE"
-			},
-			soft_descriptor: null,
-			item_list: {
-				items: [{
-					name: "hat",
-					description: "Brown hat.",
-					quantity: "5",
-					price: "3",
-					tax: "0.01",
-					sku: "1",
-					currency: "USD"
-				}],
-				shipping_address: {
-					recipient_name: "Brian Robinson",
-					line1: "4th Floor",
-					line2: "Unit #34",
-					city: "San Jose",
-					country_code: "US",
-					postal_code: "95131",
-					phone: "011862212345678",
-					state: "CA"
-				}
-			}
-		}],
-		note_to_payer: "Contact us for any questions on your order.",
-		redirect_urls: {
-			return_url: "https://www.paypal.com/return",
-			cancel_url: "https://www.paypal.com/cancel"
-		}
+
+
+
+
+//
+// POST '/execute-payment' - Create a payment transaction
+app.post('/execute-payment', function (req, res) {
+
+	// Log request received
+	console.log( "Received request: POST /execute-payment" );
+
+	console.log("Request: "+JSON.stringify(req.body));
+
+	var authToken = new Buffer(process.env.PGW_CLIENT+':'+process.env.PGW_SECRET).toString('base64');
+	var headers = {
+		'Content-Type': 'application/x-www-form-urlencoded',
+		'Authorization': 'Basic '+authToken
 	}
-			
-			
-			
-		amount: req.body.amount,
-		merchantAccountId: "USD",
-		paymentMethodNonce: req.body.nonce,
-		orderId: orderId,
-		descriptor: {
-			name: descriptor
-		},
-		shipping: {
-			firstName: firstName,
-			lastName: lastName,
-			streetAddress: req.body.shippingAddress.line1,
-			extendedAddress: req.body.shippingAddress.line2,
-			locality: req.body.shippingAddress.city,
-			region: req.body.shippingAddress.state,
-			postalCode: req.body.shippingAddress.postalCode,
-			countryCodeAlpha2: req.body.shippingAddress.countryCode
-		},
-		options: {
-			paypal: {
-				customField: "PayPal custom field",
-				description: "Description for PayPal email receipt"
-			},
-			submitForSettlement: true
-		}
-	};
+	console.log("headers: "+JSON.stringify(headers));
+	request.post({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: headers, body: 'grant_type=client_credentials'}, function (accessError, accessResponse, accessBody) {
 
-	request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment'}, function (paymentError, paymentResponse, paymentBody) {
-		
-		if (paymentError) {
+		if (accessError) {
 
-			console.log("Error details: "+paymentError);
+			console.log("Error details: "+accessError);
 
 			// Return error to caller
 			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify({error: {message: paymentError}}));
+			res.write(JSON.stringify({error: accessError}));
 			res.end();
 			return;
 		} else {
 
-			console.log("Payment transaction successful (id: "+result.transaction.id+")");
-			console.log("Request Body: "+JSON.stringify(req.body));
-			console.log("Request Session: "+JSON.stringify(req.session));
+			console.log("Got access response: "+JSON.stringify(accessResponse));
+			console.log("Got access body: "+accessBody);
 
-			var order = {
-				id: orderId,
-				status: 'PENDING',
-				paymentId: result.transaction.id,
-				nonce: req.body.nonce,
-				amount: req.body.amount,
-				shippingAddress: req.body.shippingAddress,
-				cart: req.session.cart,
-				customerId: req.session.customer.sub
-			}
-			
-			storeOrder(order, function (orderStoreError) {
-				
-				if(orderStoreError) {
+			console.log("Sending form-data: "+JSON.stringify(newPayment));
 
-					console.log("!ERROR! - Failed to store order record after successful payment ("+result.transaction.id+"): "+orderStoreError);
+			request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment/'+req.body.paymentID+'/execute', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, body: {'payer_id': req.body.payerID}}, function (paymentError, paymentResponse, paymentBody) {
+
+				if (paymentError) {
+
+					console.log("Error details: "+paymentError);
 
 					// Return error to caller
 					res.writeHead(500, {'Content-Type': 'application/json'});
-					res.write(JSON.stringify({error: {message: ['Failed to store order record after successful payment: '+orderStoreError], paymentId: result.transaction.id}}));
+					res.write(JSON.stringify({error: paymentError}));
 					res.end();
 					return;
 				} else {
 
-					// Return new order item to caller
-					res.writeHead(200, {'Content-Type': 'application/json'});
-					res.write(JSON.stringify({transaction: {message: 'Payment success! Your order will be dispatched.', orderId: order.id, paymentId: result.transaction.id}}));
-					res.end();
-					return;
+					console.log("Got payment response: "+JSON.stringify(paymentResponse));
+					console.log("Got payment body: "+paymentBody);
+					
+					paymentBody = JSON.parse(paymentBody);
+
+					if(paymentBody.state != 'approved') {
+						
+						// Return error to caller
+						res.writeHead(500, {'Content-Type': 'application/json'});
+						res.write(JSON.stringify({error: 'Incomplete payment: state='+paymentBody.state+', ref='+req.body.paymentID}));
+						res.end();
+						return;
+					} else {
+
+						var response = {paymentID: paymentBody.id, state: paymentBody.state}
+						console.log("Returning to caller: "+JSON.stringify(response));
+						// Return error to caller
+						res.writeHead(201, {'Content-Type': 'application/json'});
+						res.write(JSON.stringify(response));
+						res.end();
+						return;
+					}
 				}
 			});
 		}
 	});
 });
-*/
+
 //
 // Store order into the data source
 function storeOrder(order, callback) {
