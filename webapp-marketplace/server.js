@@ -1252,7 +1252,7 @@ app.post('/execute-payment', function (req, res) {
 			console.log("Got access response: "+JSON.stringify(accessResponse));
 			console.log("Got access body: "+accessBody);
 
-			request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment/'+req.body.paymentID+'/execute', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, body: {'payer_id': req.body.payerID}}, function (paymentError, paymentResponse, paymentBody) {
+			request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment/'+req.body.paymentID+'/execute', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, body: JSON.stringify({'payer_id': req.body.payerID})}, function (paymentError, paymentResponse, paymentBody) {
 
 				if (paymentError) {
 
