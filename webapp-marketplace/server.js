@@ -1267,7 +1267,7 @@ app.post('/execute-payment', function (req, res) {
 
 					console.log("Got payment response: "+JSON.stringify(paymentResponse));
 					console.log("Got payment body: "+paymentBody);
-					
+
 					paymentBody = JSON.parse(paymentBody);
 
 					if(paymentBody.state != 'approved') {
