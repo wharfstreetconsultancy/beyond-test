@@ -91,7 +91,7 @@ $(document).ready(function() {
 			console.log("Customer about to checkout: "+JSON.stringify(customer));
 							// Set up PayPal with the checkout.js library
 							paypal.Button.render({
-	
+
 								env: '{environment}',
 								commit: true,
 								payment: function () {
