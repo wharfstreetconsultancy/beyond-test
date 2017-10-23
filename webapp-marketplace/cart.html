@@ -142,7 +142,7 @@ $(document).ready(function() {
 								},
 								onError: function (error) {
 
-									console.log("Error while creating or executing payment: "+error);
+									console.log("Error while creating or executing payment: "+JSON.stringify(error));
 									if(error) {error = JSON.stringify(error);}
 									if(!error || error.length == 0 || error == '{}') {error = 'Unexpected error.';}
 									console.log("Payment authorisation failed: "+error);
