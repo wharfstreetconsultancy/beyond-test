@@ -89,52 +89,16 @@ $(document).ready(function() {
 
 			customer = JSON.parse(customer);
 			console.log("Customer about to checkout: "+JSON.stringify(customer));
-/*
-			$.ajax({
-
-				url: '/client_token',
-				type: 'get',
-				dataType: 'json',
-				error: function (xhr) {
-	
-					console.log("Failed to get payment gateway client token: "+JSON.stringify(xhr));
-				},
-				success: function (response) {
-	
-					console.log("Got payment gateway client token: "+JSON.stringify(response));
-					// Create a client.
-					braintree.client.create({authorization: response.clientToken}, function (clientErr, clientInstance) {
-	
-						// Stop if there was a problem creating the client.
-						// This could happen if there is a network error or if the authorization
-						// is invalid.
-						if (clientErr) {
-	
-							console.error('Error creating client:', clientErr);
-							return;
-						}
-	
-						// Create a PayPal Checkout component.
-						braintree.paypalCheckout.create({client: clientInstance}, function (paypalCheckoutErr, paypalCheckoutInstance) {
-	
-							// Stop if there was a problem creating PayPal Checkout.
-							// This could happen if there was a network error or if it's incorrectly
-							// configured.
-							if (paypalCheckoutErr) {
-								console.error('Error creating PayPal Checkout:', paypalCheckoutErr);
-								return;
-							}
-*/
 							// Set up PayPal with the checkout.js library
 							paypal.Button.render({
 	
-//								env: response.environment, // or 'sandbox'
-								env: 'sandbox',
+								env: '{environment}',
 								commit: true,
 								payment: function () {
 
 									// Set up a url on your server to create the payment
-									var CREATE_URL = 'https://35.167.169.252:1443/create-payment';
+//									var CREATE_URL = 'https://'+restDomain+'/create-payment';
+									var CREATE_URL = '/create-payment';
 
 									// Set up the data you need to pass to your server
 									var data = {
@@ -147,45 +111,15 @@ $(document).ready(function() {
 										console.log("Payment created: "+res.paymentID);
 										return res.paymentID;
 									});
-									
-									
-									
-									
-									
-									
-									
-									
-									
-									
-/*
-									console.log("CUSTOMER: "+JSON.stringify(customer));
-									console.log("ADDRESS: "+JSON.stringify(customer.address));
-
-									return paypalCheckoutInstance.createPayment({
-										flow: 'checkout',
-										amount: totalCost,
-										currency: 'USD',
-										enableShippingAddress: true,
-										shippingAddressEditable: false,
-										shippingAddressOverride: {
-											recipient_name: customer.given_name+' '+customer.family_name,
-											line1: customer.address.line1,
-											line2: customer.address.line2,
-											city: customer.address.city,
-											country_code: 'US',
-											postal_code: customer.address.zip,
-											phone: customer.address.phone_number,
-											state: customer.address.state
-										}
-									});
-*/
 								},
 								onAuthorize: function (data, actions) {
 
 									// Set up a url on your server to execute the payment
-									var EXECUTE_URL = 'https://35.167.169.252:1443/execute-payment';
+									var EXECUTE_URL = '/execute-payment';
+//									var EXECUTE_URL = 'https://'+restDomain+'/execute-payment';
 
 									console.log("Received authorisation: "+JSON.stringify(data));
+
 									// Set up the data you need to pass to your server
 									var data = {
 										paymentID: data.paymentID,
@@ -201,60 +135,6 @@ $(document).ready(function() {
 										document.getElementById("cart_title").innerHTML = 'Order Status...';
 										document.getElementById("cart_inventory").innerHTML = 'Success!';
 									});
-
-									
-									
-									
-									
-/*									
-									return paypalCheckoutInstance.tokenizePayment(data).then(function (payload) {
-
-										console.log("Payment gateway request data: "+JSON.stringify(data));
-										console.log("Payment gateway request actions: "+JSON.stringify(actions));
-										console.log("Payment gateway response: "+JSON.stringify(payload));
-
-										// Submit payload.nonce to server
-										$.ajax({
-											url: '/transaction',
-											type: 'post',
-											dataType: 'json',
-											data: {
-												amount: totalCost,
-												nonce: payload.nonce,
-												shippingAddress: payload.details.shippingAddress
-											},
-											error: function (xhr) {
-
-												console.log('Payment transaction failed: '+JSON.stringify(xhr.responseJSON.error));
-
-												document.getElementById("cart_cost_summary").innerHTML = '';
-												document.getElementById("paypal-button").innerHTML = '';
-												document.getElementById("cart_title").innerHTML = 'Order Summary...';
-												document.getElementById("cart_inventory").innerHTML = 'Status: Failed<br>';
-												document.getElementById("cart_inventory").innerHTML += 'Error message(s):<br>';
-												document.getElementById("cart_inventory").innerHTML += '<ul>';
-												for(var errorMessage of xhr.responseJSON.error.message) {
-													document.getElementById("cart_inventory").innerHTML += '<li>'+errorMessage+'</li>';
-												}
-												if(xhr.responseJSON.error.orderId) {document.getElementById("cart_inventory").innerHTML += 'Suroor Order Ref: '+xhr.responseJSON.error.orderId;}
-												if(xhr.responseJSON.error.paymentId) {document.getElementById("cart_inventory").innerHTML += 'Paypal Payment Ref: '+xhr.responseJSON.error.paymentId;}
-												document.getElementById("cart_inventory").innerHTML += '</ul>';
-											},
-											success: function (response) {
-								
-												console.log("Created payment transaction: "+JSON.stringify(response));
-
-												document.getElementById("cart_cost_summary").innerHTML = '';
-												document.getElementById("paypal-button").innerHTML = '';
-												document.getElementById("cart_title").innerHTML = 'Order Summary...';
-												document.getElementById("cart_inventory").innerHTML = 'Status: '+response.transaction.message+'<br>';
-												document.getElementById("cart_inventory").innerHTML += 'Suroor Order Ref: '+response.transaction.orderId+'<br>';
-												document.getElementById("cart_inventory").innerHTML += 'Paypal Payment Ref: '+response.transaction.paymentId+'<br>';
-												document.getElementById("cart_clear").click();
-											}
-										});
-									});
-*/
 								},
 								onCancel: function (data) {
 
@@ -276,10 +156,6 @@ $(document).ready(function() {
 							// is set up and ready to be used.
 								return true;
 							});
-//						});
-//					});
-//				}
-//			}
 		}
 	} else {
 
@@ -321,7 +197,6 @@ $(document).ready(function() {
     		return false;		
 		}
 	});
-
 });
 		</script>
 	</body>

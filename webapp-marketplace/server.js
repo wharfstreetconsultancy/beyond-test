@@ -70,6 +70,7 @@ var securePort = process.env.SECURE_PORT;
 var restHost = process.env.REST_HOST;
 var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
+var paymentDomain = ((environment == 'sandbox') ? 'api.sandbox.paypal.com': 'api.paypal.com');
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
@@ -280,6 +281,7 @@ app.post('/cart', function (req, res) {
 
 		// Return 'cart' page
 	    fs.createReadStream(__dirname+'/cart.html')
+			.pipe(replaceStream('{environment}', environment))
 			.pipe(replaceStream('{latest.cart}', (localCart) ? localCart : 'null'))
 	    	.pipe(res);
 	    return;
@@ -1167,7 +1169,7 @@ app.post('/create-payment', function (req, res) {
 						'Authorization': 'Basic '+authToken
 					}
 					console.log("headers: "+JSON.stringify(headers));
-					request.post({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: headers, body: 'grant_type=client_credentials'}, function (accessError, accessResponse, accessBody) {
+					request.post({url: 'https://'+paymentDomain+'/v1/oauth2/token', headers: headers, body: 'grant_type=client_credentials'}, function (accessError, accessResponse, accessBody) {
 
 						if (accessError) {
 
@@ -1185,7 +1187,7 @@ app.post('/create-payment', function (req, res) {
 
 							console.log("Sending form-data: "+JSON.stringify(newPayment));
 
-							request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, body: JSON.stringify(newPayment)}, function (paymentError, paymentResponse, paymentBody) {
+							request.post({url: 'https://'+paymentDomain+'/v1/payments/payment', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, body: JSON.stringify(newPayment)}, function (paymentError, paymentResponse, paymentBody) {
 		
 								if (paymentError) {
 		
@@ -1236,7 +1238,7 @@ app.post('/execute-payment', function (req, res) {
 		'Authorization': 'Basic '+authToken
 	}
 	console.log("headers: "+JSON.stringify(headers));
-	request.post({url: 'https://api.sandbox.paypal.com/v1/oauth2/token', headers: headers, body: 'grant_type=client_credentials'}, function (accessError, accessResponse, accessBody) {
+	request.post({url: 'https://'+paymentDomain+'/v1/oauth2/token', headers: headers, body: 'grant_type=client_credentials'}, function (accessError, accessResponse, accessBody) {
 
 		if (accessError) {
 
@@ -1252,7 +1254,7 @@ app.post('/execute-payment', function (req, res) {
 			console.log("Got access response: "+JSON.stringify(accessResponse));
 			console.log("Got access body: "+accessBody);
 
-			request.post({url: 'https://api.sandbox.paypal.com/v1/payments/payment/'+req.body.paymentID+'/execute', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, body: JSON.stringify({'payer_id': req.body.payerID})}, function (paymentError, paymentResponse, paymentBody) {
+			request.post({url: 'https://'+paymentDomain+'/v1/payments/payment/'+req.body.paymentID+'/execute', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+JSON.parse(accessBody).access_token}, body: JSON.stringify({'payer_id': req.body.payerID})}, function (paymentError, paymentResponse, paymentBody) {
 
 				if (paymentError) {
 
