@@ -1070,7 +1070,7 @@ app.post('/create-payment', function (req, res) {
 				console.log("Cart not found: "+cartError);
 
 				// Throw 'cart not found' response to caller
-				res.writeHead(404, {'Content-Type': 'application/json'});
+				res.writeHead(500, {'Content-Type': 'application/json'});
 				res.write(JSON.stringify({error: cartError}));
 				res.end();
 				return;
