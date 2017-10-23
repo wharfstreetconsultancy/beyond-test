@@ -1078,7 +1078,7 @@ app.post('/create-payment', function (req, res) {
 
 				console.log("Cart found");
 	
-				if(!cart.items || cart.items.length == 0) {
+				if(!cart || !cart.items || cart.items.length == 0) {
 
 					console.log("Cart is empty");
 
