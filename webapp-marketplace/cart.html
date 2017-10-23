@@ -92,7 +92,7 @@ $(document).ready(function() {
 							// Set up PayPal with the checkout.js library
 							paypal.Button.render({
 
-								env: '{environment}',
+								env: '{environment}'.toLowerCase(),
 								commit: true,
 								payment: function () {
 
