@@ -1318,13 +1318,30 @@ app.post('/execute-payment', function (req, res) {
 						return;
 					} else {
 
-						var response = {paymentID: paymentBody.id, state: paymentBody.state}
-						console.log("Returning to caller: "+JSON.stringify(response));
-						// Return error to caller
-						res.writeHead(201, {'Content-Type': 'application/json'});
-						res.write(JSON.stringify(response));
-						res.end();
-						return;
+				        deleteCart(req.body.customer.sub, function (deleteCartError) {
+
+				        	// Handle error
+				        	if(deleteCartError) {
+								
+								// Cart does not exist - create and store cart
+								console.log("Unexpected error: "+deleteCartError);
+				        		
+				        		// Throw 'cart not found' response to caller
+								res.writeHead(404, {'Content-Type': 'application/json'});
+								res.write(deleteCartError);
+								res.end();
+								return;
+				        	} else {
+
+								console.log("Returning to caller: "+JSON.stringify(response));
+
+								// Return success to caller
+								res.writeHead(201, {'Content-Type': 'application/json'});
+								res.write(JSON.stringify({paymentID: paymentBody.id, state: paymentBody.state}));
+								res.end();
+								return;
+				        	}
+				        });
 					}
 				}
 			});

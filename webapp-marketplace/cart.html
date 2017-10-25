@@ -102,7 +102,7 @@ $(document).ready(function() {
 
 									// Set up the data you need to pass to your server
 									var data = {
-										customer: JSON.stringify(customer) // !!!!!!!!!!!!! do nto stringify twice
+										customer: JSON.stringify(customer)
 									};
 
 									// Make a call to your server to set up the payment
@@ -122,14 +122,17 @@ $(document).ready(function() {
 
 									// Set up the data you need to pass to your server
 									var data = {
+
+										customer: JSON.stringify(customer),
 										paymentID: data.paymentID,
 										payerID: data.payerID
 									};
 
 									// Make a call to your server to execute the payment
 									return paypal.request.post(EXECUTE_URL, data).then(function (res) {
+
 										console.log("Payment complete: "+JSON.stringify(res));
-										//localStorage.removeItem('cart');
+										localStorage.removeItem('cart');
 										document.getElementById("cart_cost_summary").innerHTML = '';
 										document.getElementById("paypal-button").innerHTML = '';
 										document.getElementById("cart_title").innerHTML = 'Order Status...';
