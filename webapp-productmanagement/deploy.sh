@@ -4,10 +4,8 @@ echo Stop which version?:
 read oldVersion
 echo Start which version?:
 read newVersion
-echo target environment?:
-read environment
 
-if [ "$environment" == "sandbox" ]; then
+if [ "$1" == "sandbox" ]; then
 	export desired_port='1'
 fi
 
