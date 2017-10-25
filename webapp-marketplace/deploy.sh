@@ -8,8 +8,27 @@ read newVersion
 SRV_ENV=$(aws s3 cp s3://suroor.fashions.config/marketplace_server.$1.env.properties - --profile suroor-fashions_webapp-productmanagement)
 PGW_ENV=$(aws s3 cp s3://suroor.fashions.config/payment_gateway.$2.env.properties - --profile suroor-fashions_webapp-productmanagement)
 
-echo $SRV_ENV
-echo $PGW_ENV
+SESSION_SECRET=$(jq -r '.sessionSecret' <<< "${SRV_ENV}")
+REGION=$(jq -r '.region' <<< "${SRV_ENV}")
+USER_POOL_CLIENT=$(jq -r '.userPoolClient' <<< "${SRV_ENV}")
+NON_SECURE_PORT=$(jq -r '.nonSecurePort' <<< "${SRV_ENV}")
+SECURE_PORT=$(jq -r '.securePort' <<< "${SRV_ENV}")
+AGW_HOST=$(jq -r '.apiGatewayHost' <<< "${SRV_ENV}")
+AGW_PORT=$(jq -r '.apiGatewayPort' <<< "${SRV_ENV}")
+
+PGW_CLIENT=$(jq -r '.client' <<< "${SRV_ENV}")
+PGW_SECRET=$(jq -r '.secret' <<< "${SRV_ENV}")
+
+echo SESSION_SECRET=$SESSION_SECRET
+echo REGION=$REGION
+echo USER_POOL_CLIENT=$USER_POOL_CLIENT
+echo NON_SECURE_PORT=$NON_SECURE_PORT
+echo SECURE_PORT=$SECURE_PORT
+echo AGW_HOST=$AGW_HOST
+echo AGW_PORT=$AGW_PORT
+
+echo PGW_CLIENT=$PGW_CLIENT
+echo PGW_SECRET=$PGW_SECRET
 
 #sudo docker stop webapp_marketplace-$oldVersion
 #sudo docker rm webapp_marketplace-$oldVersion
