@@ -17,7 +17,23 @@ var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
 var CognitoSDK = require('amazon-cognito-identity-js-node');
 
-console.log("ENVIRONMENT="+process.env.ENVIRONMENT);
+var srvEnvKey = process.env.SRV_ENV;
+console.log("SERVER ENV: "+srvEnvKey);
+//var configBucket = 'SuroorFashionsServerConfig';
+//var srvEnvProps = {
+//	    Bucket: configBucket,
+//	    Key: 'marketplace_server.'+srvEnvKey+'.env.properties'
+//};
+//console.log("Server env props: "+JSON.stringify(srvEnvProps));
+
+var pgwEnvKey = process.env.PGW_ENV;
+console.log("PAYMENT-GATEWAY ENV: "+pgwEnvKey);
+//var pgwEnvProps = {
+//	    Bucket: configBucket,
+//	    Key: 'payment_gateway.'+pgwEnvKey+'.env.properties'
+//};
+//console.log("Payment-gateway env props: "+JSON.stringify(pgwEnvProps));
+
 console.log("SESSION_SECRET="+process.env.SESSION_SECRET);
 console.log("AWS_REGION="+process.env.AWS_REGION);
 console.log("AUTH_CLIENT="+process.env.AUTH_CLIENT);
@@ -37,7 +53,6 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	ClientId: process.env.AUTH_CLIENT
 });
 
-var environment = process.env.ENVIRONMENT.toUpperCase();
 
 //
 // Manage HTTP server container
@@ -47,7 +62,7 @@ app.use(bodyParser.json({extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: process.env.SESSION_SECRET,
-	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessionsUsers_'+environment}),
+	store: new DynamoDBStore({AWSConfigJSON: {region: process.env.AWS_REGION}, table: 'SuroorFashionsSessionsUsers_'+srvEnvKey.toUpperCase()}),
 	resave: false,
 	saveUninitialized: true,
 	cookie: {secure: true}
@@ -64,7 +79,7 @@ var securePort = process.env.SECURE_PORT;
 var restHost = process.env.REST_HOST;
 var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
-var paymentDomain = ((environment == 'sandbox') ? 'api.sandbox.paypal.com': 'api.paypal.com');
+var paymentDomain = ((pgwEnvKey == 'sandbox') ? 'api.sandbox.paypal.com': 'api.paypal.com');
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
@@ -322,7 +337,7 @@ app.post('/cart', function (req, res) {
 
 		// Return 'cart' page
 	    fs.createReadStream(__dirname+'/cart.html')
-			.pipe(replaceStream('{environment}', environment))
+			.pipe(replaceStream('{environment}', pgwEnvKey))
 			.pipe(replaceStream('{latest.cart}', (sanitisedCart) ? sanitisedCart : 'null'))
 	    	.pipe(res);
 	    return;
@@ -941,7 +956,7 @@ function loadCart(cartId, callback) {
 
 		// Cart id specified, create params
 		var params = {
-			TableName: 'SuroorFashionsCarts_'+environment,
+			TableName: 'SuroorFashionsCarts_'+srvEnvKey.toUpperCase(),
             ExpressionAttributeValues: {':c': cartId},
 			FilterExpression: 'id = :c'
 		};
@@ -992,7 +1007,7 @@ function deleteCart(cartId, callback) {
 
 		// Cart id specified, create params
 		var params = {
-			TableName: 'SuroorFashionsCarts_'+environment,
+			TableName: 'SuroorFashionsCarts_'+srvEnvKey.toUpperCase(),
             Key: {id: cartId}
 		};
 
@@ -1024,7 +1039,7 @@ function storeCart(cart, callback) {
 
 	// Create params for cart 'store' operation
 	var storeCartParams = {
-		TableName: 'SuroorFashionsCarts_'+environment,
+		TableName: 'SuroorFashionsCarts_'+srvEnvKey.toUpperCase(),
 		Item: cart
 	};
 
@@ -1050,6 +1065,7 @@ function storeCart(cart, callback) {
 
 //
 // GET '/client_token' - Generate a client token for the payment gateway
+/*
 app.get('/client_token', function (req, res) {
 
     // Log request received
@@ -1077,6 +1093,7 @@ app.get('/client_token', function (req, res) {
     	}
     });
 });
+*/
 
 //
 // POST '/create-payment' - Create a payment transaction
