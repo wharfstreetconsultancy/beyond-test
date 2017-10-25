@@ -74,6 +74,7 @@ $(document).ready(function() {
 		var localCart = JSON.parse(localStorage.getItem('cart'));
 		var timestamp = new Date().getTime().toString();
 		if(!localCart || !localCart.items || localCart.items.length == 0) {
+
 			localCart = {id: timestamp.split("").reverse().join(""), items: []};
 		}
 	    var newCartItem = {

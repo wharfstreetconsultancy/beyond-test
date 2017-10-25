@@ -144,7 +144,7 @@ $(document).ready(function() {
 
 									console.log("Error while creating or executing payment: "+JSON.stringify(error));
 									if(error) {error = JSON.stringify(error);}
-									if(!error || error.length == 0 || error == '{}') {error = 'Unexpected error.';}
+									if(!error || error.length == 0 || error == '{}') {error = 'Payment failure.';}
 									console.log("Payment authorisation failed: "+error);
 									document.getElementById("cart_cost_summary").innerHTML = '';
 									document.getElementById("paypal-button").innerHTML = '';

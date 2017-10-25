@@ -36,15 +36,9 @@ var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
 	UserPoolId: 'us-west-2_jnmkbOGZY',
 	ClientId: process.env.AUTH_CLIENT
 });
-//var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$'+process.env.PAYMENT_GATEWAY;
-// sf production
-// var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$9z5zcbzdw7jz8wgh$5e70b4b5235cd976300bb8dcd1355bc8';
-// my production
-// var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$2f8hkkzcsk4k9ptk$3a16a4a5e682ee85ee4358802c1f008f';
-// my sandbox
-// var accessToken = 'access_token$'+process.env.ENVIRONMENT.toLowerCase()+'$vbv95xvqd975334w$1e8403d96b3794b85d784d27a641bb46';
 
 var environment = process.env.ENVIRONMENT.toUpperCase();
+
 //
 // Manage HTTP server container
 var app = express();
@@ -113,7 +107,7 @@ app.get('/', function (req, res) {
 	console.log( "Received request: GET /" );
 
 	// Load all existing products from REST API
-	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+	loadExistingProducts(null, function (productLoadErrorMessage, productsList) {
 
         // Format products into appropriate HTML
         formatProductsCarouselsHtml(productsList, function(productsListClothingHtml, productsListJewelleryHtml) {
@@ -137,7 +131,7 @@ app.get('/product', function (req, res) {
 	console.log( "Received request: GET /product" );
 
 	// Load all specified product from REST API
-	loadExistingProducts(req, res, function (productLoadErrorMessage, product) {
+	loadExistingProducts(req.query.id, function (productLoadErrorMessage, product) {
 
 		// Check that only one product found
 		if((product) && !Array.isArray(product)) {
@@ -145,8 +139,6 @@ app.get('/product', function (req, res) {
 	        // Format product into appropriate HTML
 	        formatProductViewHtml(product, function(productImageCarouselHtml, productColorSelectorHtml, productSizeSelectorHtml) {
 
-	        // Load current shopping cart
-	        
 				// Add dynamic elements to response page
 		        fs.createReadStream(__dirname+'/product.html')
 					.pipe(replaceStream('{product.id}', product.id))
@@ -209,7 +201,7 @@ app.get('/shop', function (req, res) {
 	console.log( "Received request: GET /shop" );
 
 	// Load all existing products from REST API
-	loadExistingProducts(req, res, function (productLoadErrorMessage, productsList) {
+	loadExistingProducts(null, function (productLoadErrorMessage, productsList) {
 
         // Add dynamic elements to response page
         fs.createReadStream(__dirname+'/shop.html')
@@ -271,18 +263,67 @@ app.post('/cart', function (req, res) {
 		var localCart = req.body.cart;
 		console.log("Local cart: "+localCart);
 		if(localCart) {
-			
+
+			var sanitisedCart = {id: localCart.id, items: []};
+			for(var item of localCart.items) {
+
+				// Load all specified product from REST API
+				loadExistingProducts(item.productId, function (productLoadError, product) {
+					if(productLoadError) {
+
+						console.log("!ERROR! - Failed to sanitise cart: "+productLoadError);
+					} else {
+
+					    var newCartItem = {
+							id: item.id,
+							productId: item.productId,
+							productName: product.name,
+							quantity: item.quantity,
+							color: item.color,
+							size: item.size,
+							cost: product.cost,
+							created: item.created,
+							lastUpdated: item.lastUpdated
+					    }
+					    sanitisedCart.push(newItem);
+					}
+				});
+			}  
 		}
-		var storedCart = req.session.cart;
-		console.log("Stored cart: "+storedCart);
-		if(storedCart) {
-			
-		}
+
+		// Load all specified product from REST API
+		loadExistingCart(customer.sub, function (cartLoadError, storedCart) {
+
+			if(cartLoadError) {
+
+				console.log("!ERROR! - Failed to load stored cart: "+cartLoadError);
+			} else {
+				
+				console.log("Stored cart: "+storedCart);
+				for(var oldItem of storedCart.items) {
+
+				    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
+
+				    	var sameItem = (
+				    		(sanitisedItem.productId === oldItem.productId) &&
+				    		(sanitisedItem.color === oldItem.color) &&
+				    		(sanitisedItem.size === oldItem.size)
+				    	);
+				    	return sameItem;
+				    });
+				    if(existingCartItem.length == 0) {
+
+				    	console.log("Old cart item found, that does not exist in latrest cart: "+JSON.stringify(oldItem));
+				    	sanitisedCartItem.push(oldItem);
+				    }
+				}
+			}
+		});			
 
 		// Return 'cart' page
 	    fs.createReadStream(__dirname+'/cart.html')
 			.pipe(replaceStream('{environment}', environment))
-			.pipe(replaceStream('{latest.cart}', (localCart) ? localCart : 'null'))
+			.pipe(replaceStream('{latest.cart}', (sanitisedCart) ? sanitisedCart : 'null'))
 	    	.pipe(res);
 	    return;
 	}
@@ -290,10 +331,9 @@ app.post('/cart', function (req, res) {
 
 //
 // Load existing product from data source
-function loadExistingProducts(req, res, callback) {
+function loadExistingProducts(productId, callback) {
 
-	var productId = (req.query.id) ? '/'+req.query.id : '';
-	request.get({url:'https://'+restDomain+'/product'+productId, agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
+	request.get({url:'https://'+restDomain+'/product'+(productId) ? '/'+productId : '', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		
 		if (productLoadError) {
 
@@ -321,10 +361,10 @@ function loadExistingProducts(req, res, callback) {
 
 //
 // Load existing cart from data source
-function loadExistingCart(req, res, callback) {
+function loadExistingCart(cartId, callback) {
 
 	request.get({url:'https://'+restDomain+'/cart/'+cartId, agent: agent}, function (cartLoadError, cartLoadResponse, cartLoadBody) {
-		
+
 		if (cartLoadError) {
 
 			callback(cartLoadError, null);
@@ -1219,9 +1259,6 @@ app.post('/create-payment', function (req, res) {
 		});
 	}
 });
-
-
-
 
 //
 // POST '/execute-payment' - Create a payment transaction
