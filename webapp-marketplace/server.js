@@ -262,7 +262,7 @@ app.post('/cart', function (req, res) {
 
 		var localCart = req.body.cart;
 		console.log("Local cart: "+localCart);
-		if(localCart) {
+		if(localCart && localCart.items) {
 
 			var sanitisedCart = {id: localCart.id, items: []};
 			for(var item of localCart.items) {
