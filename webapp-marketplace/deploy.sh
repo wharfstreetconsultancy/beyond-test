@@ -16,8 +16,8 @@ SECURE_PORT=$(jq -r '.securePort' <<< "${SRV_ENV}")
 AGW_HOST=$(jq -r '.apiGatewayHost' <<< "${SRV_ENV}")
 AGW_PORT=$(jq -r '.apiGatewayPort' <<< "${SRV_ENV}")
 
-PGW_CLIENT=$(jq -r '.client' <<< "${SRV_ENV}")
-PGW_SECRET=$(jq -r '.secret' <<< "${SRV_ENV}")
+PGW_CLIENT=$(jq -r '.client' <<< "${PGW_ENV}")
+PGW_SECRET=$(jq -r '.secret' <<< "${PGW_ENV}")
 
 echo SESSION_SECRET=$SESSION_SECRET
 echo REGION=$REGION
