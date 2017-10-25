@@ -42,6 +42,7 @@ console.log("REST_HOST="+process.env.REST_HOST);
 console.log("REST_PORT="+process.env.REST_PORT);
 console.log("PGW_CLIENT="+process.env.PGW_CLIENT);
 console.log("PGW_SECRET="+process.env.PGW_SECRET);
+console.log("PGW_HOST="+process.env.PGW_HOST);
 
 AWS.config.update({region: process.env.AWS_REGION});
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
@@ -79,7 +80,7 @@ var securePort = process.env.SECURE_PORT;
 var restHost = process.env.REST_HOST;
 var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
-var paymentDomain = ((pgwEnvKey == 'sandbox') ? 'api.sandbox.paypal.com': 'api.paypal.com');
+var paymentDomain = process.env.PGW_HOST;
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 agent = new https.Agent({
