@@ -5,6 +5,7 @@ var session = require('express-session');
 var DynamoDBStore = require('connect-dynamodb')({session: session});
 var http = require('http');
 var https = require('https');
+var events = require('events');
 var request = require('request');
 var fs = require('fs');
 var replaceStream = require('replacestream')
@@ -76,23 +77,6 @@ app.use(session({
 	cookie: {secure: true}
 }));
 
-//var key = fs.readFileSync('certs/domain.key');
-//var cert = fs.readFileSync('certs/domain.crt');
-var options = {
-	key: key,
-	cert: cert
-};
-var configBucket = 'SuroorFashionsServerConfig';
-var key = null;
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data) {
-
-	key = data;
-});
-var cert = null;
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (data) {
-
-	cert = data;
-});
 
 var securePort = process.env.SECURE_PORT;
 var restHost = process.env.REST_HOST;
@@ -108,10 +92,36 @@ agent = new https.Agent({
 	rejectUnauthorized: false
 });
 
-//
-// Create and run web server
-http.createServer(app).listen(8080);
-https.createServer(options, app).listen(8443);
+var suroorServer = new events.EventEmitter();
+suroorServer.on('server_start', function () {
+
+	var options = {
+
+		key: key,
+		cert: cert
+	};
+	
+	//
+	// Create and run web server
+	http.createServer(app).listen(8080);
+	https.createServer(options, app).listen(8443);
+});
+
+//var key = fs.readFileSync('certs/domain.key');
+//var cert = fs.readFileSync('certs/domain.crt');
+var configBucket = 'SuroorFashionsServerConfig';
+var key = null;
+var cert = null;
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data) {
+
+	key = data;
+	if(cert) {suroorServer.emit('start_server');}
+});
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (data) {
+
+	cert = data;
+	if(key) {suroorServer.emit('start_server');}
+});
 
 //
 // ALL '*' - Redirect all http traffic to https
