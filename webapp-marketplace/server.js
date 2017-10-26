@@ -113,12 +113,12 @@ var configBucket = 'SuroorFashionsServerConfig';
 var key = null;
 var cert = null;
 s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data) {
-
+console.log("Key loaded: "+JSON.stringify(data));
 	key = data;
 	if(cert) {suroorServer.emit('start_server');}
 });
 s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (data) {
-
+console.log("Cert loaded: "+JSON.stringify(data));
 	cert = data;
 	if(key) {suroorServer.emit('start_server');}
 });
