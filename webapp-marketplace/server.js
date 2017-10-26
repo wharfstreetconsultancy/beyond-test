@@ -10,12 +10,6 @@ var fs = require('fs');
 var replaceStream = require('replacestream')
 var replaceall = require("replaceall");
 var bodyParser = require('body-parser');
-var braintree = require('braintree');
-var AWS = require('aws-sdk');
-var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
-var CognitoSDK = require('amazon-cognito-identity-js-node');
 
 var srvEnvKey = process.env.SRV_ENV;
 console.log("SERVER ENV: "+srvEnvKey);
@@ -46,6 +40,14 @@ console.log("REST_PORT="+process.env.REST_PORT);
 console.log("PGW_CLIENT="+process.env.PGW_CLIENT);
 console.log("PGW_SECRET="+process.env.PGW_SECRET);
 console.log("PGW_HOST="+process.env.PGW_HOST);
+
+//
+// Configure AWS env 
+var AWS = require('aws-sdk');
+var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
+var CognitoSDK = require('amazon-cognito-identity-js-node');
 
 AWS.config.update({region: process.env.AWS_REGION});
 AWS.CognitoIdentityServiceProvider.CognitoUserPool = CognitoSDK.CognitoUserPool;
