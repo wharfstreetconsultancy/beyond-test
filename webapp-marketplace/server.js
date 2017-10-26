@@ -109,7 +109,7 @@ suroorServer.on('server_start', function () {
 
 //var key = fs.readFileSync('certs/domain.key');
 //var cert = fs.readFileSync('certs/domain.crt');
-var configBucket = 'SuroorFashionsServerConfig';
+var configBucket = 'suroor.fashions.config';
 var key = null;
 var cert = null;
 s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data) {
