@@ -42,8 +42,10 @@ console.log("PGW_SECRET="+process.env.PGW_SECRET);
 console.log("PGW_HOST="+process.env.PGW_HOST);
 
 //
-// Configure AWS env 
+// Configure AWS env
 var AWS = require('aws-sdk');
+var credentials = new AWS.SharedIniFileCredentials({profile: process.env.AWS_PROFILE});
+AWS.config.credentials = credentials;
 var dddc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
