@@ -69,12 +69,23 @@ app.use(session({
 	cookie: {secure: true}
 }));
 
-var key = fs.readFileSync('certs/domain.key');
-var cert = fs.readFileSync('certs/domain.crt');
+//var key = fs.readFileSync('certs/domain.key');
+//var cert = fs.readFileSync('certs/domain.crt');
 var options = {
 	key: key,
 	cert: cert
 };
+var configBucket = 'SuroorFashionsServerConfig';
+var key = null;
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data) {
+
+	key = data;
+});
+var cert = null;
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (data) {
+
+	cert = data;
+});
 
 var securePort = process.env.SECURE_PORT;
 var restHost = process.env.REST_HOST;
