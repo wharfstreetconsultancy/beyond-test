@@ -5,8 +5,8 @@ read oldVersion
 echo Start which version?:
 read newVersion
 
-AWS_ACCESS_KEY_ID=$3
-AWS_SECRET_ACCESS_KEY=$4
+set AWS_ACCESS_KEY_ID=$3
+set AWS_SECRET_ACCESS_KEY=$4
 
 SRV_ENV=$(aws s3 cp s3://suroor.fashions.config/marketplace_server.$1.env.properties -)
 PGW_ENV=$(aws s3 cp s3://suroor.fashions.config/payment_gateway.$2.env.properties -)
