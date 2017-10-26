@@ -30,8 +30,8 @@ console.log("PAYMENT-GATEWAY ENV: "+pgwEnvKey);
 
 console.log("SESSION_SECRET="+process.env.SESSION_SECRET);
 console.log("AWS_PROFILE="+process.env.AWS_PROFILE);
-console.log("AWS_ACCESS_KEY_ID="+process.env.AWS_ACCESS_KEY_ID);
-console.log("AWS_SECRET_ACCESS_KEY="+process.env.AWS_SECRET_ACCESS_KEY);
+//console.log("AWS_ACCESS_KEY_ID="+process.env.AWS_ACCESS_KEY_ID);
+//console.log("AWS_SECRET_ACCESS_KEY="+process.env.AWS_SECRET_ACCESS_KEY);
 console.log("AWS_REGION="+process.env.AWS_REGION);
 console.log("AUTH_CLIENT="+process.env.AUTH_CLIENT);
 console.log("SECURE_PORT="+process.env.SECURE_PORT);
