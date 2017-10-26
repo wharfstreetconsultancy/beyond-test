@@ -112,7 +112,7 @@ suroorServer.on('server_start', function () {
 var configBucket = 'suroor.fashions.config';
 var key = null;
 var cert = null;
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data) {
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data, error) {
 	if(!data) {
 		console.log("Key not loaded!");
 	} else {
@@ -121,7 +121,7 @@ s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (da
 		if(cert) {suroorServer.emit('start_server');}
 	}
 });
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (data) {
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (data, error) {
 	if(!data) {
 		console.log("Cert not loaded!");
 	} else {
