@@ -112,20 +112,20 @@ suroorServer.on('server_start', function () {
 var configBucket = 'suroor.fashions.config';
 var key = null;
 var cert = null;
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (err, data) {
-	if(err) {
-		console.log("Key not loaded: "+err);
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (data) {
+	if(!data) {
+		console.log("Key not loaded!");
 	} else {
-		console.log("Key loaded: "+JSON.stringify(data));
+		console.log("Key loaded: "+JSON.stringify(data.data));
 		key = data;
 		if(cert) {suroorServer.emit('start_server');}
 	}
 });
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (err, data) {
-	if(err) {
-		console.log("Cert not loaded: "+err);
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (data) {
+	if(!data) {
+		console.log("Cert not loaded!");
 	} else {
-		console.log("Cert loaded: "+JSON.stringify(data));
+		console.log("Cert loaded: "+JSON.stringify(data.data));
 		cert = data;
 		if(key) {suroorServer.emit('start_server');}
 	}
