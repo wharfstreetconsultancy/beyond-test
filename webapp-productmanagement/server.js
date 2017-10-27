@@ -52,11 +52,11 @@ var allowedOriginPort = process.env.ALLOWED_ORIGIN_PORT;
 var restHost = process.env.REST_HOST;
 var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
-var allowedOriginDomain = restHost+((allowedOriginPort && allowedOriginPort.length > 0) ? ':'+allowedOriginPort : '');
+//var allowedOriginDomain = restHost+((allowedOriginPort && allowedOriginPort.length > 0) ? ':'+allowedOriginPort : '');
 
-var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
-var authClientId = '';
-var authClientSecret = '';
+//var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
+//var authClientId = '';
+//var authClientSecret = '';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
 var agent = new https.Agent({
@@ -172,7 +172,7 @@ console.log("Session found: "+JSON.stringify(session));
 	} else {
 
 		// Request was http - redirect caller to https
-        var secureUrl = 'https://'+req.host+':'+securePort+req.url
+        var secureUrl = 'https://'+req.hostname+':'+securePort+req.url
         console.log("Redirecting http request to: "+secureUrl);
 		res.redirect(secureUrl);
 		return;
