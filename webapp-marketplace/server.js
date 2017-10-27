@@ -133,7 +133,7 @@ agent = new https.Agent({
 //});
 
 
-
+var configBucket = 'suroor.fashions.config';
 s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (error, key) {
 
 	if(error) {
