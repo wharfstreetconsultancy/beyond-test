@@ -46,12 +46,7 @@ app.use(session({
 	cookie: {secure: true}
 }));
 var upload = multer({ dest: '/tmp/'});
-var key = fs.readFileSync('certs/domain.key');
-var cert = fs.readFileSync('certs/domain.crt');
-var options = {
-	key: key,
-	cert: cert
-};
+
 var securePort = process.env.SECURE_PORT;
 var allowedOriginPort = process.env.ALLOWED_ORIGIN_PORT;
 var restHost = process.env.REST_HOST;
@@ -73,8 +68,11 @@ var authClientSecret = '';
 
 //
 // Create and run web server
-http.createServer(app).listen(8081);
-https.createServer(options, app).listen(8444);
+var key = fs.readFileSync('certs/suroorfashions.com.key');
+var cert = fs.readFileSync('certs/suroorfashions.com.crt');
+console.log("Starting server.");
+http.createServer(app).listen(8080);
+https.createServer({key: key, cert: cert}, app).listen(8443);
 
 //
 // ALL '*' - Redirect all http traffic to https
