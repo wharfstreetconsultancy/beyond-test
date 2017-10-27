@@ -84,14 +84,6 @@ var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
 var paymentDomain = process.env.PGW_HOST;
 
-/* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
-agent = new https.Agent({
-	host: restHost,
-	port: restPort,
-	path: '/',
-	rejectUnauthorized: false
-});
-
 //var suroorServer = new events.EventEmitter();
 //suroorServer.on('start_server', function () {
 //
@@ -113,6 +105,13 @@ var cert = fs.readFileSync('certs/suroorfashions.com.crt');
 console.log("Starting server.");
 http.createServer(app).listen(8080);
 https.createServer({key: key, cert: cert}, app).listen(8443);
+/* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
+var agent = new https.Agent({
+	host: restHost,
+	port: restPort,
+	path: '/',
+	rejectUnauthorized: false
+});
 //var configBucket = 'suroor.fashions.config';
 //var key = null;
 //var cert = null;

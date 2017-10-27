@@ -54,14 +54,6 @@ var restPort = process.env.REST_PORT;
 var restDomain = restHost+':'+restPort;
 var allowedOriginDomain = restHost+((allowedOriginPort && allowedOriginPort.length > 0) ? ':'+allowedOriginPort : '');
 
-/* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
-agent = new https.Agent({
-	host: restHost,
-	port: restPort,
-	path: '/',
-	rejectUnauthorized: false
-});
-
 var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
 var authClientId = '';
 var authClientSecret = '';
@@ -73,6 +65,13 @@ var cert = fs.readFileSync('certs/suroorfashions.com.crt');
 console.log("Starting server.");
 http.createServer(app).listen(8081);
 https.createServer({key: key, cert: cert}, app).listen(8444);
+/* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
+var agent = new https.Agent({
+	host: restHost,
+	port: restPort,
+	path: '/',
+	rejectUnauthorized: false
+});
 
 //
 // ALL '*' - Redirect all http traffic to https
