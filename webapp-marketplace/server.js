@@ -110,27 +110,27 @@ agent = new https.Agent({
 
 //var key = fs.readFileSync('certs/domain.key');
 //var cert = fs.readFileSync('certs/domain.crt');
-var configBucket = 'suroor.fashions.config';
-var key = null;
-var cert = null;
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (error, data) {
-	if(error) {
-		console.log("Key not loaded! "+error);
-	} else {
-		console.log("Key loaded.");
-		key = data;
-		if(cert != null) {console.log("Cert loaded.");suroorServer.emit('start_server');} else {console.log("Cert not loaded!");}
-	}
-});
-s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (error, data) {
-	if(error) {
-		console.log("Cert not loaded! "+error);
-	} else {
-		console.log("Cert loaded.");
-		cert = data;
-		if(key != null) {console.log("Key loaded.");suroorServer.emit('start_server');} else {console.log("Key not loaded!");}
-	}
-});
+//var configBucket = 'suroor.fashions.config';
+//var key = null;
+//var cert = null;
+//s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (error, data) {
+//	if(error) {
+//		console.log("Key not loaded! "+error);
+//	} else {
+//		console.log("Key loaded.");
+//		key = data;
+//		if(cert != null) {console.log("Cert loaded.");suroorServer.emit('start_server');} else {console.log("Cert not loaded!");}
+//	}
+//});
+//s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (error, data) {
+//	if(error) {
+//		console.log("Cert not loaded! "+error);
+//	} else {
+//		console.log("Cert loaded.");
+//		cert = data;
+//		if(key != null) {console.log("Key loaded.");suroorServer.emit('start_server');} else {console.log("Key not loaded!");}
+//	}
+//});
 
 
 
