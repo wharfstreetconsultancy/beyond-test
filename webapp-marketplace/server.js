@@ -92,21 +92,21 @@ agent = new https.Agent({
 	rejectUnauthorized: false
 });
 
-var suroorServer = new events.EventEmitter();
-suroorServer.on('start_server', function () {
-
-	console.log("Starting server.");
-	var options = {
-
-		key: key,
-		cert: cert
-	};
-	
-	//
-	// Create and run web server
-	http.createServer(app).listen(8080);
-	https.createServer(options, app).listen(8443);
-});
+//var suroorServer = new events.EventEmitter();
+//suroorServer.on('start_server', function () {
+//
+//	console.log("Starting server.");
+//	var options = {
+//
+//		key: key,
+//		cert: cert
+//	};
+//	
+//	//
+//	// Create and run web server
+//	http.createServer(app).listen(8080);
+//	https.createServer(options, app).listen(8443);
+//});
 
 //var key = fs.readFileSync('certs/domain.key');
 //var cert = fs.readFileSync('certs/domain.crt');
@@ -132,6 +132,42 @@ s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (er
 	}
 });
 
+
+
+s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (error, key) {
+
+	if(error) {
+
+		console.log("Key not loaded! "+error);
+	} else {
+
+		console.log("Key loaded.");
+
+		s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (error, cert) {
+
+			if(error) {
+
+				console.log("Cert not loaded! "+error);
+			} else {
+
+				console.log("Cert loaded.");
+				console.log("Starting server.");
+
+//				var options = {
+//
+//					key: key,
+//					cert: cert
+//				};
+
+				http.createServer(app).listen(8080);
+				https.createServer({key: key, cert: cert}, app).listen(8443);
+			}
+		});
+	}
+});
+
+
+
 //
 // ALL '*' - Redirect all http traffic to https
 app.all('*', function (req, res, next) {
@@ -144,7 +180,7 @@ app.all('*', function (req, res, next) {
 	} else {
 
 		// Request was http - redirect caller to https
-        var secureUrl = 'https://'+req.host+':'+securePort+req.url
+        var secureUrl = 'https://'+req.hostname+':'+securePort+req.url
         console.log("Redirecting http request to: "+secureUrl);
 		res.redirect(secureUrl);
 		res.end();
