@@ -119,7 +119,7 @@ s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (er
 	} else {
 		console.log("Key loaded.");
 		key = data;
-		if(cert) {console.log("Cert loaded.");suroorServer.emit('start_server');} else {console.log("Cert not loaded!");}
+		if(cert != null) {console.log("Cert loaded.");suroorServer.emit('start_server');} else {console.log("Cert not loaded!");}
 	}
 });
 s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (error, data) {
@@ -128,7 +128,7 @@ s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (er
 	} else {
 		console.log("Cert loaded.");
 		cert = data;
-		if(cert) {console.log("Key loaded.");suroorServer.emit('start_server');} else {console.log("Key not loaded!");}
+		if(key != null) {console.log("Key loaded.");suroorServer.emit('start_server');} else {console.log("Key not loaded!");}
 	}
 });
 
