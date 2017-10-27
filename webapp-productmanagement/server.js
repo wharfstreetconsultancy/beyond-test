@@ -71,8 +71,8 @@ var authClientSecret = '';
 var key = fs.readFileSync('certs/suroorfashions.com.key');
 var cert = fs.readFileSync('certs/suroorfashions.com.crt');
 console.log("Starting server.");
-http.createServer(app).listen(8080);
-https.createServer({key: key, cert: cert}, app).listen(8443);
+http.createServer(app).listen(8081);
+https.createServer({key: key, cert: cert}, app).listen(8444);
 
 //
 // ALL '*' - Redirect all http traffic to https
