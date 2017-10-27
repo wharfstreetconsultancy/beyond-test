@@ -430,7 +430,7 @@ app.post('/cart', function (req, res) {
 // Load existing product from data source
 function loadExistingProducts(productId, callback) {
 
-	request.get({url:'https://'+restDomain+'/product'+(productId) ? '/'+productId : '', agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
+	request.get({url:'https://'+restDomain+'/product'+((productId != null) ? '/'+productId : ''), agent: agent}, function (productLoadError, productLoadResponse, productLoadBody) {
 		
 		if (productLoadError) {
 

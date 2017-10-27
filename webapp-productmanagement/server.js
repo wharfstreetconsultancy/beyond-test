@@ -55,7 +55,7 @@ var restDomain = restHost+':'+restPort;
 //var allowedOriginDomain = restHost+((allowedOriginPort && allowedOriginPort.length > 0) ? ':'+allowedOriginPort : '');
 
 //var authDomain = 'suroor-fashions-admins.auth.us-west-2.amazoncognito.com';
-//var authClientId = '';
+var authClientId = '';
 //var authClientSecret = '';
 
 /* #################### REMOVE THIS ONCE TRUSTED CERT IS INSTALLED ON REST API ############### */
