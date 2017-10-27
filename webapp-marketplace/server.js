@@ -117,18 +117,18 @@ s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.key'}, function (er
 	if(error) {
 		console.log("Key not loaded! "+error);
 	} else {
-		console.log("Key loaded: "+JSON.stringify(data));
+		console.log("Key loaded.");
 		key = data;
-		if(cert) {suroorServer.emit('start_server');}
+		if(cert) {console.log("Cert loaded.");suroorServer.emit('start_server');} else {console.log("Cert not loaded!");}
 	}
 });
 s3.getObject({Bucket: configBucket, Key: 'suroorfashions.com.crt'}, function (error, data) {
 	if(error) {
 		console.log("Cert not loaded! "+error);
 	} else {
-		console.log("Cert loaded: "+JSON.stringify(data));
+		console.log("Cert loaded.");
 		cert = data;
-		if(key) {suroorServer.emit('start_server');}
+		if(cert) {console.log("Key loaded.");suroorServer.emit('start_server');} else {console.log("Key not loaded!");}
 	}
 });
 
