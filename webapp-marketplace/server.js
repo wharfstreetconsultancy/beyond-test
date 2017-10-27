@@ -95,6 +95,7 @@ agent = new https.Agent({
 var suroorServer = new events.EventEmitter();
 suroorServer.on('server_start', function () {
 
+	console.log("Starting server.");
 	var options = {
 
 		key: key,
