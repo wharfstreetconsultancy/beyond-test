@@ -22,7 +22,7 @@ var events = require('events');
 var AWS = require('aws-sdk');
 var sha256 = require('sha256');
 
-console.log("ENVIRONMENT="+process.env.ENVIRONMENT);
+console.log("SRV_ENV="+process.env.SRV_ENV);
 console.log("SESSION_SECRET="+process.env.SESSION_SECRET);
 console.log("AWS_REGION="+process.env.AWS_REGION);
 console.log("SECURE_PORT="+process.env.SECURE_PORT);
@@ -30,7 +30,7 @@ console.log("ALLOWED_ORIGIN_PORT="+process.env.ALLOWED_ORIGIN_PORT);
 console.log("REST_HOST="+process.env.REST_HOST);
 console.log("REST_PORT="+process.env.REST_PORT);
 
-var environment = process.env.ENVIRONMENT.toUpperCase();
+var environment = process.env.SRV_ENV.toUpperCase();
 
 //
 // Manage HTTP server container
