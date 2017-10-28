@@ -855,8 +855,9 @@ function profileCustomer(customer, callback) {
 	        	customerProfileBuffer = customerProfileBuffer.substring(0, customerProfileBuffer.length-1);
 	        }
 	        customerProfileBuffer += '}';
+	    	console.log("Customer Profile: "+customerProfile);
 	        customerProfile = JSON.parse(customerProfileBuffer);
-	    	console.log("Customer Profile: "+JSON.stringify(customerProfile));
+	    	console.log("Customer profile loaded");
 	    	callback(null, customerProfile);
         }
 	});
