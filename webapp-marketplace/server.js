@@ -855,7 +855,7 @@ function profileCustomer(customer, callback) {
 	        	customerProfileBuffer = customerProfileBuffer.substring(0, customerProfileBuffer.length-1);
 	        }
 	        customerProfileBuffer += '}';
-	    	console.log("Customer Profile: "+customerProfile);
+	    	console.log("Customer Profile: "+customerProfileBuffer);
 	        customerProfile = JSON.parse(customerProfileBuffer);
 	    	console.log("Customer profile loaded");
 	    	callback(null, customerProfile);
