@@ -102,6 +102,9 @@ $(document).ready(function() {
 				if(xhr.responseJSON.error.code == 'NotAuthorizedException') {
 
 					errorMessage = xhr.responseJSON.error.message+' Please retry...';
+				} else if(xhr.responseJSON.error.code == 'UserNotFoundException') {
+
+					errorMessage = 'Username/password combination not found. Please retry...';
 				} else if(xhr.responseJSON.error.code == 'UserNotConfirmedException') {
 
 					errorMessage = xhr.responseJSON.error.message+' Please check your mail...';
