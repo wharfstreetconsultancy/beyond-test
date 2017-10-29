@@ -415,7 +415,7 @@ app.post('/cart', function (req, res) {
 				    	sanitisedCartItem.push(oldItem);
 				    }
 				}
-//			}
+			}
 		});			
 
 		// Return 'cart' page
