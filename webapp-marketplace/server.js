@@ -394,30 +394,30 @@ app.post('/cart', function (req, res) {
 
 		console.log("Customer signed-in.");
 
-		profileCustomer(customer, function(customerProfileError, customerProfile) {
+//		profileCustomer(customer, function(customerProfileError, customerProfile) {
 
-	        if(customerProfileError) {
-				
-				console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
-
-				// Return error to caller
-	            res.writeHead(500, {'Content-Type': 'application/json'});
-	            res.write(JSON.stringify({error: customerProfileError}));
-	            res.end();
-	        } else {
+//	        if(customerProfileError) {
+//				
+//				console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
+//
+//				// Return error to caller
+//	            res.writeHead(500, {'Content-Type': 'application/json'});
+//	            res.write(JSON.stringify({error: customerProfileError}));
+//	            res.end();
+//	        } else {
 	        	
-				console.log("Customer profiled successfully.");
+//				console.log("Customer profiled successfully.");
 
 				// Load all specified product from REST API
-				loadExistingCart(customerProfile.sub, function (cartLoadError, storedCart) {
+				loadExistingCart(customer.username, function (cartLoadError, storedCart) {
 		
 					if(cartLoadError) {
 		
-						console.log("No cart found for customer (id: "+customerProfile.sub+". Error: "+cartLoadError);
+						console.log("No cart found for customer (id: "+customer.username+". Error: "+cartLoadError);
 					}
 					if(storedCart && storedCart.items && storedCart.items.length > 0) {
 						
-						console.log("Cart found for user (id: "+customerProfile.sub+") - "+storedCart);
+						console.log("Cart found for user (id: "+customer.username+") - "+storedCart);
 						for(var oldItem of storedCart.items) {
 		
 						    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
@@ -437,11 +437,11 @@ app.post('/cart', function (req, res) {
 						}
 					} else {
 		
-						console.log("No cart found for customer (id: "+customerProfile.sub+")");
+						console.log("No cart found for customer (id: "+customer.username+")");
 					}
 				});
-	        }
-	    });
+//	        }
+//	    });
 
 		// Return 'cart' page
 	    fs.createReadStream(__dirname+'/cart.html')
