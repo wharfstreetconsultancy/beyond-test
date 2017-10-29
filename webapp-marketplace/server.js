@@ -392,39 +392,56 @@ app.post('/cart', function (req, res) {
 			}
 		}
 
-		// Load all specified product from REST API
-		loadExistingCart(customer.sub, function (cartLoadError, storedCart) {
+		console.log("Customer signed-in.");
 
-			if(cartLoadError) {
+		profileCustomer(customer, function(customerProfileError, customerProfile) {
 
-				console.log("No cart found for customer (id: "+customer.sub+". Error: "+cartLoadError);
-			}
-			if(storedCart && storedCart.items && storedCart.items.length > 0) {
+	        if(customerProfileError) {
 				
-				console.log("Cart found for user (id: "+customer.sub+") - "+storedCart);
-				for(var oldItem of storedCart.items) {
+				console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
 
-				    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
+				// Return error to caller
+	            res.writeHead(500, {'Content-Type': 'application/json'});
+	            res.write(JSON.stringify({error: customerProfileError}));
+	            res.end();
+	        } else {
+	        	
+				console.log("Customer profiled successfully.");
 
-				    	var sameItem = (
-				    		(sanitisedItem.productId === oldItem.productId) &&
-				    		(sanitisedItem.color === oldItem.color) &&
-				    		(sanitisedItem.size === oldItem.size)
-				    	);
-				    	return sameItem;
-				    });
-				    if(existingCartItem.length == 0) {
-
-				    	console.log("Old cart item found, that does not exist in latrest cart: "+JSON.stringify(oldItem));
-				    	sanitisedCartItem.push(oldItem);
-				    }
-				}
-			} else {
-
-				console.log("No cart found for customer (id: "+customer.sub+")");
-			}
-
-		});			
+				// Load all specified product from REST API
+				loadExistingCart(customerProfile.sub, function (cartLoadError, storedCart) {
+		
+					if(cartLoadError) {
+		
+						console.log("No cart found for customer (id: "+customerProfile.sub+". Error: "+cartLoadError);
+					}
+					if(storedCart && storedCart.items && storedCart.items.length > 0) {
+						
+						console.log("Cart found for user (id: "+customerProfile.sub+") - "+storedCart);
+						for(var oldItem of storedCart.items) {
+		
+						    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
+		
+						    	var sameItem = (
+						    		(sanitisedItem.productId === oldItem.productId) &&
+						    		(sanitisedItem.color === oldItem.color) &&
+						    		(sanitisedItem.size === oldItem.size)
+						    	);
+						    	return sameItem;
+						    });
+						    if(existingCartItem.length == 0) {
+		
+						    	console.log("Old cart item found, that does not exist in latest cart: "+JSON.stringify(oldItem));
+						    	sanitisedCartItem.push(oldItem);
+						    }
+						}
+					} else {
+		
+						console.log("No cart found for customer (id: "+customerProfile.sub+")");
+					}
+				});
+	        }
+	    });
 
 		// Return 'cart' page
 	    fs.createReadStream(__dirname+'/cart.html')
