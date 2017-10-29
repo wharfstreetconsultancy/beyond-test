@@ -358,8 +358,8 @@ app.post('/cart', function (req, res) {
 		console.log("Customer found and signed-in:"+JSON.stringify(customer));
 		var sanitisedCart;
 		
-		var handler = events.EventEmitter();
-		handler.on('return_to_caller', function () {
+		var cartHandler = new events.EventEmitter();
+		cartHandler.on('return_to_caller', function () {
 
 			// Return 'cart' page
 		    fs.createReadStream(__dirname+'/cart.html')
@@ -369,7 +369,7 @@ app.post('/cart', function (req, res) {
 		    return;
 		});
 		
-		var storedCartManager = new EventEmitter();
+		var storedCartManager = new events.EventEmitter();
 		storedCartManager.on('load_stored_cart', function () {
 
 			// Load all specified product from REST API
@@ -378,16 +378,16 @@ app.post('/cart', function (req, res) {
 				if(cartLoadError) {
 	
 					console.log("No cart found for customer (id: "+customer.username+". Error: "+cartLoadError);
-					handler.emit('return_to_caller');
+					cartHandler.emit('return_to_caller');
 				}
 				if(storedCart && storedCart.items && storedCart.items.length > 0) {
 					
 					console.log("Cart found for user (id: "+customer.username+") - "+storedCart);
 					var cartItemCounter = 1;
 					for(var oldItem of storedCart.items) {
-	
+
 					    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
-	
+
 					    	var sameItem = (
 					    		(sanitisedItem.productId === oldItem.productId) &&
 					    		(sanitisedItem.color === oldItem.color) &&
@@ -400,13 +400,13 @@ app.post('/cart', function (req, res) {
 					    	console.log("Old cart item found, that does not exist in latest cart: "+JSON.stringify(oldItem));
 					    	sanitisedCartItem.push(oldItem);
 					    }
-						if(cartItemCounter == storedCart.items.length) {handler.emit('return to caller');}
+						if(cartItemCounter == storedCart.items.length) {cartHandler.emit('return_to_caller');}
 						cartItemCounter++;
 					}
 				} else {
 	
 					console.log("No cart found for customer (id: "+customer.username+")");
-					handler.emit('return to caller');
+					cartHandler.emit('return_to_caller');
 				}
 			});
         });
