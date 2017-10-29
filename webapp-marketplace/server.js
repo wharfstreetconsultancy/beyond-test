@@ -356,22 +356,77 @@ app.post('/cart', function (req, res) {
 	} else {
 
 		console.log("Customer found and signed-in:"+JSON.stringify(customer));
+		var sanitisedCart;
+		
+		var handler = events.EventEmitter();
+		handler.on('return_to_caller', function () {
+
+			// Return 'cart' page
+		    fs.createReadStream(__dirname+'/cart.html')
+				.pipe(replaceStream('{environment}', pgwEnvKey))
+				.pipe(replaceStream('{latest.cart}', (sanitisedCart) ? sanitisedCart : 'null'))
+		    	.pipe(res);
+		    return;
+		});
+		
+		var storedCartManager = new EventEmitter();
+		storedCartManager.on('load_stored_cart', function () {
+
+			// Load all specified product from REST API
+			loadExistingCart(customer.username, function (cartLoadError, storedCart) {
+	
+				if(cartLoadError) {
+	
+					console.log("No cart found for customer (id: "+customer.username+". Error: "+cartLoadError);
+					handler.emit('return_to_caller');
+				}
+				if(storedCart && storedCart.items && storedCart.items.length > 0) {
+					
+					console.log("Cart found for user (id: "+customer.username+") - "+storedCart);
+					var cartItemCounter = 1;
+					for(var oldItem of storedCart.items) {
+	
+					    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
+	
+					    	var sameItem = (
+					    		(sanitisedItem.productId === oldItem.productId) &&
+					    		(sanitisedItem.color === oldItem.color) &&
+					    		(sanitisedItem.size === oldItem.size)
+					    	);
+					    	return sameItem;
+					    });
+					    if(existingCartItem.length == 0) {
+	
+					    	console.log("Old cart item found, that does not exist in latest cart: "+JSON.stringify(oldItem));
+					    	sanitisedCartItem.push(oldItem);
+					    }
+						if(cartItemCounter == storedCart.items.length) {handler.emit('return to caller');}
+						cartItemCounter++;
+					}
+				} else {
+	
+					console.log("No cart found for customer (id: "+customer.username+")");
+					handler.emit('return to caller');
+				}
+			});
+        });
 
 		var localCartParam = req.body.cart;
 		console.log("Local cart: "+localCartParam);
 		if(localCartParam) {
 
 			var localCart = JSON.parse(localCartParam);
-			if(localCart && localCart.items) {
+			if(localCart && localCart.items && localCart.items.length > 0) {
 	
-				var sanitisedCart = {id: localCart.id, items: []};
+				sanitisedCart = {id: localCart.id, items: []};
+				var cartItemCounter = 1;
 				for(var item of localCart.items) {
 	
 					// Load all specified product from REST API
 					loadExistingProducts(item.productId, function (productLoadError, product) {
 						if(productLoadError) {
 	
-							console.log("!ERROR! - Failed to sanitise cart: "+productLoadError);
+							console.log("!WARNING! - Cart contained product that could not be loaded from datastore: "+productLoadError);
 						} else {
 	
 						    var newCartItem = {
@@ -387,68 +442,15 @@ app.post('/cart', function (req, res) {
 						    }
 						    sanitisedCart.push(newItem);
 						}
+						if(cartItemCounter == localCart.items.length) {storedCartManager.emit('load_stored_cart');}
 					});
+					cartItemCounter++;
 				}  
 			}
+		} else {
+
+			storedCartManager.emit('load_stored_cart');
 		}
-
-		console.log("Customer signed-in.");
-
-//		profileCustomer(customer, function(customerProfileError, customerProfile) {
-
-//	        if(customerProfileError) {
-//				
-//				console.log("!ERROR! - Failed to profile customer: "+customerProfileError);
-//
-//				// Return error to caller
-//	            res.writeHead(500, {'Content-Type': 'application/json'});
-//	            res.write(JSON.stringify({error: customerProfileError}));
-//	            res.end();
-//	        } else {
-	        	
-//				console.log("Customer profiled successfully.");
-
-				// Load all specified product from REST API
-				loadExistingCart(customer.username, function (cartLoadError, storedCart) {
-		
-					if(cartLoadError) {
-		
-						console.log("No cart found for customer (id: "+customer.username+". Error: "+cartLoadError);
-					}
-					if(storedCart && storedCart.items && storedCart.items.length > 0) {
-						
-						console.log("Cart found for user (id: "+customer.username+") - "+storedCart);
-						for(var oldItem of storedCart.items) {
-		
-						    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
-		
-						    	var sameItem = (
-						    		(sanitisedItem.productId === oldItem.productId) &&
-						    		(sanitisedItem.color === oldItem.color) &&
-						    		(sanitisedItem.size === oldItem.size)
-						    	);
-						    	return sameItem;
-						    });
-						    if(existingCartItem.length == 0) {
-		
-						    	console.log("Old cart item found, that does not exist in latest cart: "+JSON.stringify(oldItem));
-						    	sanitisedCartItem.push(oldItem);
-						    }
-						}
-					} else {
-		
-						console.log("No cart found for customer (id: "+customer.username+")");
-					}
-				});
-//	        }
-//	    });
-
-		// Return 'cart' page
-	    fs.createReadStream(__dirname+'/cart.html')
-			.pipe(replaceStream('{environment}', pgwEnvKey))
-			.pipe(replaceStream('{latest.cart}', (sanitisedCart) ? sanitisedCart : 'null'))
-	    	.pipe(res);
-	    return;
 	}
 });
 
