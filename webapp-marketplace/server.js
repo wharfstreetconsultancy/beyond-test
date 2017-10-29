@@ -395,10 +395,10 @@ app.post('/cart', function (req, res) {
 					    	);
 					    	return sameItem;
 					    });
-					    if(existingCartItem.length == 0) {
+					    if(existingCartItems.length == 0) {
 	
 					    	console.log("Old cart item found, that does not exist in latest cart: "+JSON.stringify(oldItem));
-					    	sanitisedCartItem.push(oldItem);
+					    	sanitisedCart.items.push(oldItem);
 					    }
 						if(cartItemCounter == storedCart.items.length) {cartHandler.emit('return_to_caller');}
 						cartItemCounter++;
@@ -440,7 +440,7 @@ app.post('/cart', function (req, res) {
 								created: item.created,
 								lastUpdated: item.lastUpdated
 						    }
-						    sanitisedCart.push(newCartItem);
+						    sanitisedCart.items.push(newCartItem);
 						}
 						if(cartItemCounter == localCart.items.length) {storedCartManager.emit('load_stored_cart');}
 					});
