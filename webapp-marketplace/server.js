@@ -440,7 +440,7 @@ app.post('/cart', function (req, res) {
 								created: item.created,
 								lastUpdated: item.lastUpdated
 						    }
-						    sanitisedCart.push(newItem);
+						    sanitisedCart.push(newCartItem);
 						}
 						if(cartItemCounter == localCart.items.length) {storedCartManager.emit('load_stored_cart');}
 					});
