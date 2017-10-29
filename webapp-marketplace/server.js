@@ -355,7 +355,7 @@ app.post('/cart', function (req, res) {
 	    return;
 	} else {
 
-		console.log("Customer found and signed-in:"+customer);
+		console.log("Customer found and signed-in:"+JSON.stringify(customer));
 
 		var localCartParam = req.body.cart;
 		console.log("Local cart: "+localCartParam);
