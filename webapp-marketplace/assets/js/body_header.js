@@ -100,7 +100,7 @@ $(document).ready(function() {
 		var localCart = localStorage.getItem('cart');
 		if(localCart) {
 
-			document.getElementById("cart_manager").innerHTML = '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
+			document.getElementById("cart_manager").innerHTML = '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>';
 		}
 		$('#cart_manager').submit();
  		return false;

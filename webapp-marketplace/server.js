@@ -354,38 +354,42 @@ app.post('/cart', function (req, res) {
 	    	.pipe(res);
 	    return;
 	} else {
-		
+
 		console.log("Customer found and signed-in.");
 
-		var localCart = req.body.cart;
-		console.log("Local cart: "+localCart);
-		if(localCart && localCart.items) {
+		var localCartParam = req.body.cart;
+		console.log("Local cart: "+localCartParam);
+		if(localCartParam) {
 
-			var sanitisedCart = {id: localCart.id, items: []};
-			for(var item of localCart.items) {
-
-				// Load all specified product from REST API
-				loadExistingProducts(item.productId, function (productLoadError, product) {
-					if(productLoadError) {
-
-						console.log("!ERROR! - Failed to sanitise cart: "+productLoadError);
-					} else {
-
-					    var newCartItem = {
-							id: item.id,
-							productId: item.productId,
-							productName: product.name,
-							quantity: item.quantity,
-							color: item.color,
-							size: item.size,
-							cost: product.cost,
-							created: item.created,
-							lastUpdated: item.lastUpdated
-					    }
-					    sanitisedCart.push(newItem);
-					}
-				});
-			}  
+			var localCart = JSON.parse(localCartParam);
+			if(localCart && localCart.items) {
+	
+				var sanitisedCart = {id: localCart.id, items: []};
+				for(var item of localCart.items) {
+	
+					// Load all specified product from REST API
+					loadExistingProducts(item.productId, function (productLoadError, product) {
+						if(productLoadError) {
+	
+							console.log("!ERROR! - Failed to sanitise cart: "+productLoadError);
+						} else {
+	
+						    var newCartItem = {
+								id: item.id,
+								productId: item.productId,
+								productName: product.name,
+								quantity: item.quantity,
+								color: item.color,
+								size: item.size,
+								cost: product.cost,
+								created: item.created,
+								lastUpdated: item.lastUpdated
+						    }
+						    sanitisedCart.push(newItem);
+						}
+					});
+				}  
+			}
 		}
 
 		// Load all specified product from REST API
@@ -393,11 +397,11 @@ app.post('/cart', function (req, res) {
 
 			if(cartLoadError) {
 
-				console.log("!ERROR! - Failed to load stored cart: "+cartLoadError);
+				console.log("No cart found for customer (id: "+customer.sub+". Error: "+cartLoadError);
 			}
 			if(storedCart && storedCart.items && storedCart.items.length > 0) {
 				
-				console.log("Stored cart: "+storedCart);
+				console.log("Cart found for user (id: "+customer.sub+") - "+storedCart);
 				for(var oldItem of storedCart.items) {
 
 				    var existingCartItem = sanitisedCart.items.filter(function (sanitisedItem) {
@@ -415,7 +419,11 @@ app.post('/cart', function (req, res) {
 				    	sanitisedCartItem.push(oldItem);
 				    }
 				}
+			} else {
+
+				console.log("No cart found for customer (id: "+customer.sub+")");
 			}
+
 		});			
 
 		// Return 'cart' page
