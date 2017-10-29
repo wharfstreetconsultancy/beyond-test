@@ -394,7 +394,8 @@ app.post('/cart', function (req, res) {
 			if(cartLoadError) {
 
 				console.log("!ERROR! - Failed to load stored cart: "+cartLoadError);
-			} else {
+			}
+			if(storedCart && storedCart.items && storedCart.items.length > 0) {
 				
 				console.log("Stored cart: "+storedCart);
 				for(var oldItem of storedCart.items) {
@@ -414,7 +415,7 @@ app.post('/cart', function (req, res) {
 				    	sanitisedCartItem.push(oldItem);
 				    }
 				}
-			}
+//			}
 		});			
 
 		// Return 'cart' page
