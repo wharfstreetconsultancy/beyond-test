@@ -452,6 +452,7 @@ app.post('/cart', function (req, res) {
 							storedCartManager.emit('load_stored_cart');
 						}
 					});
+					console.log("ITEM: "+JSON.stringify(item));
 					cartItemCounter++;
 				}  
 			}
