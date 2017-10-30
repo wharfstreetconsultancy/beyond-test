@@ -360,6 +360,7 @@ app.post('/cart', function (req, res) {
 		
 		var cartHandler = new events.EventEmitter();
 		cartHandler.on('return_to_caller', function () {
+			console.log("Event: 'return_to_caller' detected.);
 
 			// Return 'cart' page
 		    fs.createReadStream(__dirname+'/cart.html')
@@ -371,13 +372,14 @@ app.post('/cart', function (req, res) {
 		
 		var storedCartManager = new events.EventEmitter();
 		storedCartManager.on('load_stored_cart', function () {
+			console.log("Event: 'load_stored_cart' detected.);
 
 			// Load all specified product from REST API
 			loadExistingCart(customer.username, function (cartLoadError, storedCart) {
 	
 				if(cartLoadError) {
 	
-					console.log("No cart found for customer (id: "+customer.username+". Error: "+cartLoadError);
+					console.log("No stored cart found for customer (id: "+customer.username+". Error: "+cartLoadError);
 					cartHandler.emit('return_to_caller');
 				}
 				if(storedCart && storedCart.items && storedCart.items.length > 0) {
@@ -405,7 +407,7 @@ app.post('/cart', function (req, res) {
 					}
 				} else {
 	
-					console.log("No cart found for customer (id: "+customer.username+")");
+					console.log("No stored cart found for customer (id: "+customer.username+")");
 					cartHandler.emit('return_to_caller');
 				}
 			});
