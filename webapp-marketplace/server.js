@@ -441,10 +441,16 @@ app.post('/cart', function (req, res) {
 								cost: product.cost,
 								created: item.created,
 								lastUpdated: item.lastUpdated
-						    }
+						    };
 						    sanitisedCart.items.push(newCartItem);
 						}
-						if(cartItemCounter == localCart.items.length) {storedCartManager.emit('load_stored_cart');}
+						console.log("Current counter: "+cartItemCounter);
+						console.log("Target counter: "+localCart.items.length);
+						if(cartItemCounter == localCart.items.length) {
+							
+							console.log("Calling event: 'load_stored_cart'");
+							storedCartManager.emit('load_stored_cart');
+						}
 					});
 					cartItemCounter++;
 				}  
