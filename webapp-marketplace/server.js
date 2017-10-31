@@ -434,19 +434,21 @@ app.post('/cart', function (req, res) {
 	
 							console.log("!WARNING! - Cart contained product that could not be loaded from datastore: "+productLoadError);
 						} else {
-	
-						    var newCartItem = {
+
+							console.log("Existing item: "+JSON.stringify(item));
+							var sanitisedCartItem = {
 								id: item.id,
 								productId: item.productId,
 								productName: product.name,
 								quantity: item.quantity,
 								color: item.color,
 								size: item.size,
-								cost: product.cost,
+								cost: parseFloat(product.cost)*parseInt(item.quantity),
 								created: item.created,
 								lastUpdated: item.lastUpdated
 						    };
-						    sanitisedCart.items.push(newCartItem);
+							console.log("Sanitised item: "+JSON.stringify(sanitisedCartItem));
+						    sanitisedCart.items.push(sanitisedCartItem);
 						}
 						if(cartItemCounter == localCart.items.length) {
 							
