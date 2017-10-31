@@ -446,7 +446,7 @@ app.post('/cart', function (req, res) {
 						}
 						console.log("Current counter: "+cartItemCounter);
 						console.log("Target counter: "+localCart.items.length);
-						if((cartItemCounter++) == localCart.items.length) {
+						if((++cartItemCounter) == localCart.items.length) {
 							
 							console.log("Calling event: 'load_stored_cart'");
 							storedCartManager.emit('load_stored_cart');
