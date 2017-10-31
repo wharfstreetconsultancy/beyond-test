@@ -421,7 +421,7 @@ app.post('/cart', function (req, res) {
 			if(localCart && localCart.items && localCart.items.length > 0) {
 	
 				sanitisedCart = {id: localCart.id, items: []};
-				var cartItemCounter = 1;
+				var cartItemCounter = 0;
 				for(var item of localCart.items) {
 	
 					// Load all specified product from REST API
@@ -446,14 +446,12 @@ app.post('/cart', function (req, res) {
 						}
 						console.log("Current counter: "+cartItemCounter);
 						console.log("Target counter: "+localCart.items.length);
-						if(cartItemCounter == localCart.items.length) {
+						if((cartItemCounter++) == localCart.items.length) {
 							
 							console.log("Calling event: 'load_stored_cart'");
 							storedCartManager.emit('load_stored_cart');
 						}
 					});
-					console.log("ITEM: "+JSON.stringify(item));
-					cartItemCounter++;
 				}  
 			}
 		} else {
