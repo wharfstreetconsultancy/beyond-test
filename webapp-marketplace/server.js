@@ -381,6 +381,7 @@ app.post('/cart', function (req, res) {
 	
 					console.log("No stored cart found for customer (id: "+customer.username+". Error: "+cartLoadError);
 					cartHandler.emit('return_to_caller');
+					return;
 				}
 				if(storedCart && storedCart.items && storedCart.items.length > 0) {
 					
@@ -402,13 +403,17 @@ app.post('/cart', function (req, res) {
 					    	console.log("Old cart item found, that does not exist in latest cart: "+JSON.stringify(oldItem));
 					    	sanitisedCart.items.push(oldItem);
 					    }
-						if(cartItemCounter == storedCart.items.length) {cartHandler.emit('return_to_caller');}
+						if(cartItemCounter == storedCart.items.length) {
+							cartHandler.emit('return_to_caller');
+							return;
+						}
 						cartItemCounter++;
 					}
 				} else {
 	
-					console.log("No stored cart found for customer (id: "+customer.username+")");
+					console.log("Empty cart returned  for customer (id: "+customer.username+")");
 					cartHandler.emit('return_to_caller');
+					return;
 				}
 			});
         });
@@ -421,7 +426,7 @@ app.post('/cart', function (req, res) {
 			if(localCart && localCart.items && localCart.items.length > 0) {
 	
 				sanitisedCart = {id: localCart.id, items: []};
-				var cartItemCounter = 0;
+				var cartItemCounter = 1;
 				for(var item of localCart.items) {
 	
 					// Load all specified product from REST API
@@ -446,17 +451,20 @@ app.post('/cart', function (req, res) {
 						}
 						console.log("Current counter: "+cartItemCounter);
 						console.log("Target counter: "+localCart.items.length);
-						if((++cartItemCounter) == localCart.items.length) {
+						if(cartItemCounter == localCart.items.length) {
 							
 							console.log("Calling event: 'load_stored_cart'");
 							storedCartManager.emit('load_stored_cart');
+							return;
 						}
+						cartItemCounter++;
 					});
 				}  
 			}
 		} else {
 
 			storedCartManager.emit('load_stored_cart');
+			return;
 		}
 	}
 });
