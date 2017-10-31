@@ -443,7 +443,7 @@ app.post('/cart', function (req, res) {
 								quantity: item.quantity,
 								color: item.color,
 								size: item.size,
-								cost: parseFloat(product.cost)*parseInt(item.quantity),
+								cost: parseFloat(product.price)*parseInt(item.quantity),
 								created: item.created,
 								lastUpdated: item.lastUpdated
 						    };
