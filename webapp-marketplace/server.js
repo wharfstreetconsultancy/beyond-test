@@ -364,7 +364,7 @@ app.post('/cart', function (req, res) {
 			// Return 'cart' page
 		    fs.createReadStream(__dirname+'/cart.html')
 				.pipe(replaceStream('{environment}', pgwEnvKey))
-				.pipe(replaceStream('{latest.cart}', (sanitisedCart) ? sanitisedCart : 'null'))
+				.pipe(replaceStream('{latest.cart}', (sanitisedCart) ? JSON.stringify(sanitisedCart) : 'null'))
 		    	.pipe(res);
 		    return;
 		});
