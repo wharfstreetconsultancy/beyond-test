@@ -360,7 +360,6 @@ app.post('/cart', function (req, res) {
 		
 		var cartHandler = new events.EventEmitter();
 		cartHandler.on('return_to_caller', function () {
-			console.log("Event: 'return_to_caller' detected.");
 
 			// Return 'cart' page
 		    fs.createReadStream(__dirname+'/cart.html')
@@ -372,7 +371,6 @@ app.post('/cart', function (req, res) {
 		
 		var storedCartManager = new events.EventEmitter();
 		storedCartManager.on('load_stored_cart', function () {
-			console.log("Event: 'load_stored_cart' detected.");
 
 			// Load all specified product from REST API
 			loadExistingCart(customer.username, function (cartLoadError, storedCart) {
@@ -404,6 +402,7 @@ app.post('/cart', function (req, res) {
 					    	sanitisedCart.items.push(oldItem);
 					    }
 						if(cartItemCounter == storedCart.items.length) {
+
 							cartHandler.emit('return_to_caller');
 							return;
 						}
@@ -449,11 +448,8 @@ app.post('/cart', function (req, res) {
 						    };
 						    sanitisedCart.items.push(newCartItem);
 						}
-						console.log("Current counter: "+cartItemCounter);
-						console.log("Target counter: "+localCart.items.length);
 						if(cartItemCounter == localCart.items.length) {
 							
-							console.log("Calling event: 'load_stored_cart'");
 							storedCartManager.emit('load_stored_cart');
 							return;
 						}
