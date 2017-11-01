@@ -23,20 +23,20 @@
 		</div>
 	</div>
 </div -->
-<nav id="suroor_navbar" class="navbar navbar-default">
+<nav id="suroor_navbar" class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid nav-con">
 		<!--Brand and toggle get grouped for better mobile display-->
 		<div class="navbar-header">
-			<div class="col-sm-1 header">
+			<!-- div class="col-sm-1 header" -->
 				<button type="button" class="navbar-toggle x collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar second-bar"></span>
 				</button>
-			</div>
-			<div class="col-xs-1 col-md-1 col-lg-1 text-center">
+			<!-- /div>
+			<div class="col-xs-1 col-md-1 col-lg-1 text-center" -->
 				<a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Marketplace"></a>
-			</div>
+			<!-- /div -->
 		</div>
 		<!--Collect the nav links, forms, and other content for toggling-->
 		<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
