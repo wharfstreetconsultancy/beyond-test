@@ -14,7 +14,7 @@
     margin-top: 30px; /* Add a top margin to avoid content overlay */
 }
 </style -->
-<div id="suroor_banner" class="container-fluid">
+<!-- div id="suroor_banner" class="container-fluid">
 	<div class="row">
 		<div class="col-sm-1 header">
 			<div class="col-xs-1 col-md-1 col-lg-1 text-center">
@@ -22,8 +22,8 @@
 			</div>
 		</div>
 	</div>
-</div>
-<nav id="suroor_navbar" class="navbar navbar-default">
+</div -->
+<nav id="suroor_navbar" class="navbar navbar-default  navbar-fixed-top">
 	<div class="container-fluid nav-con">
 		<!--Brand and toggle get grouped for better mobile display-->
 		<div class="navbar-header">
@@ -34,6 +34,7 @@
 					<span class="icon-bar second-bar"></span>
 				</button>
 			</div>
+			<a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Marketplace"></a>
 		</div>
 		<!--Collect the nav links, forms, and other content for toggling-->
 		<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
