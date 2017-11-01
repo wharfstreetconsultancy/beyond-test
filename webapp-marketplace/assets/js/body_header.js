@@ -23,7 +23,7 @@
 		</div>
 	</div>
 </div>
-<nav id="suroor_navbar" class="navbar navbar-default navbar-fixed-top">
+<nav id="suroor_navbar" class="navbar navbar-default">
 	<div class="container-fluid nav-con">
 		<!--Brand and toggle get grouped for better mobile display-->
 		<div class="navbar-header">
