@@ -37,11 +37,11 @@ body { padding-top: 70px; }
 				</button>
 			<!-- /div>
 			<div class="col-xs-1 col-md-1 col-lg-1 text-center" -->
-				<a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" class="img" alt="Suroor Fashions - Marketplace"></a>
+				<a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" id="suroor_banner" height="70" class="img" alt="Suroor Fashions - Marketplace"></a>
 			<!-- /div -->
 		</div>
 		<!--Collect the nav links, forms, and other content for toggling-->
-		<div class="collapse navbar-collapse cool-nav" id="bs-example-navbar-collapse-1">
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="myNav nav navbar-nav">
 				<li><a href="/shop">Shop<span class="sr-only">(current)</span></a></li>
 				<li><a href="/about">About Us<span class="sr-only">(current)</span></a></li>
