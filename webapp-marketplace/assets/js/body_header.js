@@ -1,4 +1,4 @@
-<style>
+<!-- style>
 /* The navigation bar */
 //.navbar {
 #suroor_navbar {
@@ -13,7 +13,7 @@
 .main {
     margin-top: 30px; /* Add a top margin to avoid content overlay */
 }
-</style>
+</style -->
 <div id="suroor_banner" class="container-fluid">
 	<div class="row">
 		<div class="col-sm-1 header">
@@ -23,7 +23,7 @@
 		</div>
 	</div>
 </div>
-<nav id="suroor_navbar" class="navbar navbar-default">
+<nav id="suroor_navbar" class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid nav-con">
 		<!--Brand and toggle get grouped for better mobile display-->
 		<div class="navbar-header">
