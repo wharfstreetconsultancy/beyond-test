@@ -1,5 +1,5 @@
 <style>
-body { padding-top: 70px; }
+body { padding-top: 270px; }
 <!--
 /* The navigation bar */
 //.navbar {
