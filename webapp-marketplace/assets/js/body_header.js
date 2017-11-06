@@ -14,8 +14,8 @@ body { padding-top: 70px; }
 		</div>
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li><a href="/shop">Shop<span class="sr-only">(current)</span></a></li>
-				<li><a href="/about">About Us<span class="sr-only">(current)</span></a></li>
+				<li><a href="/shop">Shop</a></li>
+				<li><a href="/about">About Us</a></li>
 				<li><a href="/contact">Contact</a></li>
 				<li>
 					<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
