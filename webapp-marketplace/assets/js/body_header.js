@@ -18,10 +18,10 @@ body { padding-top: 70px; }
 	  <!-- Collect the nav links, forms, and other content for toggling -->
 	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    <ul class="nav navbar-nav navbar-right">
-	    	<li class="active"><a href="/" class="fa">Featured</a></li>
-			<li><a href="/shop" class="fa">Shop</a></li>
-			<li><a href="/about" class="fa">About Us</a></li>
-			<li><a href="/contact" class="fa">Contact</a></li>
+	    	<li class="active"><a href="/">Featured</a></li>
+			<li><a href="/shop">Shop</a></li>
+			<li><a href="/about">About Us</a></li>
+			<li><a href="/contact">Contact</a></li>
 			<li>
 				<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
 				<form id="cart_manager" action="/cart" method="post"/>
