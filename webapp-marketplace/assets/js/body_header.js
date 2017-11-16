@@ -11,7 +11,8 @@ body { padding-top: 70px; }
 	      <span class="icon-bar"></span>
 	      <span class="icon-bar"></span>
 	    </button>
-	    <a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" alt="Suroor Fashions - Marketplace"/></a>
+	    <!-- a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" alt="Suroor Fashions - Marketplace"/></a -->
+	    <a class="navbar-brand" href="/">Brand</a>
 	  </div>
 	
 	  <!-- Collect the nav links, forms, and other content for toggling -->
