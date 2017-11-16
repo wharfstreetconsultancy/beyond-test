@@ -1,7 +1,7 @@
 <style>
 body { padding-top: 70px; }
 </style>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 	  <!-- Brand and toggle get grouped for better mobile display -->
 	  <div class="navbar-header">
@@ -11,16 +11,16 @@ body { padding-top: 70px; }
 	      <span class="icon-bar"></span>
 	      <span class="icon-bar"></span>
 	    </button>
-	    <a class="navbar-brand" href="#">Brand</a>
+	    <a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" id="suroor_banner" height="70" class="img" alt="Suroor Fashions - Marketplace"/></a>
 	  </div>
 	
 	  <!-- Collect the nav links, forms, and other content for toggling -->
 	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    <ul class="nav navbar-nav navbar-right">
-	    	<li class="active"><a href="/">Featured</a></li>
-			<li><a href="/shop">Shop</a></li>
-			<li><a href="/about">About Us</a></li>
-			<li><a href="/contact">Contact</a></li>
+	    	<li class="active"><a href="/" class="fa">Featured</a></li>
+			<li><a href="/shop" class="fa">Shop</a></li>
+			<li><a href="/about" class="fa">About Us</a></li>
+			<li><a href="/contact" class="fa">Contact</a></li>
 			<li>
 				<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
 				<form id="cart_manager" action="/cart" method="post"/>
