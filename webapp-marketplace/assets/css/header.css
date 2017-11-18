@@ -102,7 +102,7 @@ a {
 }
 
 .navbar-header {
-	margin-top: -50px;
+	margin-top: 0px;
 }
 
 .navbar-default .navbar-nav > li > a:hover,
