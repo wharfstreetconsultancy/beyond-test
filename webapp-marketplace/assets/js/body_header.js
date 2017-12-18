@@ -1,3 +1,18 @@
+<style>
+#navigation {
+    background-color: rgba(72, 8, 111, 0.4);
+    border: 0 none;
+    margin: 0;
+}
+
+.navbar-brand {
+    padding: 0;
+}
+
+.logo {
+    margin: 0;
+}
+</style>
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 	  <!-- Brand and toggle get grouped for better mobile display -->
