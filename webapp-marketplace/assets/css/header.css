@@ -107,7 +107,8 @@ a {
 
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav:active {
-	background-color: transparent;
+/*	background-color: transparent;*/
+	background-color: #999999;
 	color: #e8effc;
 }
 
