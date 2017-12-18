@@ -1,18 +1,3 @@
-<style>
-#navigation {
-    background-color: rgba(72, 8, 111, 0.4);
-    border: 0 none;
-    margin: 0;
-}
-
-.navbar-brand {
-    padding: 0;
-}
-
-.logo {
-    margin: 0;
-}
-</style>
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 	  <!-- Brand and toggle get grouped for better mobile display -->
@@ -23,7 +8,7 @@
 	      <span class="icon-bar"></span>
 	      <span class="icon-bar"></span>
 	    </button>
-	    <a class="navbar-brand" href="/"><img style="max-height: 50px;" src="img/SVGlogo.svg" alt="Suroor Fashions - Marketplace"/></a>
+	    <a class="navbar-brand" href="/"><img style="max-height: 50px;" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
 	  </div>
 	
 	  <!-- Collect the nav links, forms, and other content for toggling -->
