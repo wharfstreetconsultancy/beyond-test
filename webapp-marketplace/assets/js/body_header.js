@@ -8,7 +8,7 @@
 	      <span class="icon-bar"></span>
 	      <span class="icon-bar"></span>
 	    </button>
-	    <a class="navbar-brand" href="/"><img style="max-height: 100px;" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
+	    <a class="navbar-brand" href="/"><img style="max-height: 70px;" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
 	  </div>
 	
 	  <!-- Collect the nav links, forms, and other content for toggling -->
