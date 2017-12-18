@@ -108,7 +108,7 @@ a {
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav:active {
 /*	background-color: transparent;*/
-	background-color: #999999;
+	background-color: #ffffff;
 	color: #e8effc;
 }
 
@@ -170,7 +170,7 @@ a {
 
 .navbar-default {
 /*	background-color: transparent;*/
-	background-color: #999999;
+	background-color: #ffffff;
 }
 
 .navbar-toggle .icon-bar {
