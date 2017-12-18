@@ -169,7 +169,8 @@ a {
 
 
 .navbar-default {
-    background-color: transparent;
+/*	background-color: transparent;*/
+	background-color: #999999;
 }
 
 .navbar-toggle .icon-bar {
