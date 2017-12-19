@@ -8,7 +8,8 @@
 	      <span class="icon-bar"></span>
 	      <span class="icon-bar"></span>
 	    </button>
-	    <a style="padding: 0px" class="navbar-brand" href="/"><img style="max-height: 50px; padding-left: 10px" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
+	    <!-- a style="padding: 0px" class="navbar-brand" href="/"><img style="max-height: 50px; padding-left: 10px" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a -->
+	    <a style="padding: 0px; float: none" class="navbar-brand" href="/"><img src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
 	  </div>
 	
 	  <!-- Collect the nav links, forms, and other content for toggling -->
@@ -27,31 +28,6 @@
 	  </div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
 </nav>
-<!-- nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="/"><img src="img/SVGlogo.svg" id="suroor_banner" height="70" class="img" alt="Suroor Fashions - Marketplace"/></a>
-		</div>
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				<li><a href="/shop">Shop</a></li>
-				<li><a href="/about">About Us</a></li>
-				<li><a href="/contact">Contact</a></li>
-				<li>
-					<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
-					<form id="cart_manager" action="/cart" method="post"/>
-				</li>
-				<li><a id="cust_link" class="dropdown-toggle fa fa-user" href="#"/></li>
-			</ul>
-		</div>
-	</div>
-</nav -->
 <script>
 $(document).ready(function() {
 	var customer = sessionStorage.getItem('customer');
