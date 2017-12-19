@@ -9,7 +9,7 @@
 	      <span class="icon-bar"></span>
 	    </button>
 	    <!-- a style="padding: 0px" class="navbar-brand" href="/"><img style="max-height: 50px; padding-left: 10px" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a -->
-	    <a style="padding: 0px; float: none" class="navbar-brand" href="/"><img src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
+	    <a style="padding: 0px; float: none" class="navbar-brand" href="/"><img style="max-height: 50px" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
 	  </div>
 	
 	  <!-- Collect the nav links, forms, and other content for toggling -->
