@@ -13,7 +13,7 @@
 							<form id="signin_form" class="form-inline">
 								<p>
 									<span id="cust_msg">
-										Please provide your customer credentials or <a id="signup" href="#">sign-up</a> if you have not yet registered...
+										Please provide your customer credentials if you have already registered.
 									</span>
 								</p>
 								<input id="email" name="email" type="text" placeholder="Email..." /><br> <input id="password" name="password" type="password" placeholder="Password..." />
@@ -25,7 +25,7 @@
 						<div class="col-lg-12">
 							<button id="signin_btn" type="submit" value="signin" form="signin_form" class="btn btn-primary btn-block">Sign-in</button>
 							<br>
-							<a id="signup" href="#">Sign-up here</a>
+							Not regeistered? <a id="signup" href="#">sign-up here</a> to do so.
 						</div>
 					</div>
 				</div>
