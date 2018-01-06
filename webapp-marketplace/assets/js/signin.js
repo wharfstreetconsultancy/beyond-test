@@ -1,6 +1,6 @@
 <div class="body">
 	<div class="container-fluid">
-		<div class="col-lg-4">
+		<div class="col-lg-6 col-lg-offset-3">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<div class="row">
