@@ -15,7 +15,9 @@
 	  <!-- Collect the nav links, forms, and other content for toggling -->
 	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    <ul class="nav navbar-nav navbar-right">
-	    	<li class="active"><a href="/" class="fa fa-star"> Featured</a></li>
+	    	<li class="active">
+	  			<a id="showcase_link"  href="#" class="fa fa-star"> Featured</a>
+	  		</li>
 			<li>
 				<a id="shop_link" href="#" class="fa fa-tags"> Shop</a>
 			</li>
@@ -47,12 +49,24 @@ $(document).ready(function() {
 		document.getElementById("cust_link").innerHTML = ' Sign-In';
 	}
 
+	$('#showcase_link').on('click', function () {
+
+		$("#body_main").load("js/showcase.js");
+		return false;
+	});
+
 	$('#shop_link').on('click', function () {
 
 		$("#body_main").load("js/shop.js");
 		return false;
 	});
-	
+
+	$('#cart_link').on('click', function () {
+
+		$("#body_main").load("js/cart.js");
+		return false;
+	});
+
 	$('#cust_link').on('click', function () {
 		
 		var customer = sessionStorage.getItem('customer');

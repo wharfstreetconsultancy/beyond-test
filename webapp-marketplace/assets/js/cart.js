@@ -1,68 +1,147 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
-<!-- script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script -->
-<script>
-/*
-function reloadCustomerCart() {
+<div class="body">
+	<div class="container-fluid">
+		<div class="col-lg-10 col-lg-offset-1">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div class="row">
+						<div id="cart_title" class="col-lg-9"></div>
+						<div id="cart_cost_summary" class="col-lg-3"></div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div id="paypal-button" class="col-lg-3"></div>
+						<div id="clear_button" class="col-lg-1 col-lg-offset-8"></div>
+					</div>
+					<hr>
+					<div id="cart_inventory" class="row"></div>
+				</div>
+				<div class="panel-footer">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-	var localCart = JSON.parse(localStorage.getItem('cart'));
-	console.log("Current cart: "+JSON.stringify(localCart));
-	var totalItems = 0;
-	var totalCost = 0.00;
-	if(localCart && localCart.items) {
-		for(var cartItem of localCart.items) {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+var latestCart = {latest.cart};
+
+$(document).ready(function() {
+
+	document.getElementById("cart_title").innerHTML = 'Your Cart Items...';
+	if(latestCart) {
+		document.getElementById("clear_button").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" class="btn btn-primary pull-right">Clear</button>';
+		document.getElementById("cart_inventory").innerHTML += '<div class="row">';
+		document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1"><b>Qty</b></div><div class="col-lg-3"><b>Product</b></div><div class="col-lg-2"><b>Size</b></div><div class="col-lg-2"><b>Color</b></div><div class="col-lg-2"><b>Item Cost</b></div><div class="col-lg-2"><b>Line Cost</b></div>';
+		document.getElementById("cart_inventory").innerHTML += '</div>';
+		console.log("Latest cart: "+JSON.stringify(latestCart));
+		var totalItems = 0;
+		var totalCost = 0.00;
+		for(var cartItem of latestCart.items) {
 			
 			totalItems += cartItem.quantity;
-			totalCost += cartItem.cost;
+			var lineCost = (cartItem.cost * cartItem.quantity);
+			totalCost += lineCost;
+			document.getElementById("cart_inventory").innerHTML += '<div class="row">';
+			document.getElementById("cart_inventory").innerHTML += '<div class="col-lg-1">'+cartItem.quantity+'</div><div class="col-lg-3">'+cartItem.productName+'</div><div class="col-lg-2">'+cartItem.size+'</div><div class="col-lg-2">'+cartItem.color+'</div><div class="col-lg-2">'+cartItem.cost.toFixed(2)+'</div><div class="col-lg-2">'+lineCost.toFixed(2)+'</div>';
+			document.getElementById("cart_inventory").innerHTML += '</div>';
 		}
-	}
-	document.getElementById("cart_preview").innerHTML = '';
-	document.getElementById("cart_preview").innerHTML += '<div class="row">';
-	document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-	document.getElementById("cart_preview").innerHTML += totalItems+' item(s) @ $'+totalCost.toFixed(2);
-	document.getElementById("cart_preview").innerHTML += '</div>';
-	document.getElementById("cart_preview").innerHTML += '</div>';
-	document.getElementById("cart_preview").innerHTML += '<hr>';
-	if(localCart && localCart.items) {
-		for(var cartItem of localCart.items) {
-			
-			document.getElementById("cart_preview").innerHTML += cartItem.quantity+' x <a href="/product?id='+cartItem.productId+'">'+cartItem.productName+'</a> - ('+cartItem.color+'/'+cartItem.size+') - ($'+cartItem.cost.toFixed(2)+')<br>';
-			console.log("Current cart item: "+JSON.stringify(cartItem));
-		}
-		if(localCart.items.length > 0) {
-			document.getElementById("cart_preview").innerHTML += '<hr>';
-			document.getElementById("cart_preview").innerHTML += '<div class="row">';
-			document.getElementById("cart_preview").innerHTML += '<div class="col-lg-10 col-lg-offset-1">';
-			document.getElementById("cart_preview").innerHTML += '<button id="check_out_cart_btn" type="submit" value="check_out_cart" class="btn btn-primary btn-block">Checkout</button>';
-			document.getElementById("cart_preview").innerHTML += '<button type="reset" id="cart_clear" name="cart_clear" form="cart_preview" class="btn btn-primary pull-right">Clear</button>';
-			document.getElementById("cart_preview").innerHTML += '</div>';
-			document.getElementById("cart_preview").innerHTML += '</div>';
-		}
-	}
-}
-*/
-$(document).ready(function() {
-/*
-	reloadCustomerCart(function () {
-		
-		console.log("Customer cart loaded.");
-	});
-*/
-	$('#cart_preview').on('reset', function () {
+		document.getElementById("cart_cost_summary").innerHTML = '<span class="pull-right">'+totalItems+' item(s), Total = $'+totalCost.toFixed(2)+'</span>';
 
-		//
-		// Local cart management
-		localStorage.removeItem('cart');
 
-		//
-		// Remote cart management
+		var customer = sessionStorage.getItem('customer');
+
+		if(customer) {
+
+			customer = JSON.parse(customer);
+			console.log("Customer about to checkout: "+JSON.stringify(customer));
+							// Set up PayPal with the checkout.js library
+							paypal.Button.render({
+
+								env: '{environment}',
+								commit: true,
+								payment: function () {
+
+									// Set up a url on your server to create the payment
+//									var CREATE_URL = 'https://'+restDomain+'/create-payment';
+									var CREATE_URL = '/create-payment';
+
+									// Set up the data you need to pass to your server
+									var data = {
+										customer: JSON.stringify(customer)
+									};
+
+									// Make a call to your server to set up the payment
+									return paypal.request.post(CREATE_URL, data).then(function(res) {
+										alert("Payment created: "+res.paymentID);
+										console.log("Payment created: "+res.paymentID);
+										return res.paymentID;
+									});
+								},
+								onAuthorize: function (data, actions) {
+
+									// Set up a url on your server to execute the payment
+									var EXECUTE_URL = '/execute-payment';
+//									var EXECUTE_URL = 'https://'+restDomain+'/execute-payment';
+
+									console.log("Received authorisation: "+JSON.stringify(data));
+
+									// Set up the data you need to pass to your server
+									var data = {
+
+										customer: JSON.stringify(customer),
+										paymentID: data.paymentID,
+										payerID: data.payerID
+									};
+
+									// Make a call to your server to execute the payment
+									return paypal.request.post(EXECUTE_URL, data).then(function (res) {
+
+										console.log("Payment complete: "+JSON.stringify(res));
+										localStorage.removeItem('cart');
+										document.getElementById("cart_cost_summary").innerHTML = '';
+										document.getElementById("paypal-button").innerHTML = '';
+										document.getElementById("cart_title").innerHTML = 'Order Status...';
+										document.getElementById("cart_inventory").innerHTML = 'Success!';
+									});
+								},
+								onCancel: function (data) {
+
+									console.log('Checkout payment cancelled.', JSON.stringify(data, 0, 2));
+								},
+								onError: function (error) {
+
+									console.log("Error while creating or executing payment: "+JSON.stringify(error));
+									if(error) {error = JSON.stringify(error);}
+									if(!error || error.length == 0 || error == '{}') {error = 'Payment failure.';}
+									console.log("Payment authorisation failed: "+error);
+									document.getElementById("cart_cost_summary").innerHTML = '';
+									document.getElementById("paypal-button").innerHTML = '';
+									document.getElementById("cart_title").innerHTML = 'Order Status...';
+									document.getElementById("cart_inventory").innerHTML = error;
+								}
+							}, '#paypal-button').then(function () {
+							// The PayPal button will be rendered in an html element with the id
+							// `paypal-button`. This function will be called when the PayPal button
+							// is set up and ready to be used.
+								return true;
+							});
+		}
+	} else {
+
+		document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
+	}
+	
+	$('#cart_clear').on('click', function () {
+
 		var customer = sessionStorage.getItem('customer');
 		console.log("Current customer: "+customer);
 		if(customer) {
 
 			customer = JSON.parse(customer);
-			$('#status').empty().text('Cart is updating...');
-			console.log("Cart is updating: ");
+			console.log("Cart is clearing");
 			
 			$.ajax({
 				url: '/cart/'+customer.sub,
@@ -72,132 +151,23 @@ $(document).ready(function() {
 					
 					$('#status').empty().text('Cart update success');
 					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
-		    		reloadCustomerCart();
-		    		document.getElementById("cart_preview_nav").click();
+					localStorage.removeItem('cart');
+					document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
 		    		return false;		
 				},
 				error: function (xhr) {
 					
 					$('#status').empty().text('Cart update error: '+xhr.status);
 					console.log("Cart update error: "+xhr.status);
-		    		reloadCustomerCart();
-		    		document.getElementById("cart_preview_nav").click();
 		    		return false;		
 				}
 			});
 		} else {
 			
-    		reloadCustomerCart();
-    		document.getElementById("cart_preview_nav").click();
+			localStorage.removeItem('cart');
+			document.getElementById("cart_inventory").innerHTML = '...is currently empty. Please browse our store for some great products!';
     		return false;		
 		}
 	});
-
-	$('#cart_checkout').on('click', function () {
-alert("Hello!");
-		var localCart = localStorage.getItem('cart');
-		if(localCart) {
-/*
-			alert("1");
-			$('#cart_preview').ajaxForm({
-	
-				//url: '/checkout',
-				//type: 'post',
-				dataType: 'json',
-				data: {cart: localCart}
-			});
-			$('#cart_preview').submit();
-			alert("2");
-*/
-			document.getElementById("cart_manager").innerHTML += '<input type=\'hidden\' name=\'cart\' value=\''+localCart+'\'/>'
-		}
- 		return true;
-	});
-
-/*
-	$('#cart_control').on('click', '#add_to_cart_btn', function () {
-
-		//
-		// Local cart management
-		var localCart = JSON.parse(localStorage.getItem('cart'));
-		var timestamp = new Date().getTime().toString();
-		if(!localCart || !localCart.items || localCart.items.length == 0) {
-			localCart = {id: timestamp.split("").reverse().join(""), items: []};
-		}
-	    var newCartItem = {
-			id: timestamp.split("").reverse().join(""),
-			productId: document.getElementById('productId').value,
-			productName: document.getElementById('productName').value,
-			quantity: parseInt(document.getElementById('productQuantity').value),
-			color: (document.getElementById('productColor')) ? document.getElementById('productColor').value : null,
-			size: (document.getElementById('productSize')) ? document.getElementById('productSize').value : null,
-			cost: parseFloat(document.getElementById('productPrice').value) * parseInt(document.getElementById('productQuantity').value),
-			created: timestamp,
-			lastUpdated: timestamp
-	    }
-    	console.log("New cart item:\t\t"+JSON.stringify(newCartItem));
-	    var existingCartItem = localCart.items.filter(function (currentCartItem) {
-
-	    	console.log("Current:\t"+JSON.stringify(currentCartItem));
-	    	console.log("New:\t\t"+JSON.stringify(newCartItem));
-	    	var sameItem = (
-	    		(currentCartItem.productId === newCartItem.productId) &&
-	    		(currentCartItem.color === newCartItem.color) &&
-	    		(currentCartItem.size === newCartItem.size)
-	    	);
-	    	console.log(sameItem);
-	    	return sameItem;
-	    });
-    	console.log("Existing cart item:\t"+JSON.stringify(existingCartItem));
-	    if(existingCartItem.length > 0) {
-
-	    	existingCartItem[0].quantity += newCartItem.quantity;
-	    	existingCartItem[0].cost += newCartItem.cost;
-	    } else {
-
-	    	localCart.items.push(newCartItem);
-	    }
-		localStorage.setItem('cart', JSON.stringify(localCart));
-		console.log("Local cart update success - full cart: "+JSON.stringify(localCart));
-
-		//
-		// Remote cart management
-		var customer = sessionStorage.getItem('customer');
-		console.log("Current customer: "+customer);
-		if(customer) {
-
-			customer = JSON.parse(customer);
-			$('#status').empty().text('Cart is updating...');
-			console.log("Cart is updating: ");
-			
-			$.ajax({
-				url: '/cart/'+customer.sub+'/item',
-				type: 'post',
-				dataType: 'json',
-				data: {newCartItem: newCartItem},
-				success: function (uploadedCartItem) {
-
-					$('#status').empty().text('Cart update success');
-					console.log("Remote cart update success - new item: "+JSON.stringify(uploadedCartItem));
-		    		reloadCustomerCart();
-		    		document.getElementById("cart_preview_nav").click();
-				},
-				error: function (xhr) {
-					
-					$('#status').empty().text('Cart update error: '+xhr.status);
-					console.log("Cart update error: "+xhr.status);
-		    		reloadCustomerCart();
-		    		document.getElementById("cart_preview_nav").click();
-				}
-			});
-		} else {
-
-    		reloadCustomerCart();
-    		document.getElementById("cart_preview_nav").click();
-		}
-		return false;		
-	});
-
 });
-*/
 </script>
