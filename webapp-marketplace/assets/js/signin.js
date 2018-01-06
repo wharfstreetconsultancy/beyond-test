@@ -51,7 +51,6 @@ $(document).ready(function() {
 			Username: document.getElementById("email").value,
 			Password: document.getElementById("password").value
 		};
-	});
 /*
 		$('#signin_form').ajaxSubmit({
 			
@@ -90,6 +89,7 @@ $(document).ready(function() {
 				document.getElementById("cust_msg").innerHTML = errorMessage;
 			}
 		});
+*/
 		return false;
 	});
 */
