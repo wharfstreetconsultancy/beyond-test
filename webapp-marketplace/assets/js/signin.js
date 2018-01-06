@@ -40,11 +40,11 @@
 $(document).ready(function() {
 
 	$('#signup_link').on('click', function () {
-alert("Sign up link clicked");
+
 		$("#body_main").load("js/signup.js");
 		return false;
 	});
-
+/*
 	$('#signin_btn').on('click', function () {
 
 		$('#signin_form').ajaxSubmit({
@@ -86,5 +86,6 @@ alert("Sign up link clicked");
 		});
 		return false;
 	});
+*/
 });
 </script>
