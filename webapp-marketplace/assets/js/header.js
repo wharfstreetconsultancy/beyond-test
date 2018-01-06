@@ -103,6 +103,7 @@ $(document).ready(function() {
 		}
  		return false;
 	});
+
 /*
 	$('#identity').on('click', '#signout_btn', function () {
 
@@ -132,5 +133,11 @@ $(document).ready(function() {
 		return false;
 	});
 */
+
+	$('#signup').on('click', function () {
+
+		$("#body_main").load("js/signup.js");
+		return false;
+	});
 });
 </script>
