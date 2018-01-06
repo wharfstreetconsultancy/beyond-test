@@ -16,8 +16,7 @@
 					<hr>
 					<div id="cart_inventory" class="row"></div>
 				</div>
-				<div class="panel-footer">
-				</div>
+				<div class="panel-footer"></div>
 			</div>
 		</div>
 	</div>
