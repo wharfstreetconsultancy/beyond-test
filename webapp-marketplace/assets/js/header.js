@@ -9,7 +9,6 @@
 			</button>
 			<a style="padding: 0px 10px" class="navbar-brand" href="/"><img style="max-height: 50px; margin: auto" src="img/SVGlogo.png" alt="Suroor Fashions - Marketplace"/></a>
 		</div>
-	
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
 		    	<li class="active">

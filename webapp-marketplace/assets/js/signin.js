@@ -25,9 +25,7 @@
 						<div class="col-lg-12">
 							<button id="signin_btn" type="submit" value="signin" form="signin_form" class="btn btn-primary btn-block">Sign-in</button>
 							<br>
-							Not regeistered?
-							<br>
-							<a id="signup_link" href="#">Sign-up here</a> to do so.
+							Not regeistered? <a id="signup_link" href="#">Sign-up here</a> to do so...
 						</div>
 					</div>
 				</div>
@@ -44,9 +42,17 @@ $(document).ready(function() {
 		$("#body_main").load("js/signup.js");
 		return false;
 	});
-/*
+
 	$('#signin_btn').on('click', function () {
 
+		alert(document.getElementById("email").value+":"+document.getElementById("password").value);
+		var authenticationData = {
+
+			Username: document.getElementById("email").value,
+			Password: document.getElementById("password").value
+		};
+	});
+/*
 		$('#signin_form').ajaxSubmit({
 			
 			url: '/customer/session',
