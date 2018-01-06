@@ -27,7 +27,7 @@
 							<br>
 							Not regeistered?
 							<br>
-							<a id="signup" href="#">Sign-up here</a> to do so.
+							<a id="signup_link" href="#">Sign-up here</a> to do so.
 						</div>
 					</div>
 				</div>
@@ -37,11 +37,10 @@
 	</div>
 </div>
 <script>
-
 $(document).ready(function() {
 
-	$('#signup').on('click', function () {
-
+	$('#signup_link').on('click', function () {
+alert("Sign up link clicked");
 		$("#body_main").load("js/signup.js");
 		return false;
 	});

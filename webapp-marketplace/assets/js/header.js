@@ -99,7 +99,7 @@ $(document).ready(function() {
 			});
 		} else {
 
-			$("#body_main").load("js/signup.js");
+			$("#body_main").load("js/signin.js");
 		}
  		return false;
 	});
