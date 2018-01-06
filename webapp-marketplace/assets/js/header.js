@@ -16,14 +16,14 @@
 	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    <ul class="nav navbar-nav navbar-right">
 	    	<li class="active"><a href="/" class="fa fa-star"> Featured</a></li>
-			<li><a href="/shop" class="fa fa-tags"> Shop</a></li>
+			<li><a id="cust_link" href="#" class="fa fa-tags"> Shop</a></li>
 			<li><a href="/about" class="fa fa-book"> About Us</a></li>
 			<li><a href="/contact" class="fa fa-phone"> Contact</a></li>
 			<li>
 				<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
 				<form id="cart_manager" action="/cart" method="post"/>
 			</li>
-			<li><a id="cust_link" class="dropdown-toggle fa fa-user" href="#"/></li>
+			<li><a id="cust_link" href="#" class="dropdown-toggle fa fa-user"/></li>
 	    </ul>
 	  </div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
