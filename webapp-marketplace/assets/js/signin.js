@@ -25,7 +25,7 @@
 						<div class="col-lg-12">
 							<button id="signin_btn" type="submit" value="signin" form="signin_form" class="btn btn-primary btn-block">Sign-in</button>
 							<br>
-							Not regeistered? <a id="signup_link" href="#">Sign-up here</a> to do so...
+							Not registered? <a id="signup_link" href="#">Sign-up here</a> to do so...
 						</div>
 					</div>
 				</div>
@@ -37,6 +37,24 @@
 <script>
 $(document).ready(function() {
 
+	var userPoolClientToken
+	$.ajax({
+		url: '/client_token',
+		type: 'get',
+		dataType: 'json',
+		success: function (response) {
+			
+			console.log("Got client token: "+response.clientToken);
+			userPoolClientToken = response.clientToken;
+//    		return false;		
+		},
+		error: function (err) {
+			
+			alert(err);
+//    		return false;		
+		}
+	});
+
 	$('#signup_link').on('click', function () {
 
 		$("#body_main").load("js/signup.js");
@@ -45,12 +63,39 @@ $(document).ready(function() {
 
 	$('#signin_btn').on('click', function () {
 
-		alert(document.getElementById("email").value+":"+document.getElementById("password").value);
 		var authenticationData = {
 
 			Username: document.getElementById("email").value,
 			Password: document.getElementById("password").value
 		};
+		var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
+
+		var poolData = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
+			UserPoolId: 'us-west-2_jnmkbOGZY',
+			ClientId: userPoolClientToken
+		});
+		var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+
+		var userData = {
+
+			Username: authenticationData.Username,
+			Pool: userPool
+		};
+		var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+		cognitoUser.authenticateUser(authenticationDetails, {
+
+			onSuccess: function (result) {
+
+				console.log('access token + ' + result.getAccessToken().getJwtToken());
+				/*Use the idToken for Logins Map when Federating User Pools with Cognito Identity or when passing through an Authorization Header to an API Gateway Authorizer*/
+				console.log('idToken + ' + result.idToken.jwtToken);
+			},
+		
+			onFailure: function(err) {
+
+				alert(err);
+			},
+		});
 /*
 		$('#signin_form').ajaxSubmit({
 			

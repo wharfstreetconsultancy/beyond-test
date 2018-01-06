@@ -1188,7 +1188,19 @@ function storeCart(cart, callback) {
 }
 
 //
-// GET '/client_token' - Generate a client token for the payment gateway
+// GET '/client_token' - Generate a client token for the auth gateway
+app.get('/client_token', function (req, res) {
+
+    // Log request received
+    console.log( "Received request: GET /client_token" );
+
+	// Return new cart item to caller
+	res.writeHead(200, {'Content-Type': 'application/json'});
+	res.write(JSON.stringify({clientToken: process.env.AUTH_CLIENT}));
+	res.end();
+	return;
+});
+
 /*
 app.get('/client_token', function (req, res) {
 
