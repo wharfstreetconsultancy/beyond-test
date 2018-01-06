@@ -16,14 +16,22 @@
 	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    <ul class="nav navbar-nav navbar-right">
 	    	<li class="active"><a href="/" class="fa fa-star"> Featured</a></li>
-			<li><a id="cust_link" href="#" class="fa fa-tags"> Shop</a></li>
-			<li><a href="/about" class="fa fa-book"> About Us</a></li>
-			<li><a href="/contact" class="fa fa-phone"> Contact</a></li>
 			<li>
-				<a id="cart_link" class="fa fa-shopping-cart" href="#"> My Cart</a>
+				<a id="shop_link" href="#" class="fa fa-tags"> Shop</a>
+			</li>
+			<li>
+				<a href="/about" class="fa fa-book"> About Us</a>
+			</li>
+			<li>
+				<a href="/contact" class="fa fa-phone"> Contact</a>
+			</li>
+			<li>
+				<a id="cart_link" href="#" class="fa fa-shopping-cart"> My Cart</a>
 				<form id="cart_manager" action="/cart" method="post"/>
 			</li>
-			<li><a id="cust_link" href="#" class="dropdown-toggle fa fa-user"/></li>
+			<li>
+				<a id="cust_link" href="#" class="dropdown-toggle fa fa-user"/>
+			</li>
 	    </ul>
 	  </div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
@@ -39,6 +47,12 @@ $(document).ready(function() {
 		document.getElementById("cust_link").innerHTML = ' Sign-In';
 	}
 
+	$('#shop_link').on('click', function () {
+
+		$("#body_main").load("js/shop.js");
+		return false;
+	});
+	
 	$('#cust_link').on('click', function () {
 		
 		var customer = sessionStorage.getItem('customer');
