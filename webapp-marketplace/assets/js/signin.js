@@ -40,6 +40,12 @@
 
 $(document).ready(function() {
 
+	$('#signup').on('click', function () {
+
+		$("#body_main").load("js/signup.js");
+		return false;
+	});
+
 	$('#signin_btn').on('click', function () {
 
 		$('#signin_form').ajaxSubmit({

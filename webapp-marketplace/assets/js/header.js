@@ -99,7 +99,7 @@ $(document).ready(function() {
 			});
 		} else {
 
-			$("#body_main").load("js/signin.js");
+			$("#body_main").load("js/signup.js");
 		}
  		return false;
 	});
@@ -133,11 +133,5 @@ $(document).ready(function() {
 		return false;
 	});
 */
-
-	$('#signup').on('click', function () {
-
-		$("#body_main").load("js/signup.js");
-		return false;
-	});
 });
 </script>
