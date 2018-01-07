@@ -38,7 +38,7 @@
 $(document).ready(function() {
 
 	var sessionStatus = function (event_source, $container) {
-alert(1);
+alert(JSON.stringify($container));
 		$(event_source).bind('session_status', function (event, signedIn) {
 			alert(JSON.stringify(event)+":"+signedIn);
 			$container.innerHTML = (signedIn) ? ' Sign-Out' : 'Sign-In';
