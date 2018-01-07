@@ -71,8 +71,12 @@ $(document).ready(function() {
 						console.error(err);
 						return;
 					}
+					console.log("Got session: "+session.isValid());
 					$(document).trigger('session_status', session.isValid());
 				});
+			} else {
+
+				$(document).trigger('session_status', false);
 			}
 		},
 		error: function (err) {
