@@ -38,20 +38,49 @@
 $(document).ready(function() {
 
 	var sessionStatus = function (event_source, $container) {
-alert(JSON.stringify($container));
+
 		$(event_source).bind('session_status', function (event, signedIn) {
-			alert(JSON.stringify(event)+":"+signedIn);
+
 			$container.innerHTML = (signedIn) ? ' Sign-Out' : ' Sign-In';
-			alert(3);
 		});
-		alert(4);
 	};
-	alert(5);
-//	new sessionStatus(document, $('#cust_link'));
+
 	new sessionStatus(document, document.getElementById("cust_link"));
-	alert(6);
-	$(document).trigger('session_status', true);
-	alert(7);
+
+	$.ajax({
+		url: '/client_token',
+		type: 'get',
+		dataType: 'json',
+		success: function (response) {
+			
+			console.log("Got client token: "+response.clientToken);
+
+			var poolData = {
+
+				UserPoolId: 'us-west-2_jnmkbOGZY',
+				ClientId: response.clientToken
+			}
+			var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+			var cognitoUser = userPool.getCurrentUser();
+			if(cognitoUser != null) {
+
+				cognitoUser.getSession(function (err, session) {
+
+					if (err) {
+
+						console.error(err);
+						return;
+					}
+					$(document).trigger('session_status', session.isValid());
+				});
+			}
+		},
+		error: function (err) {
+			
+			console.error(err);
+			return;
+		}
+	});
 
 	$('#showcase_link').on('click', function () {
 
