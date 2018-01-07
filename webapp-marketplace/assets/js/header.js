@@ -41,13 +41,14 @@ $(document).ready(function() {
 alert(JSON.stringify($container));
 		$(event_source).bind('session_status', function (event, signedIn) {
 			alert(JSON.stringify(event)+":"+signedIn);
-			$container.innerHTML = (signedIn) ? ' Sign-Out' : 'Sign-In';
+			$container.innerHTML = (signedIn) ? ' Sign-Out' : ' Sign-In';
 			alert(3);
 		});
 		alert(4);
 	};
 	alert(5);
-	new sessionStatus(document, $('#cust_link'));
+//	new sessionStatus(document, $('#cust_link'));
+	new sessionStatus(document, document.getElementById("cust_link"));
 	alert(6);
 	$(document).trigger('session_status', true);
 	alert(7);
