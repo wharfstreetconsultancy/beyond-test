@@ -72,13 +72,11 @@ try {
 		};
 		var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
-		var poolDataAttributes = {
+		var poolData = {
 
 			UserPoolId: 'us-west-2_jnmkbOGZY',
 			ClientId: userPoolClientToken
 		}
-		alert(JSON.stringify(poolDataAttributes));
-		var poolData = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolDataAttributes);
 		alert(1);
 		var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
 		alert(2);
