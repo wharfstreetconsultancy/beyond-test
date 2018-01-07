@@ -42,11 +42,15 @@ alert(1);
 		$(event_source).bind('session_status', function (event, signedIn) {
 			alert(2);
 			$container.innerHTML = (signedIn) ? ' Sign-Out' : 'Sign-In';
+			alert(3);
 		});
+		alert(4);
 	};
+	alert(5);
 	new sessionStatus(document, $('cust_link'));
-
+	alert(6);
 	$(document).trigger('session_status', true);
+	alert(7);
 
 	$('#showcase_link').on('click', function () {
 
