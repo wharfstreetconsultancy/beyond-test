@@ -79,15 +79,18 @@ try {
 		}
 		alert(JSON.stringify(poolDataAttributes));
 		var poolData = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolDataAttributes);
-		alert("A'erwards");
+		alert(1);
 		var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+		alert(2);
 
 		var userData = {
 
 			Username: authenticationData.Username,
 			Pool: userPool
 		};
+		alert(3);
 		var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+		alert(4);
 
 		cognitoUser.authenticateUser(authenticationDetails, {
 
