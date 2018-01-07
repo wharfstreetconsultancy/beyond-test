@@ -72,12 +72,13 @@ try {
 		};
 		var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
-		alert(userPoolClientToken);
-		var poolData = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({
+		var poolDataAttributes = {
 
 			UserPoolId: 'us-west-2_jnmkbOGZY',
 			ClientId: userPoolClientToken
-		});
+		}
+		alert(poolDataAttributes);
+		var poolData = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolDataAttributes);
 		var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
 
 		var userData = {
