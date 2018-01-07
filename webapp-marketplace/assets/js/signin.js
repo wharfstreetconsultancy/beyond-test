@@ -72,7 +72,7 @@ try {
 		};
 		var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
-		var poolData = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
+		var poolData = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({
 
 			UserPoolId: 'us-west-2_jnmkbOGZY',
 			ClientId: userPoolClientToken
