@@ -47,7 +47,7 @@ alert(JSON.stringify($container));
 		alert(4);
 	};
 	alert(5);
-	new sessionStatus(document, $('cust_link'));
+	new sessionStatus(document, $('#cust_link'));
 	alert(6);
 	$(document).trigger('session_status', true);
 	alert(7);
