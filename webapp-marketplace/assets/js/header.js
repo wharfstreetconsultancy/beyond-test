@@ -38,9 +38,9 @@
 $(document).ready(function() {
 
 	var sessionStatus = function (event_source, $container) {
-
+alert(1);
 		$(event_source).bind('session_status', function (event, signedIn) {
-	
+			alert(2);
 			$container.innerHTML = (signedIn) ? ' Sign-Out' : 'Sign-In';
 		});
 	};
