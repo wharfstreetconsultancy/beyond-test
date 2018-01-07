@@ -46,12 +46,10 @@ $(document).ready(function() {
 			
 			console.log("Got client token: "+response.clientToken);
 			userPoolClientToken = response.clientToken;
-//    		return false;		
 		},
 		error: function (err) {
 			
 			alert(err);
-//    		return false;		
 		}
 	});
 
@@ -62,8 +60,6 @@ $(document).ready(function() {
 	});
 
 	$('#signin_btn').on('click', function () {
-
-try {
 
 		var authenticationData = {
 
@@ -77,35 +73,30 @@ try {
 			UserPoolId: 'us-west-2_jnmkbOGZY',
 			ClientId: userPoolClientToken
 		}
-		alert(1);
 		var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
-		alert(2);
 
 		var userData = {
 
 			Username: authenticationData.Username,
 			Pool: userPool
 		};
-		alert(3);
 		var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
-		alert(4);
 
 		cognitoUser.authenticateUser(authenticationDetails, {
 
 			onSuccess: function (result) {
 
-				alert(JSON.stringify(result));
-				console.log('access token + ' + result.getAccessToken().getJwtToken());
 				/*Use the idToken for Logins Map when Federating User Pools with Cognito Identity or when passing through an Authorization Header to an API Gateway Authorizer*/
-				console.log('idToken + ' + result.idToken.jwtToken);
+				console.log('Login success (idToken='+result.idToken.jwtToken+')');
+				$("#body_main").load("js/cart.js");
+				$(document).trigger('session_status', true);
 			},
 		
 			onFailure: function(err) {
 
 				alert(err);
-			},
+			}
 		});
-} catch (err) {alert(err);}
 /*
 		$('#signin_form').ajaxSubmit({
 			

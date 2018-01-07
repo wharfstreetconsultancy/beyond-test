@@ -36,14 +36,23 @@
 </nav>
 <script>
 $(document).ready(function() {
-	var customer = sessionStorage.getItem('customer');
-	if(customer) {
 
-		document.getElementById("cust_link").innerHTML = ' Sign-out';
-	} else {
+	var sessionStatus = function (event_source, $container) {
 
-		document.getElementById("cust_link").innerHTML = ' Sign-In';
-	}
+		$(event_source).bind('session_status', function (event, signedIn) {
+	
+			$container.innerHTML = (signedIn) ? ' Sign-Out' : 'Sign-In';
+		});
+	};
+	new sessionStatus(document, $('cust_link'));
+
+	$(document).trigger('session_status', true);
+
+	$('#showcase_link').on('click', function () {
+
+		$("#body_main").load("js/showcase.js");
+		return false;
+	});
 
 	$('#showcase_link').on('click', function () {
 
