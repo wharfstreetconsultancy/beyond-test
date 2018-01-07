@@ -40,7 +40,7 @@ $(document).ready(function() {
 	var sessionStatus = function (event_source, $container) {
 alert(1);
 		$(event_source).bind('session_status', function (event, signedIn) {
-			alert($container+":"+event+":"+signedIn);
+			alert(JSON.stringify($container)+":"+JSON.stringify(event)+":"+signedIn);
 			$container.innerHTML = (signedIn) ? ' Sign-Out' : 'Sign-In';
 			alert(3);
 		});
