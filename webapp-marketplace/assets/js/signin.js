@@ -37,7 +37,7 @@
 <script>
 $(document).ready(function() {
 
-	var userPoolClientToken
+	var userPoolClientToken;
 	$.ajax({
 		url: '/client_token',
 		type: 'get',
@@ -72,6 +72,7 @@ try {
 		};
 		var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
+		alert(userPoolClientToken);
 		var poolData = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool({
 
 			UserPoolId: 'us-west-2_jnmkbOGZY',
