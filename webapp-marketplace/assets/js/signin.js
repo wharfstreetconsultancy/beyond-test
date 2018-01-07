@@ -63,33 +63,28 @@ $(document).ready(function() {
 
 	$('#signin_btn').on('click', function () {
 
+try {
+
 		var authenticationData = {
 
 			Username: document.getElementById("email").value,
 			Password: document.getElementById("password").value
 		};
-		alert(1);
 		var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
-		alert(2);
 
 		var poolData = new AWS.CognitoIdentityServiceProvider.CognitoUserPool({
+
 			UserPoolId: 'us-west-2_jnmkbOGZY',
 			ClientId: userPoolClientToken
 		});
-		alert(3);
-
 		var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
-		alert(4);
 
 		var userData = {
 
 			Username: authenticationData.Username,
 			Pool: userPool
 		};
-		alert(5);
-
 		var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
-		alert(6);
 
 		cognitoUser.authenticateUser(authenticationDetails, {
 
@@ -106,6 +101,7 @@ $(document).ready(function() {
 				alert(err);
 			},
 		});
+} catch (err) {alert(err);}
 /*
 		$('#signin_form').ajaxSubmit({
 			
