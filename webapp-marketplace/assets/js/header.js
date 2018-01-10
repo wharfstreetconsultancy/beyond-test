@@ -37,15 +37,15 @@
 <script>
 $(document).ready(function() {
 
-	var sessionStatus = function (event_source, $container) {
+	var sessionStatusDisplay = function (event_source, $container) {
 
-		$(event_source).bind('session_status', function (event, signedIn) {
+		$(event_source).bind('session_status_changed', function (event, signedIn) {
 
 			$container.innerHTML = (signedIn) ? ' Sign-Out' : ' Sign-In';
 		});
 	};
 
-	new sessionStatus(document, document.getElementById("cust_link"));
+	new sessionStatusDisplay(document, document.getElementById("cust_link"));
 
 	$.ajax({
 		url: '/client_token',
@@ -72,7 +72,7 @@ $(document).ready(function() {
 						return;
 					}
 					console.log("Got session: "+session.isValid());
-					$(document).trigger('session_status', session.isValid());
+					$(document).trigger('session_status_changed', session.isValid());
 				});
 			} else {
 

@@ -89,7 +89,7 @@ $(document).ready(function() {
 				/*Use the idToken for Logins Map when Federating User Pools with Cognito Identity or when passing through an Authorization Header to an API Gateway Authorizer*/
 				console.log('Login success (idToken='+result.idToken.jwtToken+')');
 				$("#body_main").load("js/cart.js");
-				$(document).trigger('session_status', true);
+				$(document).trigger('session_status_changed', true);
 			},
 		
 			onFailure: function(err) {
