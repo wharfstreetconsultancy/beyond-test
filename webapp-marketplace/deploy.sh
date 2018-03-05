@@ -11,9 +11,9 @@ echo AWS_PROFILE=$AWS_PROFILE
 SRV_ENV=$(aws s3 cp s3://suroor.fashions.config/marketplace_server.$1.env.properties - --profile $AWS_PROFILE)
 PGW_ENV=$(aws s3 cp s3://suroor.fashions.config/payment_gateway.$2.env.properties - --profile $AWS_PROFILE)
 
-SESSION_SECRET=$(jq -r '.sessionSecret' <<< "${SRV_ENV}")
 AWS_ACCESS_KEY_ID=$4
 AWS_SECRET_ACCESS_KEY=$5
+SESSION_SECRET=$(jq -r '.sessionSecret' <<< "${SRV_ENV}")
 AWS_REGION=$(jq -r '.region' <<< "${SRV_ENV}")
 USER_POOL_CLIENT=$(jq -r '.userPoolClient' <<< "${SRV_ENV}")
 NON_SECURE_PORT=$(jq -r '.nonSecurePort' <<< "${SRV_ENV}")
