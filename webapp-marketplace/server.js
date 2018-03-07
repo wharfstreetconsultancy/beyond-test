@@ -116,7 +116,7 @@ console.log("Started HTTP server.");
 
 //
 // HTTPS Server
-if('true'.equals(process.env.RUN_HTTPS)) {
+if(process.env.RUN_HTTPS.equals('true')) {
 	var key = fs.readFileSync('certs/suroorfashions.com.key');
 	var cert = fs.readFileSync('certs/suroorfashions.com.crt');
 	var options = {key: key, cert: cert};
