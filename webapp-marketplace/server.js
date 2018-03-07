@@ -41,6 +41,7 @@ console.log("REST_PORT="+process.env.REST_PORT);
 console.log("PGW_CLIENT="+process.env.PGW_CLIENT);
 console.log("PGW_SECRET="+process.env.PGW_SECRET);
 console.log("PGW_HOST="+process.env.PGW_HOST);
+console.log("RUN_HTTPS="+process.env.RUN_HTTPS);
 
 //
 // Configure AWS env
@@ -108,13 +109,20 @@ var agent = new https.Agent({
 //	https.createServer(options, app).listen(8443);
 //});
 
-var key = fs.readFileSync('certs/suroorfashions.com.key');
-var cert = fs.readFileSync('certs/suroorfashions.com.crt');
-console.log("Starting server.");
+//
+// HTTP Server
 http.createServer(app).listen(8080);
-var options = {key: key, cert: cert};
-https.createServer(options, app).listen(8443);
+console.log("Started HTTP server.");
 
+//
+// HTTPS Server
+if('true'.equals(process.env.RUN_HTTPS)) {
+	var key = fs.readFileSync('certs/suroorfashions.com.key');
+	var cert = fs.readFileSync('certs/suroorfashions.com.crt');
+	var options = {key: key, cert: cert};
+	https.createServer(options, app).listen(8443);
+	console.log("Started HTTPS server.");
+}
 //var configBucket = 'suroor.fashions.config';
 //var key = null;
 //var cert = null;
