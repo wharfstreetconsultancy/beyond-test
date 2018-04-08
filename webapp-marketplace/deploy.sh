@@ -10,7 +10,7 @@ kubectl get service | grep $LB_NAME > /dev/null 2>&1; LB_EXISTS=$?
 if [ $DEPLOYMENT_EXISTS -eq 0 ]; then
 	echo "Deployment already exists: "$ZONE_DOMAIN
 
-	kubectl rolling-update maarketplace
+	kubectl rolling-update marketplace --image=471388289254.dkr.ecr.us-west-2.amazonaws.com/wharfstreetconsultancy/beyond-test:latest
 	
 else
 	echo "Deployment does not exist."
