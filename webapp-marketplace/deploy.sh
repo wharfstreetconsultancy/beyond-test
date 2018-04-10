@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DEPLOYMENT_NAME=marketplace
-DEPLOYMENT_LB_NAME=$DEPLOYMENT_NAME-lb
+DEPLOYMENT_NAME="marketplace"
+DEPLOYMENT_LB_NAME="$DEPLOYMENT_NAME-lb"
 
 kubectl get deployment | grep $DEPLOYMENT_NAME > /dev/null 2>&1; DEPLOYMENT_EXISTS=$?
 kubectl get service | grep $LB_NAME > /dev/null 2>&1; LB_EXISTS=$?
