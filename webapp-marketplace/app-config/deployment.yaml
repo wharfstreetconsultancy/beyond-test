@@ -1,0 +1,83 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: 2018-04-14T15:30:52Z
+  generation: 1
+  labels:
+    run: marketplace
+  name: marketplace
+  namespace: default
+  resourceVersion: "568"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/marketplace
+  uid: d0c5021c-3ff8-11e8-b1c0-06ec8456f28a
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: marketplace
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: marketplace
+    spec:
+      containers:
+      - env:
+        - name: DOMAIN
+          value: cluster
+        - name: SRV_ENV
+          value: sandbox
+        - name: PGW_ENV
+          value: sandbox
+        - name: SESSION_SECRET
+          value: '...keyboard_cat_named_leon...'
+        - name: AWS_REGION
+          value: us-west-2
+        - name: SECURE_PORT
+          value: "1443"
+        - name: REST_HOST
+          value: ip-10-0-0-148.us-west-2.compute.internal
+        - name: REST_PORT
+          value: "1444"
+        - name: AUTH_CLIENT
+          value: m1f0r4q7uqgr9vd0qbqouspha
+        - name: PGW_HOST
+          value: api.sandbox.paypal.com
+        - name: PGW_CLIENT
+          value: AVif-bKyLbRPxkuJwjj83I9W4s3Fn2YO5UDqFaOyNcx9VQUhNNCLyCfN6V883iys0W2sOfNMh4DzZyZX
+        - name: PGW_SECRET
+          value: ECNTIA_7b_-KohMTjuOcHM_GRsVlIjPEwFIFUgU8rqBulPddv7URtc1e5QqL1quHs7Yj_qMztDcCuv9S
+        image: 471388289254.dkr.ecr.us-west-2.amazonaws.com/wharfstreetconsultancy/beyond-test:latest
+        imagePullPolicy: Always
+        name: marketplace
+        ports:
+        - containerPort: 8443
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 3
+  conditions:
+  - lastTransitionTime: 2018-04-14T15:31:24Z
+    lastUpdateTime: 2018-04-14T15:31:24Z
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  readyReplicas: 3
+  replicas: 3
+  updatedReplicas: 3

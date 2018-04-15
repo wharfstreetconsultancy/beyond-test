@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-04-14T15:30:52Z
+  labels:
+    run: marketplace
+  name: marketplace-lb
+  namespace: default
+  resourceVersion: "501"
+  selfLink: /api/v1/namespaces/default/services/marketplace-lb
+  uid: d0e2b60e-3ff8-11e8-8ed0-02e985758772
+spec:
+  clusterIP: 100.69.64.103
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 30026
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    run: marketplace
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - hostname: ad0e2b60e3ff811e88ed002e98575877-1535460219.us-west-2.elb.amazonaws.com
